@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
   Wallet,
+  CreditCard,
   Bell,
 } from "@repo/design/lucide";
 import { cn } from "@/lib/cn";
@@ -30,6 +31,7 @@ const IconMap: Record<string, React.ElementType> = {
   Settings,
   LogOut,
   Wallet,
+  CreditCard,
   Bell,
 };
 

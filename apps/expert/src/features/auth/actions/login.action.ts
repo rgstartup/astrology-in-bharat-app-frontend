@@ -6,6 +6,7 @@ import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import { API_ROUTES } from "@/utils/api.routes";
 import { captureSetCookies, mirrorSetCookies } from "@/utils/forwarded-cookies";
 import api from "@/api/api";
+import { unwrapEnvelope, type EnvelopeResponse } from "@/lib/envelope.mapper";
 
 import { LoginFormData, LoginSchema } from "../schemas/login.schema";
 
@@ -57,13 +58,15 @@ export async function loginAction(
   }
 
   let backendSetCookies: string[] = [];
-  const result = await api
+  const rawResult = await api
     .extend({
       onResponse: (_data, res) => {
         backendSetCookies = captureSetCookies(res.headers);
       },
     })
-    .post<ILoginResponse>(API_ROUTES.AUTH.LOGIN.EMAIL, safeParseResult.data);
+    .post<EnvelopeResponse<ILoginResponse>>(API_ROUTES.AUTH.LOGIN.EMAIL, safeParseResult.data);
+
+  const result = unwrapEnvelope(rawResult);
 
   if (!result.ok) {
     const status = result.error.status;
@@ -83,7 +86,7 @@ export async function loginAction(
     };
   }
 
-  const { data } = result;
+  const data = result.data;
 
   // Token existence check
   if (!data?.accessToken) {

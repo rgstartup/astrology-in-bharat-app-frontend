@@ -1,5 +1,6 @@
 export { ConsultationErrorCode, isConsultationErrorCode } from "./error/consultation-error-codes";
 export { ExpertAuthErrorCode, isExpertAuthErrorCode } from "./error/expert-auth-error-codes";
+export { PayoutAccountsErrorCode, isPayoutAccountsErrorCode } from "./error/payout-accounts-error-codes";
 
 export type {
   ExpertReviewClient,

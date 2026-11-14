@@ -48,4 +48,21 @@ export const API_ROUTES = {
     STATS: "/expert/me/stats",
     REPLY: (id: string) => `/expert/reviews/${id}/reply`,
   },
+  BANK_LINKS: {
+    ROOT: "/expert/bank-accounts",
+    INITIATE: "/expert/bank-accounts/link/initiate",
+    COMPLETE: "/expert/bank-accounts/link/complete",
+    CALLBACK: "/expert/bank-accounts/callback",
+    REFRESH_STATUS: "/expert/bank-accounts/link/refresh-status",
+    VALIDATE_PENNY_DROP: "/expert/bank-accounts/link/validate-penny-drop",
+    SET_PRIMARY: "/expert/bank-accounts/link/set-primary",
+  },
+  PAYOUT_ACCOUNTS: {
+    ROOT: "/expert/payout-accounts",
+    INITIATE: "/expert/payout-accounts/initiate",
+    COMPLETE: "/expert/payout-accounts/complete",
+    LINKS: "/expert/payout-accounts/links",
+    PAYOUT: "/expert/payout-accounts/payout",
+    RECONCILE: "/expert/payout-accounts/reconcile",
+  },
 } as const;

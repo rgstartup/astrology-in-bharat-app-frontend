@@ -8,6 +8,8 @@ export {
   isConsultationErrorCode,
   ExpertAuthErrorCode,
   isExpertAuthErrorCode,
+  PayoutAccountsErrorCode,
+  isPayoutAccountsErrorCode,
 } from "./contracts";
 export { AddressTag } from "./enums/address-tag.enum";
 export {

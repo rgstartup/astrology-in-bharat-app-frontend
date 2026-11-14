@@ -10,17 +10,36 @@ import {
   AlertCircle,
 } from "@repo/design/lucide";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
 import {
-  listBankLinks,
-  initiateBankLink,
-  completeBankLink,
-  validatePennyDrop,
-  setPrimaryBankLink,
-  deleteBankLink,
-  refreshBankLinkStatus,
-  type BankLinkSummary,
-  type InitiateBankLinkOutput,
-} from "@/features/bank-links/api";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  Input,
+} from "@repo/design/shadcn";
+import {
+  initiatePayoutOnboarding,
+  completePayoutOnboarding,
+  listPayoutAccountLinks,
+  executePayout,
+  reconcilePayouts,
+  type InitiatePayoutOnboardingInput,
+  type InitiatePayoutOnboardingOutput,
+  type CompletePayoutOnboardingInput,
+  type ExecutePayoutInput,
+  type ReconcilePayoutsInput,
+  type PayoutAccountLink,
+} from "@/features/payout-accounts/api";
+import { getErrorMessage } from "@repo/lib";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   PENDING: { label: "Pending", color: "bg-amber-100 text-amber-700" },
@@ -29,23 +48,54 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   FAILED: { label: "Failed", color: "bg-red-100 text-red-700" },
 };
 
+const FIELD_LABELS: Record<string, string> = {
+  account_holder_name: "Account Holder Name",
+  account_number: "Account Number",
+  ifsc: "IFSC Code",
+};
+
+const fieldLabel = (field: string) => {
+  const mapped = FIELD_LABELS[field];
+  if (mapped) return mapped;
+  return field
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
 export default function PayoutAccountsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [links, setLinks] = useState<BankLinkSummary[]>([]);
+  const [links, setLinks] = useState<PayoutAccountLink[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [formSpec, setFormSpec] = useState<InitiateBankLinkOutput | null>(null);
-  const [externalAccountId, setExternalAccountId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [formSpec, setFormSpec] = useState<InitiatePayoutOnboardingOutput | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [showPennyDrop, setShowPennyDrop] = useState(false);
-  const [pennyDropAmount, setPennyDropAmount] = useState("");
-  const [validatingPennyDrop, setValidatingPennyDrop] = useState(false);
+  const [executeLoading, setExecuteLoading] = useState(false);
+  const [reconcileLoading, setReconcileLoading] = useState(false);
+  const [executeFormOpen, setExecuteFormOpen] = useState(false);
+
+  const form = useForm<Record<string, string>>({
+    defaultValues: {},
+    mode: "onBlur",
+  });
 
   useEffect(() => {
-    // Handle callback query params from provider redirect
+    if (formSpec) {
+      const defaults: Record<string, string> = {};
+      formSpec.fields?.forEach((field) => {
+        defaults[field] = "";
+      });
+      form.reset(defaults);
+    }
+  }, [formSpec, form]);
+
+  useEffect(() => {
     const linked = searchParams.get("linked");
     const error = searchParams.get("error");
     const externalAccountId = searchParams.get("externalAccountId");
@@ -67,9 +117,14 @@ export default function PayoutAccountsPage() {
 
   const fetchLinks = async () => {
     setLoading(true);
-    const result = await listBankLinks();
+    const result = await listPayoutAccountLinks();
     if (result.ok) {
-      setLinks(result.data ?? []);
+      setLinks(Array.isArray(result.data) ? result.data : []);
+    } else {
+      setMessage({
+        type: "error",
+        text: getErrorMessage(result.error) || "Failed to load payout accounts.",
+      });
     }
     setLoading(false);
   };
@@ -80,103 +135,137 @@ export default function PayoutAccountsPage() {
       typeof window !== "undefined"
         ? `${window.location.origin}/dashboard/payout-accounts`
         : "";
-    const result = await initiateBankLink({ redirectUri });
+    const input: InitiatePayoutOnboardingInput = {
+      providerCode: "razorpayx",
+      redirectUri,
+    };
+    const result = await initiatePayoutOnboarding(input);
     setLoading(false);
     if (result.ok && result.data) {
       if (result.data.type === "redirect" && result.data.url) {
         window.location.href = result.data.url;
       } else if (result.data.type === "form") {
         setFormSpec(result.data);
-        setFormData({});
+        setDialogOpen(true);
       } else {
         setMessage({ type: "error", text: "Unexpected response from provider." });
       }
     } else {
-      setMessage({ type: "error", text: "Failed to start linking. Please try again." });
+      setMessage({
+        type: "error",
+        text:
+          getErrorMessage(result.error) ||
+          "Failed to start payout onboarding. Please try again.",
+      });
+    }
+  };
+
+  const handleFormSubmit = async (data: Record<string, string>) => {
+    if (!formSpec) return;
+    setSubmitting(true);
+    const input: CompletePayoutOnboardingInput = {
+      onboardingId: formSpec.onboardingId,
+      accountHolderName: data.account_holder_name || undefined,
+      accountNumber: data.account_number || undefined,
+      ifsc: data.ifsc || undefined,
+    };
+    const result = await completePayoutOnboarding(input);
+    setSubmitting(false);
+    if (result.ok && result.data) {
+      setDialogOpen(false);
+      setFormSpec(null);
+      form.reset();
+      setMessage({
+        type: "success",
+        text: `Payout account linked (${result.data.providerReference}).`,
+      });
+      fetchLinks();
+    } else {
+      setMessage({
+        type: "error",
+        text:
+          getErrorMessage(result.error) ||
+          "Failed to complete payout onboarding. Please try again.",
+      });
     }
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    const result = await refreshBankLinkStatus();
+    const result = await listPayoutAccountLinks();
     setRefreshing(false);
     if (result.ok) {
-      setMessage({ type: "success", text: "Status refreshed." });
-      fetchLinks();
+      setMessage({ type: "success", text: "Payout accounts refreshed." });
+      setLinks(Array.isArray(result.data) ? result.data : []);
     } else {
-      setMessage({ type: "error", text: "Failed to refresh status." });
+      setMessage({
+        type: "error",
+        text: getErrorMessage(result.error) || "Failed to refresh payout accounts.",
+      });
     }
   };
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    const result = await completeBankLink({
-      accountHolderName: formData.accountHolderName || undefined,
-      accountNumber: formData.accountNumber || undefined,
-      ifsc: formData.ifsc || undefined,
-    });
-    setSubmitting(false);
+  const handleExecutePayout = async () => {
+    setExecuteLoading(true);
+    const input: ExecutePayoutInput = {
+      payoutAccountId: 0,
+      amount: 0,
+      currencyCode: "INR",
+      narration: "",
+      idempotencyKey: undefined,
+    };
+    const result = await executePayout(input);
+    setExecuteLoading(false);
     if (result.ok && result.data) {
-      setFormSpec(null);
-      setFormData({});
-      setExternalAccountId(result.data.externalAccountId || null);
-      setShowPennyDrop(true);
+      setExecuteFormOpen(false);
+      setMessage({
+        type: "success",
+        text: `Payout executed (${result.data.providerPayoutReference}, ${result.data.status}).`,
+      });
     } else {
-      setMessage({ type: "error", text: "Failed to complete bank link. Please try again." });
+      setMessage({
+        type: "error",
+        text: getErrorMessage(result.error) || "Failed to execute payout. Please try again.",
+      });
     }
   };
 
-  const handleValidatePennyDrop = async () => {
-    if (!externalAccountId) return;
-    const amount = parseFloat(pennyDropAmount);
-    if (!amount || amount <= 0) {
-      setMessage({ type: "error", text: "Please enter a valid amount." });
-      return;
-    }
-    setValidatingPennyDrop(true);
-    const result = await validatePennyDrop(externalAccountId, amount);
-    setValidatingPennyDrop(false);
-    if (result.ok) {
-      setShowPennyDrop(false);
-      setPennyDropAmount("");
-      setMessage({ type: "success", text: "Penny-drop validated. Account linked." });
-      fetchLinks();
+  const handleReconcile = async () => {
+    setReconcileLoading(true);
+    const input: ReconcilePayoutsInput = { statuses: undefined, limit: 100 };
+    const result = await reconcilePayouts(input);
+    setReconcileLoading(false);
+    if (result.ok && result.data) {
+      setMessage({
+        type: "success",
+        text: `Reconciled ${result.data.checked} payout(s), ${result.data.updated} updated.`,
+      });
     } else {
-      setMessage({ type: "error", text: "Penny-drop validation failed. Please try again." });
+      setMessage({
+        type: "error",
+        text: getErrorMessage(result.error) || "Reconciliation failed. Please try again.",
+      });
     }
   };
 
-  const handleSetPrimary = async (id: number) => {
-    const result = await setPrimaryBankLink(id);
-    if (result.ok) {
-      fetchLinks();
-    } else {
-      setMessage({ type: "error", text: "Failed to set primary account." });
-    }
-  };
-
-  const handleDelete = async (id: number) => {
+  const handleDelete = (id: number) => {
     if (!window.confirm("Unlink this payout account?")) return;
-    const result = await deleteBankLink(id);
-    if (result.ok) {
-      fetchLinks();
-    } else {
-      setMessage({ type: "error", text: "Failed to unlink account." });
-    }
+    setMessage({
+      type: "error",
+      text: "Unlinking a payout account is not yet supported. Please contact support.",
+    });
   };
 
   const dismissMessage = () => setMessage(null);
 
   return (
-    <div className="min-h-screen bg-white sm:bg-gray-50/50 p-0 sm:p-6 lg:p-8">
-      <header className="px-4 pt-6 sm:px-0 sm:pt-0 mb-6 sm:mb-8 font-outfit">
+    <div className="min-h-screen bg-white sm:bg-gray-50/50 p-0 sm:p-6 lg:p-8 font-outfit">
+      <header className="px-4 pt-6 sm:px-0 sm:pt-0 mb-6 sm:mb-8">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
           Payout Accounts
         </h1>
         <p className="text-gray-700 mt-1">
-          Link a bank account to receive payouts. Your bank and KYC details are
-          collected securely by our payment provider.
+          Link a bank account via RazorpayX to send and receive payouts.
         </p>
       </header>
 
@@ -203,84 +292,85 @@ export default function PayoutAccountsPage() {
         </div>
       )}
 
-      {formSpec && formSpec.type === "form" && (
-        <div className="max-w-md mx-auto mb-6">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">
-              Bank Details
-            </h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Enter your bank account details to link your payout account.
-            </p>
-            <form onSubmit={handleFormSubmit} className="space-y-4">
-              {formSpec.fields?.map((field) => (
-                <div key={field} className="space-y-2">
-                  <label
-                    className="block text-sm font-medium text-gray-700"
-                    htmlFor={field}
-                  >
-                    {field.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                  </label>
-                  <input
-                    id={field}
-                    name={field}
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    value={formData[field] || ""}
-                    onChange={(e) =>
-                      setFormData({ ...formData, [field]: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-              ))}
-              <Button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-[#fd6410] text-white"
-              >
-                {submitting ? "Linking…" : "Link Bank Account"}
-              </Button>
-            </form>
-          </div>
+      {/* Link bank account dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <div>
+          <Button
+            onClick={handleLinkAccount}
+            disabled={loading}
+            className="bg-[#fd6410] text-white"
+          >
+            {loading ? (
+              <>
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>Linking…</span>
+              </>
+            ) : (
+              <>
+                <CreditCard className="w-4 h-4" />
+                <span>Link Bank Account</span>
+              </>
+            )}
+          </Button>
         </div>
-      )}
-
-      {showPennyDrop && (
-        <div className="max-w-md mx-auto mb-6">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 sm:p-8">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">
-              Penny-Drop Confirmation
-            </h3>
-            <p className="text-sm text-gray-600 mb-4">
-              A small amount (₹1) has been deposited to your account.
-              Please confirm the amount to complete linking.
-            </p>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Amount deposited (₹)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                  value={pennyDropAmount}
-                  onChange={(e) => setPennyDropAmount(e.target.value)}
-                  required
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Link Bank Account</DialogTitle>
+            <DialogDescription>
+              Enter your bank account details to link your payout account via RazorpayX.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleFormSubmit)}
+              noValidate
+              className="space-y-4"
+            >
+              {formSpec?.fields?.map((field) => (
+                <FormField
+                  key={field}
+                  control={form.control}
+                  name={field}
+                  render={({ field: f }) => (
+                    <FormItem>
+                      <FormLabel required>{fieldLabel(field)}</FormLabel>
+                      <FormControl>
+                        <Input
+                          id={field}
+                          autoComplete="off"
+                          inputMode="text"
+                          {...f}
+                          required
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <Button
-                onClick={handleValidatePennyDrop}
-                disabled={validatingPennyDrop}
-                className="w-full bg-[#fd6410] text-white"
-              >
-                {validatingPennyDrop ? "Validating…" : "Confirm Amount"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+              ))}
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setDialogOpen(false);
+                    setFormSpec(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-[#fd6410] text-white"
+                >
+                  {submitting ? "Linking…" : "Link Bank Account"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
@@ -290,23 +380,6 @@ export default function PayoutAccountsPage() {
               Manage your payout destination accounts.
             </p>
           </div>
-          <Button
-            onClick={handleLinkAccount}
-            disabled={loading}
-            className="flex items-center gap-2 bg-[#fd6410] text-white"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Linking...</span>
-              </>
-            ) : (
-              <>
-                <CreditCard className="w-4 h-4" />
-                <span>Link Bank Account</span>
-              </>
-            )}
-          </Button>
         </div>
 
         <div className="bg-white rounded-[1.5rem] border border-gray-100 shadow-sm overflow-hidden">
@@ -400,39 +473,27 @@ export default function PayoutAccountsPage() {
                         )}
                       </td>
                       <td className="px-8 py-6 text-center">
-                        {link.isPrimary ? (
-                          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider">
-                            Primary
-                          </span>
-                        ) : (
-                          <Button
-                            onClick={() => handleSetPrimary(link.id)}
-                            size="sm"
-                            className="text-[10px] bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1.5"
-                          >
-                            Set Primary
-                          </Button>
-                        )}
+                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
+                          —
+                        </span>
                       </td>
                       <td className="px-8 py-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            onClick={() => handleDelete(link.id)}
-                            size="sm"
-                            variant="outline"
-                            className="text-[10px] px-3 py-1.5 text-red-600 border-red-100 hover:bg-red-50"
-                          >
-                            Unlink
-                          </Button>
-                          <Button
-                            onClick={handleRefresh}
-                            size="sm"
-                            disabled={refreshing}
-                            className="text-[10px] px-3 py-1.5"
-                          >
-                            <RefreshCw className="w-3 h-3" />
-                          </Button>
-                        </div>
+                        <Button
+                          onClick={() => handleDelete(link.id)}
+                          size="sm"
+                          variant="outline"
+                          className="text-[10px] px-3 py-1.5 text-red-600 border-red-100 hover:bg-red-50"
+                        >
+                          Unlink
+                        </Button>
+                        <Button
+                          onClick={handleRefresh}
+                          size="sm"
+                          disabled={refreshing}
+                          className="text-[10px] px-3 py-1.5"
+                        >
+                          <RefreshCw className="w-3 h-3" />
+                        </Button>
                       </td>
                     </tr>
                   ))
@@ -441,6 +502,14 @@ export default function PayoutAccountsPage() {
             </table>
           </div>
         </div>
+
+        <Button
+          onClick={handleReconcile}
+          disabled={reconcileLoading}
+          className="mt-6 text-[10px] px-3 py-1.5 text-gray-600 hover:bg-gray-100"
+        >
+          {reconcileLoading ? "Reconciling…" : "Reconcile Payouts"}
+        </Button>
       </div>
     </div>
   );
