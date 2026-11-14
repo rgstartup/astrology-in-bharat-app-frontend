@@ -8,8 +8,9 @@
 // Shares the `Result<T>` / `ApiError` contract with `safeFetch.ts` so
 // consumer code (`if (!res.ok) ... res.error ... else res.data`) is unchanged.
 
-import { ApiError, type ApiErrorBody, type FieldErrors } from "./error";
-import type { Result, SafeFetchInstanceConfig } from "./";
+import { ApiError, type ApiErrorBody, type FieldErrors } from "../core/error";
+import type { SafeFetchInstanceConfig } from "../core";
+import type { Result } from "../core/result";
 
 export interface UploadProgress {
   loaded: number;
@@ -134,7 +135,7 @@ export function createSafeFetchUploadInstance(
   config: SafeFetchInstanceConfig = {},
 ): SafeFetchUploadInstance {
   const instance: SafeFetchUploadInstance = {
-    upload<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    async upload<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
       url: string,
       body: FormData | File | Blob,
       init?: SafeUploadInit,

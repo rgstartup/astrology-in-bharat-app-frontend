@@ -4,19 +4,26 @@ export type {
   SafeFetchResultInstance,
   SafeFetchInstanceConfig,
   SafeFetchInit,
-} from "./safeFetch";
+} from "./core";
 
 export {
   default as safeFetch,
   safeFetchResult,
   createSafeFetchInstance,
   createSafeFetchResultInstance,
-} from "./safeFetch";
+} from "./core/safe-fetch";
 
 // Retry plugin (opt-in). Importing augments SafeFetchInit / SafeFetchInstanceConfig
 // with retry / retryIntervalMs / retryOn fields.
 export type { RetryConfig } from "./retry";
 export { withRetry, withRetryResult } from "./retry";
+
+// Envelope + retry wrapper (opt-in). Retries transient failures then unwraps
+// symmetric backend response envelope.
+export {
+  createSafeFetchRetryEnvelopeInstance,
+  safeFetchRetryEnvelope,
+} from "./retry";
 
 export {
   ApiError,
@@ -24,8 +31,8 @@ export {
   type ApiErrorOptions,
   type ApiErrorPayload,
   type FieldErrors,
-} from "./error";
-export type { Result } from "./result";
+} from "./core/error";
+export type { Result } from "./core/result";
 
 export {
   createSafeFetchUploadInstance,
@@ -35,5 +42,23 @@ export {
   type SafeFetchUploadInstance,
 } from "./upload";
 
-import safeFetch from "./safeFetch";
+// Envelope upload wrapper (opt-in). Unwraps symmetric backend response envelope
+// for XHR uploads.
+export {
+  createSafeFetchUploadEnvelopeInstance,
+  safeUploadEnvelope,
+} from "./upload";
+
+// Envelope wrapper (opt-in). Handles symmetric backend response envelope.
+export type {
+  EnvelopeResponse,
+  EnvelopeErrorPayload,
+  EnvelopeMeta,
+} from "./core/safe-fetch-result-envelope.instance";
+export {
+  EnvelopeError,
+  createSafeFetchEnvelopeInstance,
+} from "./core/safe-fetch-result-envelope.instance";
+
+import safeFetch from "./core/safe-fetch";
 export default safeFetch;

@@ -57,7 +57,7 @@ function cleanStack(
       lower.includes("executefetch") ||
       lower.includes("createsafefetchinstance") ||
       lower.includes("createsafefetchresultinstance") ||
-      lower.includes("any-signal") ||
+      lower.includes("signal.handler") ||
       lower.includes("body-parser");
 
     return !isInternal;

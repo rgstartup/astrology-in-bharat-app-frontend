@@ -1,4 +1,4 @@
-export default function anySignal(signals: AbortSignal[]): AbortSignal {
+export default function signalHandler(signals: AbortSignal[]): AbortSignal {
   const controller = new AbortController();
 
   const onAbort = () => controller.abort();

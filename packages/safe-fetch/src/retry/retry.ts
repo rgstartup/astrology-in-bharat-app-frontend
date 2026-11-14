@@ -4,15 +4,15 @@
 // with retry fields (opt-in types) and provides `withRetry` / `withRetryResult`
 // wrappers. No retry logic lives in `safeFetch.ts`.
 
-import { ApiError, type ApiErrorBody } from "./error";
+import { ApiError, type ApiErrorBody } from "../core/error";
 import type {
   LegacyResult,
   SafeFetchInstance,
   SafeFetchInit,
   SafeFetchInstanceConfig,
-} from "./safeFetch";
-import type { Result } from "./result";
-import type { SafeFetchResultInstance } from "./safeFetch";
+} from "../core";
+import type { Result } from "../core/result";
+import type { SafeFetchResultInstance } from "../core";
 
 /** Retry configuration. Applied per request (`init`) or per instance (`config`). */
 export interface RetryConfig {
@@ -30,7 +30,7 @@ export interface RetryConfig {
 
 // ---- Opt-in type augmentation (only when this plugin is imported) ----
 
-declare module "./safeFetch" {
+declare module "../core" {
   interface SafeFetchInit extends RetryConfig {}
   interface SafeFetchInstanceConfig extends RetryConfig {}
 }
