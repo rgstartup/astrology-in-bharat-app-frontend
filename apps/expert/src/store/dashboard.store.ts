@@ -72,7 +72,7 @@ export const useDashboardStore = create<DashboardState>()((set, get) => ({
         set({ ratingStats: statsResult.data });
       }
       if (reviewsResult.ok) {
-        const expertReviews: ExpertReview[] = reviewsResult.data.data || [];
+        const expertReviews: ExpertReview[] = reviewsResult.data || [];
         const mappedReviews: Review[] = expertReviews.map(
           (r: ExpertReview) => ({
             id: r.id,
@@ -87,7 +87,9 @@ export const useDashboardStore = create<DashboardState>()((set, get) => ({
         );
         set({
           reviews: mappedReviews,
-          reviewsTotal: reviewsResult.data.meta.total || 0,
+          reviewsTotal: Array.isArray(reviewsResult.data)
+            ? reviewsResult.data.length
+            : 0,
         });
       }
       if (dStatsResult.ok) set({ dashboardStats: dStatsResult.data });

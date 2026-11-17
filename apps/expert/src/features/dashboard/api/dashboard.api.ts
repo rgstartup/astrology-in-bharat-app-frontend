@@ -37,7 +37,7 @@ export async function getDashboardStats(
   );
   if (!result.ok) return result;
 
-  const data = result.data.data;
+  const data = result.data;
   return {
     ok: true,
     data: {
