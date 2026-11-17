@@ -25,8 +25,3 @@ export {
   startPresenceHeartbeat,
   stopPresenceHeartbeat,
 } from "./presence.socket";
-export {
-  getNotificationSocket,
-  connectNotificationSocket,
-  disconnectNotificationSocket,
-} from "./notification.socket";

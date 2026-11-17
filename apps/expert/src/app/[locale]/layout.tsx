@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 
 import { AuthProvider, ReactQueryProvider } from "@/providers";
 import { RealtimeProvider } from "@/realtime/socket-provider";
+import { NotificationProvider } from "@/features/notifications";
 import { cn } from "@/lib/cn";
 
 import "@repo/design/styles";
@@ -46,7 +47,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ReactQueryProvider>
             <AuthProvider>
               <RealtimeProvider>
-                {children}
+                <NotificationProvider>
+                  {children}
+                </NotificationProvider>
                 <ToastContainer position="top-right" />
                 <ToastContainer containerId="notification" position="bottom-right" />
               </RealtimeProvider>

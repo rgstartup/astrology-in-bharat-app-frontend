@@ -4,12 +4,12 @@ import React, { FC } from "react";
 import { Clock, Mail, Trash2 } from "@repo/design/lucide";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/cn";
-import { AppNotification } from "@/types/notification";
+import { ExpertNotification } from "@/features/notifications";
 
 interface NotificationItemProps {
-    notification: AppNotification;
-    onMarkRead: (id: string) => void;
-    onDelete: (id: string) => void;
+    notification: ExpertNotification;
+    onMarkRead: (id: number) => void;
+    onDelete: (id: number) => void;
 }
 
 export const NotificationItem: FC<NotificationItemProps> = ({ 
@@ -35,12 +35,12 @@ export const NotificationItem: FC<NotificationItemProps> = ({
                 <div
                     className={cn(
                         "w-12 h-12 flex items-center justify-center rounded-xl transition-transform group-hover:scale-110 shrink-0",
-                        notification.read
+                        notification.isRead
                             ? "bg-gray-100 text-gray-400"
                             : "bg-orange text-white"
                     )}
                 >
-                    {notification.read ? (
+                    {notification.isRead ? (
                         <Mail className="w-5 h-5" />
                     ) : (
                         <Mail className="w-5 h-5" />
@@ -59,7 +59,7 @@ export const NotificationItem: FC<NotificationItemProps> = ({
                         className="text-gray-500 text-sm mb-3 leading-relaxed line-clamp-2"
                         style={{ lineHeight: "1.5" }}
                     >
-                        {notification.description}
+                        {notification.message}
                     </p>
                     <span className="flex items-center gap-2 text-[10px] text-orange font-bold uppercase tracking-widest">
                         <Clock className="w-3.5 h-3.5" />
