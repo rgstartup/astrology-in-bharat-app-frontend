@@ -64,5 +64,7 @@ export const API_ROUTES = {
     LINKS: "/expert/payout-accounts/links",
     PAYOUT: "/expert/payout-accounts/payout",
     RECONCILE: "/expert/payout-accounts/reconcile",
+    REMOVE: (id: number) => `/expert/payout-accounts/${id}`,
+    SET_PRIMARY: (id: number) => `/expert/payout-accounts/${id}/set-primary`,
   },
 } as const;

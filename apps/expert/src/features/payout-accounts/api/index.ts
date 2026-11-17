@@ -4,6 +4,8 @@ export {
   listPayoutAccountLinks,
   executePayout,
   reconcilePayouts,
+  removePayoutAccount,
+  setPrimaryPayoutAccount,
   type InitiatePayoutOnboardingInput,
   type InitiatePayoutOnboardingOutput,
   type CompletePayoutOnboardingInput,

@@ -32,6 +32,8 @@ import {
   listPayoutAccountLinks,
   executePayout,
   reconcilePayouts,
+  removePayoutAccount,
+  setPrimaryPayoutAccount,
   type InitiatePayoutOnboardingInput,
   type InitiatePayoutOnboardingOutput,
   type CompletePayoutOnboardingInput,
@@ -74,10 +76,13 @@ export default function PayoutAccountsPage() {
     text: string;
   } | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [formSpec, setFormSpec] = useState<InitiatePayoutOnboardingOutput | null>(null);
+  const [formSpec, setFormSpec] =
+    useState<InitiatePayoutOnboardingOutput | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [executeLoading, setExecuteLoading] = useState(false);
   const [reconcileLoading, setReconcileLoading] = useState(false);
+  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [settingPrimaryId, setSettingPrimaryId] = useState<number | null>(null);
   const [executeFormOpen, setExecuteFormOpen] = useState(false);
 
   const form = useForm<Record<string, string>>({
@@ -123,7 +128,8 @@ export default function PayoutAccountsPage() {
     } else {
       setMessage({
         type: "error",
-        text: getErrorMessage(result.error) || "Failed to load payout accounts.",
+        text:
+          getErrorMessage(result.error) || "Failed to load payout accounts.",
       });
     }
     setLoading(false);
@@ -148,7 +154,10 @@ export default function PayoutAccountsPage() {
         setFormSpec(result.data);
         setDialogOpen(true);
       } else {
-        setMessage({ type: "error", text: "Unexpected response from provider." });
+        setMessage({
+          type: "error",
+          text: "Unexpected response from provider.",
+        });
       }
     } else {
       setMessage({
@@ -200,7 +209,8 @@ export default function PayoutAccountsPage() {
     } else {
       setMessage({
         type: "error",
-        text: getErrorMessage(result.error) || "Failed to refresh payout accounts.",
+        text:
+          getErrorMessage(result.error) || "Failed to refresh payout accounts.",
       });
     }
   };
@@ -225,7 +235,9 @@ export default function PayoutAccountsPage() {
     } else {
       setMessage({
         type: "error",
-        text: getErrorMessage(result.error) || "Failed to execute payout. Please try again.",
+        text:
+          getErrorMessage(result.error) ||
+          "Failed to execute payout. Please try again.",
       });
     }
   };
@@ -243,17 +255,56 @@ export default function PayoutAccountsPage() {
     } else {
       setMessage({
         type: "error",
-        text: getErrorMessage(result.error) || "Reconciliation failed. Please try again.",
+        text:
+          getErrorMessage(result.error) ||
+          "Reconciliation failed. Please try again.",
       });
     }
   };
 
-  const handleDelete = (id: number) => {
-    if (!window.confirm("Unlink this payout account?")) return;
-    setMessage({
-      type: "error",
-      text: "Unlinking a payout account is not yet supported. Please contact support.",
-    });
+  const handleRemove = async (id: number) => {
+    const link = links.find((l) => l.id === id);
+    if (!link) return;
+    if (
+      !window.confirm(`Unlink payout account ${link.externalAccountId ?? id}?`)
+    )
+      return;
+    setRemovingId(id);
+    try {
+      const result = await removePayoutAccount(id);
+      if (result.ok) {
+        setMessage({ type: "success", text: "Payout account removed." });
+        fetchLinks();
+      } else {
+        setMessage({
+          type: "error",
+          text:
+            getErrorMessage(result.error) || "Failed to remove payout account.",
+        });
+      }
+    } finally {
+      setRemovingId(null);
+    }
+  };
+
+  const handleSetPrimary = async (id: number) => {
+    setSettingPrimaryId(id);
+    try {
+      const result = await setPrimaryPayoutAccount(id);
+      if (result.ok) {
+        setMessage({ type: "success", text: "Set as primary payout account." });
+        fetchLinks();
+      } else {
+        setMessage({
+          type: "error",
+          text:
+            getErrorMessage(result.error) ||
+            "Failed to set primary payout account.",
+        });
+      }
+    } finally {
+      setSettingPrimaryId(null);
+    }
   };
 
   const dismissMessage = () => setMessage(null);
@@ -317,7 +368,8 @@ export default function PayoutAccountsPage() {
           <DialogHeader>
             <DialogTitle>Link Bank Account</DialogTitle>
             <DialogDescription>
-              Enter your bank account details to link your payout account via RazorpayX.
+              Enter your bank account details to link your payout account via
+              RazorpayX.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -399,10 +451,10 @@ export default function PayoutAccountsPage() {
               <thead>
                 <tr className="bg-gray-50/50 border-b border-gray-50">
                   <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest">
-                    Provider
-                  </th>
-                  <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest">
                     Account
+                  </th>
+                  <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest text-center">
+                    IFSC
                   </th>
                   <th className="px-8 py-5 text-[10px] font-black text-gray-700 uppercase tracking-widest text-center">
                     Status
@@ -418,7 +470,7 @@ export default function PayoutAccountsPage() {
               <tbody className="divide-y divide-gray-50">
                 {links.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="p-20 text-center">
+                    <td colSpan={4} className="p-20 text-center">
                       <p className="text-[12px] font-bold text-gray-700">
                         No payout accounts linked
                       </p>
@@ -434,37 +486,43 @@ export default function PayoutAccountsPage() {
                       className="relative hover:bg-gray-50/80 transition-all duration-300 group border-b border-gray-50 sm:border-none last:border-0"
                     >
                       <td className="px-8 py-6">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-                            <CreditCard className="w-5 h-5" />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-[13px] font-bold text-gray-900 group-hover:text-black transition-colors">
-                              {link.paymentProvider}
-                            </span>
-                            <span className="text-[11px] text-gray-500">
-                              {link.providerProduct}
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-8 py-6">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-1">
                           <span className="text-[13px] font-bold text-gray-900">
-                            {link.externalAccountId ?? "—"}
+                            {link.accountNumberMasked
+                              ? `•••• ${link.accountNumberMasked}`
+                              : (link.externalAccountId ?? "—")}
                           </span>
+                          {link.ifsc && (
+                            <span className="text-[11px] text-gray-500 font-mono">
+                              {link.ifsc}
+                            </span>
+                          )}
                           <span className="text-[11px] text-gray-500">
-                            Created {new Date(link.createdAt).toLocaleDateString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })}
+                            Created{" "}
+                            {new Date(link.createdAt).toLocaleDateString(
+                              "en-IN",
+                              {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              },
+                            )}
                           </span>
                         </div>
                       </td>
                       <td className="px-8 py-6 text-center">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${STATUS_CONFIG[link.onboardingStatus]?.color ?? "bg-gray-100 text-gray-700"}`}>
-                          {STATUS_CONFIG[link.onboardingStatus]?.label ?? link.onboardingStatus}
+                        <span
+                          className={`text-[11px] font-mono font-bold ${link.ifsc ? "text-gray-700" : "text-gray-400"}`}
+                        >
+                          {link.ifsc ?? "—"}
+                        </span>
+                      </td>
+                      <td className="px-8 py-6 text-center">
+                        <span
+                          className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${STATUS_CONFIG[link.onboardingStatus]?.color ?? "bg-gray-100 text-gray-700"}`}
+                        >
+                          {STATUS_CONFIG[link.onboardingStatus]?.label ??
+                            link.onboardingStatus}
                         </span>
                         {link.accountStatus && (
                           <span className="text-[10px] text-gray-500 block mt-1">
@@ -473,19 +531,43 @@ export default function PayoutAccountsPage() {
                         )}
                       </td>
                       <td className="px-8 py-6 text-center">
-                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
-                          —
-                        </span>
+                        {link.isPrimary ? (
+                          <span className="px-3 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-bold uppercase tracking-wider border border-green-100">
+                            Primary
+                          </span>
+                        ) : (
+                          <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
+                            —
+                          </span>
+                        )}
                       </td>
-                      <td className="px-8 py-6 text-right">
+                      <td className="px-8 py-6 text-right space-x-1">
                         <Button
-                          onClick={() => handleDelete(link.id)}
+                          onClick={() => handleRemove(link.id)}
                           size="sm"
+                          disabled={removingId === link.id}
                           variant="outline"
                           className="text-[10px] px-3 py-1.5 text-red-600 border-red-100 hover:bg-red-50"
                         >
-                          Unlink
+                          {removingId === link.id
+                            ? "Removing…"
+                            : link.isPrimary
+                              ? "Primary"
+                              : "Unlink"}
                         </Button>
+                        {!link.isPrimary && (
+                          <Button
+                            onClick={() => handleSetPrimary(link.id)}
+                            size="sm"
+                            disabled={settingPrimaryId === link.id}
+                            variant="outline"
+                            className="text-[10px] px-3 py-1.5 text-gray-700 border-gray-100 hover:bg-gray-100"
+                          >
+                            {settingPrimaryId === link.id
+                              ? "Setting…"
+                              : "Set Primary"}
+                          </Button>
+                        )}
                         <Button
                           onClick={handleRefresh}
                           size="sm"

@@ -41,6 +41,9 @@ export interface PayoutAccountLink {
   isPrimary: boolean;
   activatedAt: string | null;
   createdAt: string;
+  accountNumberMasked: string | null;
+  bankName: string | null;
+  ifsc: string | null;
 }
 
 export interface InitiatePayoutOnboardingOutput {
@@ -155,4 +158,28 @@ export async function reconcilePayouts(
   );
   if (!result.ok) return { ok: false, error: result.error };
   return { ok: true, data: result.data };
+}
+
+/** Remove (unlink) a payout account from the expert. */
+export async function removePayoutAccount(
+  payoutAccountId: number,
+): Promise<{ ok: boolean; error?: unknown }> {
+  const result = await api.delete<{ removed: boolean }>(
+    API_ROUTES.PAYOUT_ACCOUNTS.REMOVE(payoutAccountId),
+    { body: { payoutAccountId } },
+  );
+  if (!result.ok) return { ok: false, error: result.error };
+  return { ok: true };
+}
+
+/** Set a payout account as the expert's primary. */
+export async function setPrimaryPayoutAccount(
+  payoutAccountId: number,
+): Promise<{ ok: boolean; error?: unknown }> {
+  const result = await api.post<{ set: boolean }>(
+    API_ROUTES.PAYOUT_ACCOUNTS.SET_PRIMARY(payoutAccountId),
+    { body: { payoutAccountId } },
+  );
+  if (!result.ok) return { ok: false, error: result.error };
+  return { ok: true };
 }
