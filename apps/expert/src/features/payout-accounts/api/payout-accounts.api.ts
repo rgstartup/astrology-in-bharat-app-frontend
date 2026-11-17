@@ -123,15 +123,15 @@ export async function listPayoutAccountLinks(): Promise<{
   data?: PayoutAccountLink[];
   error?: unknown;
 }> {
-  const result = await api.get<PayoutAccountLink[]>(API_ROUTES.PAYOUT_ACCOUNTS.LINKS);
+  const result = await api.get<PayoutAccountLink[]>(
+    API_ROUTES.PAYOUT_ACCOUNTS.LINKS,
+  );
   if (!result.ok) return { ok: false, error: result.error };
   return { ok: true, data: result.data };
 }
 
 /** Execute a payout from the expert's linked payout account. */
-export async function executePayout(
-  input: ExecutePayoutInput,
-): Promise<{
+export async function executePayout(input: ExecutePayoutInput): Promise<{
   ok: boolean;
   data?: ExecutePayoutOutput;
   error?: unknown;
@@ -176,10 +176,11 @@ export async function removePayoutAccount(
 export async function setPrimaryPayoutAccount(
   payoutAccountId: number,
 ): Promise<{ ok: boolean; error?: unknown }> {
-  const result = await api.post<{ set: boolean }>(
-    API_ROUTES.PAYOUT_ACCOUNTS.SET_PRIMARY(payoutAccountId),
-    { body: { payoutAccountId } },
-  );
+  const apiURL = API_ROUTES.PAYOUT_ACCOUNTS.SET_PRIMARY(payoutAccountId);
+
+  console.log({ apiURL });
+
+  const result = await api.post<{ set: boolean }>(apiURL);
   if (!result.ok) return { ok: false, error: result.error };
   return { ok: true };
 }
