@@ -2,11 +2,7 @@
 
 import api from "@/api/api";
 import type { Result } from "@repo/safe-fetch";
-import type {
-  DashboardStats,
-  DashboardStatsResponse,
-  GetDashboardStatsParams,
-} from "@repo/lib";
+import type { DashboardStats, GetDashboardStatsParams } from "@repo/lib";
 import { API_ROUTES } from "@/utils/api.routes";
 
 /**
@@ -32,7 +28,7 @@ export async function getDashboardStats(
   if (startDate) query.set("startDate", startDate);
   if (endDate) query.set("endDate", endDate);
 
-  const result = await api.get<DashboardStatsResponse>(
+  const result = await api.get<DashboardStats>(
     `${API_ROUTES.DASHBOARD.STATS}?${query.toString()}`,
   );
   if (!result.ok) return result;

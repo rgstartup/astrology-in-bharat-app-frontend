@@ -26,7 +26,6 @@ const Page = () => {
   const {
     ratingStats,
     reviews,
-    reviewsTotal,
     dashboardStats,
     loading,
     isModalOpen,
@@ -53,7 +52,7 @@ const Page = () => {
     },
     {
       title: "Reviews",
-      value: (reviewsTotal || dashboardStats?.total_reviews || 0).toString(),
+      value: (dashboardStats?.total_reviews || 0).toString(),
       trend: { value: "Feedback", isPositive: true, period: "total" },
       icon: CheckCircle,
       iconBgColor: "bg-green-100",
@@ -141,10 +140,7 @@ const Page = () => {
           />
           {!loading && reviews.length > 0 && (
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-500">
-              <ReviewsList
-                initialReviews={reviews}
-                initialTotal={reviewsTotal}
-              />
+              <ReviewsList initialReviews={reviews} />
             </div>
           )}
         </div>

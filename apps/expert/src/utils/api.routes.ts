@@ -45,7 +45,7 @@ export const API_ROUTES = {
   },
   REVIEWS: {
     LIST: "/expert/me/reviews",
-    STATS: "/expert/me/stats",
+    STATS: "/expert/me/reviews/stats",
     REPLY: (id: string) => `/expert/reviews/${id}/reply`,
   },
   BANK_LINKS: {

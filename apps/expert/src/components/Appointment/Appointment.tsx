@@ -50,7 +50,7 @@ export default function AppointmentsPage() {
         api.get<any>("/call/sessions/appointments/completed"),
         api.get<any>("/puja-appointments/expert"),
         getReviews(1, 50),
-        getDashboardStats('today')
+        getDashboardStats('daily')
       ]);
 
       const getSessions = (result: any) => {
@@ -69,7 +69,7 @@ export default function AppointmentsPage() {
       const allSessions: any[] = [...chatPending, ...chatCompleted, ...callPending, ...callCompleted, ...pujaSessions];
       
       const reviews: ExpertReview[] =
-        reviewsRes.ok && reviewsRes.data ? reviewsRes.data.data : [];
+        reviewsRes.ok && reviewsRes.data ? reviewsRes.data : [];
 
       // Deduplicate sessions by ID and Source (since IDs might overlap between chat and call)
       const uniqueSessionsMap = new Map();

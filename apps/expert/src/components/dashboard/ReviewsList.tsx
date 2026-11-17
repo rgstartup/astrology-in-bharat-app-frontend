@@ -3,36 +3,32 @@
 import React, { useState, useCallback } from "react";
 import { Star, User, ChevronDown } from "@repo/design/lucide";
 import { Review, getReviews } from "@/features/dashboard/api";
-import type { ExpertReview, ExpertReviewsResponse } from "@repo/lib";
+import type { ExpertReview } from "@repo/lib";
 import { Loading } from "@repo/ui";
 
 const PAGE_SIZE = 10;
 
 interface ReviewsListProps {
     initialReviews?: Review[];
-    initialTotal?: number;
 }
 
 export const ReviewsList: React.FC<ReviewsListProps> = ({
     initialReviews = [],
-    initialTotal = 0,
 }) => {
     const [reviews, setReviews] = useState<Review[]>(initialReviews);
-    const [total, setTotal] = useState(initialTotal);
     const [page, setPage] = useState(1);
     const [loadingMore, setLoadingMore] = useState(false);
-
-    const hasMore = reviews.length < total;
+    const [hasMore, setHasMore] = useState(initialReviews.length >= PAGE_SIZE);
 
     const handleLoadMore = useCallback(async () => {
-        if (loadingMore) return;
+        if (loadingMore || !hasMore) return;
         setLoadingMore(true);
         try {
             const nextPage = page + 1;
             const result = await getReviews(nextPage, PAGE_SIZE);
             if (!result.ok) throw new Error(result.error.message);
             
-            const expertReviews: ExpertReview[] = result.data.data || [];
+            const expertReviews: ExpertReview[] = result.data || [];
             const newReviews: Review[] = expertReviews.map((r: ExpertReview) => ({
               id: r.id,
               rating: r.rating,
@@ -48,14 +44,14 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
                 const unique = newReviews.filter(r => !existingIds.has(r.id));
                 return [...prev, ...unique];
             });
-            setTotal(result.data.meta.total ?? total);
+            setHasMore(expertReviews.length === PAGE_SIZE);
             setPage(nextPage);
         } catch (err) {
             console.error("Failed to load more reviews", err);
         } finally {
             setLoadingMore(false);
         }
-    }, [page, loadingMore, total]);
+    }, [page, loadingMore, hasMore]);
 
     if (reviews.length === 0) {
         return (
@@ -69,11 +65,9 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({
         <div className="space-y-4">
             <div className="flex items-center justify-between mb-2 sticky top-0 bg-white z-10 pb-2 border-b border-gray-50 -mt-2 pt-2">
                 <h4 className="font-semibold text-gray-900">Recent Reviews</h4>
-                {total > 0 && (
-                    <span className="text-xs text-gray-700 font-medium">
-                        Showing {reviews.length} of {total}
-                    </span>
-                )}
+                <span className="text-xs text-gray-700 font-medium">
+                    Showing {reviews.length} reviews
+                </span>
             </div>
 
             <div className="overflow-y-auto pr-2 custom-scrollbar-yellow" style={{ maxHeight: '300px' }}>
