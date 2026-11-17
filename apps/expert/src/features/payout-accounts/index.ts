@@ -7,3 +7,4 @@ export * from "./components/payout-account-actions.component";
 export * from "./components/payout-account-row.component";
 export * from "./components/payout-accounts-table.component";
 export * from "./components/payout-accounts-dialog.component";
+export * from "./components/error-boundary.component";

@@ -8,6 +8,7 @@ import {
   PayoutMessageBanner,
   PayoutAccountsDialog,
   PayoutAccountsTable,
+  PayoutAccountsErrorBoundary,
   removePayoutAccount,
   setPrimaryPayoutAccount,
   executePayout,
@@ -221,15 +222,23 @@ export default function PayoutAccountsPage() {
             </Button>
           </div>
 
-          <PayoutAccountsTable
-            links={links}
-            removingId={removingId}
-            settingPrimaryId={settingPrimaryId}
-            onRemove={handleRemove}
-            onSetPrimary={handleSetPrimary}
-            onRefresh={handleRefresh}
-            refreshing={refreshing}
-          />
+          <PayoutAccountsErrorBoundary
+            fallback={
+              <div className="p-8 text-center text-red-600">
+                <p>Something went wrong loading your payout accounts.</p>
+              </div>
+            }
+          >
+            <PayoutAccountsTable
+              links={links}
+              removingId={removingId}
+              settingPrimaryId={settingPrimaryId}
+              onRemove={handleRemove}
+              onSetPrimary={handleSetPrimary}
+              onRefresh={handleRefresh}
+              refreshing={refreshing}
+            />
+          </PayoutAccountsErrorBoundary>
         </div>
 
         <Button
