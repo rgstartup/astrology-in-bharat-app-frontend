@@ -3,7 +3,7 @@
  */
 
 // Re-export all shared UI components from ui/ (Button, Card, Input, etc.)
-export * from "../ui";
+export * from "../ui/index";
 
 // Radix-backed primitives
 export {
@@ -18,3 +18,13 @@ export {
   AlertDialogTitle,
   AlertDialogDescription,
 } from "./alert-dialog";
+
+// Sonner Toast (Radix UI variant)
+export {
+  Toaster,
+  toast,
+  type ToasterProps,
+  Toaster as SonnerToaster,
+  toast as sonnerToast,
+  type ToasterProps as SonnerToasterProps,
+} from "./sonner";

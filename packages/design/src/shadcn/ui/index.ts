@@ -115,8 +115,3 @@ export {
   type ToastVariant,
   type CustomToastData,
 } from "./toast";
-export {
-  Toaster as SonnerToaster,
-  toast as sonnerToast,
-  type ToasterProps as SonnerToasterProps,
-} from "./sonner";

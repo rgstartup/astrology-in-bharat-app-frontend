@@ -65,7 +65,7 @@ Direct component imports map via package.json:
 ```tsx
 import { Button } from "@repo/design/shadcn/button";
 import { Progress } from "@repo/design/shadcn/progress";
-import { Toaster, toast } from "@repo/design/shadcn/sonner";
+import { Toaster, toast } from "@repo/design/shadcn/radix/sonner";
 ```
 
 ---
@@ -75,6 +75,8 @@ import { Toaster, toast } from "@repo/design/shadcn/sonner";
 When writing UI or switching variants, observe these API differences:
 
 | Feature | Base UI (`@repo/design/shadcn/base`) | Radix UI (`@repo/design/shadcn/radix`) |
+| :--- | :--- | :--- |
+| **Toast System** | `@base-ui/react/toast` (`import { Toaster } from "@repo/design/shadcn"`) | `sonner` (`import { Toaster } from "@repo/design/shadcn/radix"`) |
 | :--- | :--- | :--- |
 | **Trigger Composition** | `render={<Button />}` (+ `nativeButton={false}`) | `asChild` + `<Button>` |
 | **Select Data Flow** | Root `items={[...]}` array prop | Child `<SelectItem>` tags only |

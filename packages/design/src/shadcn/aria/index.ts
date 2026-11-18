@@ -3,4 +3,4 @@
  */
 
 // Re-export all shared UI components from ui/
-export * from "../ui";
+export * from "../ui/index";
