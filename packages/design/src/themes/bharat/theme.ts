@@ -1,5 +1,5 @@
-import { colors } from "./primitives/colors";
-import type { DesignTheme } from "./types";
+import { colors } from "./colors";
+import type { DesignTheme } from "../types";
 
 export const bharatTheme: DesignTheme = {
   name: "bharat",
@@ -59,32 +59,34 @@ export const bharatTheme: DesignTheme = {
     secondary: "#301e24",
     secondaryForeground: colors.emerald[300], // #6ee7b7
     muted: "#301e24",
-    mutedForeground: colors.brown[400], // #c0adb3
-    accent: "#49343b",
+    mutedForeground: colors.brown[400],
+    accent: "#301e24",
     accentForeground: colors.neutral.gray[50],
-    accentGold: colors.gold[300],
-    destructive: colors.status.destructiveDark,
+    accentGold: colors.gold[400],
+    destructive: colors.status.destructive,
     destructiveForeground: colors.neutral.white,
-    border: "#49343b",
-    input: "#634b54",
+    border: "#432830",
+    input: "#432830",
     ring: colors.saffron[500],
-    brandSaffron: colors.saffron[500],
-    brandSaffronStrong: colors.saffron[400],
-    brandEmerald: colors.emerald[300],
-    brandBrown: colors.neutral.gray[50],
+    brandSaffron: colors.saffron[400],
+    brandSaffronStrong: colors.saffron[500],
+    brandEmerald: colors.emerald[400],
+    brandBrown: colors.brown[200],
     brandBrownMuted: colors.brown[400],
     sidebar: "#1c1014",
     sidebarForeground: colors.neutral.gray[50],
-    sidebarPrimary: "#49343b",
+    sidebarPrimary: "#301e24",
     sidebarPrimaryForeground: colors.neutral.gray[50],
     sidebarAccent: "#301e24",
     sidebarAccentForeground: colors.neutral.gray[50],
-    sidebarBorder: "#49343b",
+    sidebarBorder: "#432830",
     sidebarRing: colors.brown[400],
     chart1: colors.saffron[500],
-    chart2: colors.emerald[300],
-    chart3: colors.neutral.gray[50],
-    chart4: colors.brown[400],
-    chart5: "#9c858e",
+    chart2: colors.emerald[400],
+    chart3: colors.brown[400],
+    chart4: colors.brown[300],
+    chart5: "#d4b8be",
   },
 };
+
+export default bharatTheme;

@@ -1,5 +1,5 @@
-import { colors } from "./primitives/colors";
-import type { DesignTheme } from "./types";
+import { colors } from "./colors";
+import type { DesignTheme } from "../types";
 
 export const vedicTheme: DesignTheme = {
   name: "vedic",
@@ -61,30 +61,32 @@ export const vedicTheme: DesignTheme = {
     muted: "#241215",
     mutedForeground: colors.brown[400],
     accent: "#3d1a1e",
-    accentForeground: colors.gold[200],
+    accentForeground: colors.neutral.gray[50],
     accentGold: colors.gold[400],
-    destructive: colors.status.destructiveDark,
+    destructive: colors.status.destructive,
     destructiveForeground: colors.neutral.white,
-    border: "#3d1a1e",
-    input: "#4f2227",
-    ring: colors.gold[500],
-    brandSaffron: colors.saffron[500],
-    brandSaffronStrong: colors.saffron[400],
-    brandEmerald: colors.emerald[300],
-    brandBrown: colors.neutral.gray[50],
+    border: "#4a242a",
+    input: "#4a242a",
+    ring: colors.saffron[500],
+    brandSaffron: colors.saffron[400],
+    brandSaffronStrong: colors.saffron[500],
+    brandEmerald: colors.emerald[400],
+    brandBrown: colors.brown[200],
     brandBrownMuted: colors.brown[400],
     sidebar: "#160b0d",
     sidebarForeground: colors.neutral.gray[50],
-    sidebarPrimary: "#3d1a1e",
+    sidebarPrimary: "#241215",
     sidebarPrimaryForeground: colors.neutral.gray[50],
-    sidebarAccent: "#241215",
+    sidebarAccent: "#3d1a1e",
     sidebarAccentForeground: colors.neutral.gray[50],
-    sidebarBorder: "#3d1a1e",
-    sidebarRing: colors.gold[400],
-    chart1: colors.saffron[500],
+    sidebarBorder: "#4a242a",
+    sidebarRing: colors.saffron[400],
+    chart1: colors.saffron[400],
     chart2: colors.gold[400],
-    chart3: colors.neutral.gray[50],
-    chart4: colors.emerald[300],
-    chart5: colors.brown[400],
+    chart3: colors.brown[300],
+    chart4: colors.emerald[400],
+    chart5: "#c49a9e",
   },
 };
+
+export default vedicTheme;

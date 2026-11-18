@@ -18,4 +18,9 @@ export {
 };
 
 export * from "./types";
-export * from "./primitives";
+
+// Re-export Bharat primitives as default tokens
+export * from "./bharat/colors";
+export * from "./bharat/radii";
+export * from "./bharat/shadows";
+export * from "./bharat/typography";

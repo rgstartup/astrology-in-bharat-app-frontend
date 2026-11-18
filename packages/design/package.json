@@ -10,8 +10,11 @@
   ],
   "exports": {
     "./tailwind": "./src/tailwind/index.ts",
-    "./tokens": "./src/themes/primitives/index.ts",
+    "./tokens": "./src/themes/bharat/index.ts",
     "./themes": "./src/themes/index.ts",
+    "./themes/bharat": "./src/themes/bharat/index.ts",
+    "./themes/vedic": "./src/themes/vedic/index.ts",
+    "./themes/*": "./src/themes/*/index.ts",
     "./styles": {
       "types": "./styles/index.d.ts",
       "default": "./styles/index.css"
