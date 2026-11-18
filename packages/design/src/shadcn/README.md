@@ -32,21 +32,25 @@ frontend/packages/design/src/shadcn/
 
 Consumer applications (`apps/client`, `apps/expert`) consume components via `@repo/design/shadcn`.
 
-### Default Import (Base UI)
+> **Core Import Rule:**
+> * Root `@repo/design/shadcn` strictly exports from `base/` (Base UI: `@base-ui/react`).
+> * If an application requires a **Radix UI** or **React Aria** component, import explicitly via `/radix` or `/aria`.
+
+### Default Import (Resolves to Base UI)
 ```tsx
 import { Button, Dialog, Card } from "@repo/design/shadcn";
 ```
 
 ### Explicit Variant Imports
-Choose primitive engine explicitly:
+Use explicit subpaths when opting into a specific variant:
 ```tsx
-// Base UI (@base-ui/react)
+// Base UI (@base-ui/react) — identical to default root import
 import { Dialog, Button, Card } from "@repo/design/shadcn/base";
 
 // Radix UI (@radix-ui/react-*)
 import { Dialog, Button, Card } from "@repo/design/shadcn/radix";
 
-// React Aria Components
+// React Aria Components (react-aria-components)
 import { Dialog, Button, Card } from "@repo/design/shadcn/aria";
 ```
 
