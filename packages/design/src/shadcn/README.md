@@ -6,11 +6,11 @@ This directory houses the centralized Shadcn component library for the monorepo 
 
 ## 1. Multi-Variant Architecture
 
-Components are split into primitive-specific variants and primitive-agnostic common components:
+Components are organized into standalone variant trees:
 
 ```text
 frontend/packages/design/src/shadcn/
-├── base/                    # Base UI (@base-ui/react) component sources
+├── base/                    # Complete Base UI (@base-ui/react) component sources
 │   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
 │   ├── button.tsx
@@ -21,8 +21,6 @@ frontend/packages/design/src/shadcn/
 │   └── index.ts
 ├── aria/                    # React Aria Components (react-aria-components) primitives
 │   ├── dialog.tsx
-│   └── index.ts
-├── common/                  # Re-exports primitive-agnostic components
 │   └── index.ts
 ├── index.ts                 # Default entry point (re-exports base/)
 └── README.md                # Usage guide
@@ -50,9 +48,6 @@ import { Dialog, Button, Card } from "@repo/design/shadcn/radix";
 
 // React Aria Components
 import { Dialog, Button, Card } from "@repo/design/shadcn/aria";
-
-// Pure Common (agnostic)
-import { Card, Badge, Input, Table } from "@repo/design/shadcn/common";
 ```
 
 ### Deep Imports
@@ -114,6 +109,5 @@ pnpm dlx shadcn@latest add @magicui/shimmer-button -c frontend/packages/design
 ```
 
 ### Organization Rules After Adding:
-1. Primitive-agnostic component (no overlay/trigger engine) -> Place in `src/shadcn/common/` and export in `common/index.ts`.
-2. Engine-specific component -> Place in `src/shadcn/base/`, `src/shadcn/radix/`, or `src/shadcn/aria/` and export in respective `index.ts`.
-3. Consumer apps import from `@repo/design/shadcn` (default base) or explicit variant `@repo/design/shadcn/<variant>`. Deep imports map to `base/` via package.json.
+1. Engine-specific component -> Place in `src/shadcn/base/`, `src/shadcn/radix/`, or `src/shadcn/aria/` and export in respective `index.ts`.
+2. Consumer apps import from `@repo/design/shadcn` (default base) or explicit variant `@repo/design/shadcn/<variant>`. Deep imports map to `base/` via package.json.

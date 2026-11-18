@@ -37,8 +37,6 @@
     "./shadcn/radix/*": "./src/shadcn/radix/*.tsx",
     "./shadcn/aria": "./src/shadcn/aria/index.ts",
     "./shadcn/aria/*": "./src/shadcn/aria/*.tsx",
-    "./shadcn/common": "./src/shadcn/common/index.ts",
-    "./shadcn/common/*": "./src/shadcn/common/*.tsx",
     "./components": "./src/components/index.ts",
     "./components/*": "./src/components/*.tsx",
     "./swiper": "./src/swiper.ts",
