@@ -1,21 +1,8 @@
 /**
- * Standardized Scrollbar Utilities
- * Part of @repo/design
+ * Dedicated Scrollbar Utilities
+ * Part of Astrology in Bharat Client App
  */
 
-/* Hide scrollbar */
-.hide-scrollbar::-webkit-scrollbar,
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scrollbar,
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-/* Custom Scrollbar driven by tokens */
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
@@ -30,7 +17,6 @@
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
-  border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -40,4 +26,15 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--primary-hover);
+}
+
+.hide-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar,
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

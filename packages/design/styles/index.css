@@ -1,23 +1,11 @@
 /**
  * Global Design System Master Stylesheet
  * @repo/design/styles/index.css
- * Canonical design system tokens, themes, resets, and tokenized components
+ * Canonical design system pure Shadcn primitives and standardized scrollbar utilities
  */
 
 /* ─── Pure Shadcn Primitives Layer ─────────────────────────────────────────── */
 @import "../src/shadcn/styles/shadcn.css";
 
-/* ─── Project / Brand Tokens & Themes (Bharat & Vedic) ─────────────────────── */
-@import "./tokens.css";
-
-/* ─── Base Resets & Typography ─────────────────────────────────────────────── */
-@import "./base.css";
-
-/* ─── Project-Specific Components (.btn-primary, .btn-ask-expert, etc.) ────── */
-@import "./components.css";
-
 /* ─── Scrollbar Utilities ─────────────────────────────────────────────────── */
 @import "./scrollbar.css";
-
-/* ─── Project Animations & Keyframes ───────────────────────────────────────── */
-@import "./animations.css";

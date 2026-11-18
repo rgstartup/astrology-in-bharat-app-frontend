@@ -31,6 +31,10 @@
       "types": "./styles/index.d.ts",
       "default": "./styles/*.css"
     },
+    "./scrollbar.css": {
+      "types": "./styles/index.d.ts",
+      "default": "./styles/scrollbar.css"
+    },
     "./shadcn": "./src/shadcn/index.ts",
     "./shadcn/autoplay": "./src/shadcn/ui/autoplay.ts",
     "./shadcn/use-mobile": "./src/shadcn/ui/use-mobile.ts",
@@ -51,20 +55,20 @@
     "./components/*": "./src/components/*.tsx",
     "./swiper": "./src/swiper.ts",
     "./swiper/css": {
-      "types": "./src/styles/swiper/index.d.ts",
-      "default": "./src/styles/swiper/index.css"
+      "types": "./styles/swiper/index.d.ts",
+      "default": "./styles/swiper/index.css"
     },
     "./swiper/css/*": {
-      "types": "./src/styles/swiper/*.d.ts",
-      "default": "./src/styles/swiper/*.css"
+      "types": "./styles/swiper/*.d.ts",
+      "default": "./styles/swiper/*.css"
     },
     "./swiper.css": {
-      "types": "./src/styles/swiper/index.d.ts",
-      "default": "./src/styles/swiper/index.css"
+      "types": "./styles/swiper/index.d.ts",
+      "default": "./styles/swiper/index.css"
     },
     "./fontawesome.css": {
-      "types": "./src/styles/fontawesome.d.ts",
-      "default": "./src/styles/fontawesome.css"
+      "types": "./styles/fontawesome.d.ts",
+      "default": "./styles/fontawesome.css"
     },
     "./lucide": "./src/icons/lucide.ts",
     "./react-icons": "./src/icons/react-icons.ts",
