@@ -14,7 +14,8 @@ import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { RealtimeProvider } from "@/realtime/socket.provider";
 import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
 import NotificationProvider from "@/providers/NotificationProvider";
-import { SmoothScroll, ToastProvider } from "@repo/design/components";
+import { SmoothScroll } from "@repo/design/components";
+import { Toaster } from "@repo/design/shadcn";
 import PlatformReviewModal from "@/components/features/reviews";
 import { ConsultationPrepHost } from "@/features/consultation-prep";
 import { ConsultationPrepProvider } from "@/features/consultation-prep/stores/consultationPrepStore";
@@ -84,7 +85,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           </RealtimeProvider>
           <AuthInitializer initialUser={initialUser} />
         </NextIntlClientProvider>
-        <ToastProvider />
+        <Toaster />
       </body>
     </html>
   );
