@@ -17,6 +17,15 @@ import {
   type ReconcilePayoutsInput,
 } from "@/features/payout-accounts";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTrigger,
+} from "@repo/design/shadcn";
 import { CreditCard } from "@repo/design/lucide";
 import { getErrorMessage } from "@repo/lib";
 
@@ -45,6 +54,8 @@ export default function PayoutAccountsPage() {
   const [reconcileLoading, setReconcileLoading] = useState(false);
   const [removingId, setRemovingId] = useState<number | null>(null);
   const [settingPrimaryId, setSettingPrimaryId] = useState<number | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
+  const [confirmTargetId, setConfirmTargetId] = useState<number | null>(null);
 
   // URL search params effect (linked/error messages)
   useEffect(() => {
@@ -69,16 +80,18 @@ export default function PayoutAccountsPage() {
 
   const dismissMessage = () => setMessage(null);
 
-  const handleRemove = async (id: number) => {
+  const handleRemove = (id: number) => {
     const link = links.find((l) => l.id === id);
     if (!link) return;
-    if (
-      !window.confirm(`Unlink payout account ${link.externalAccountId ?? id}?`)
-    )
-      return;
-    setRemovingId(id);
+    setConfirmTargetId(id);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (confirmTargetId === null) return;
+    setRemovingId(confirmTargetId);
     try {
-      const result = await removePayoutAccount(id);
+      const result = await removePayoutAccount(confirmTargetId);
       if (result.ok) {
         setMessage({ type: "success", text: "Payout account removed." });
         await fetchLinks();
@@ -91,6 +104,8 @@ export default function PayoutAccountsPage() {
       }
     } finally {
       setRemovingId(null);
+      setConfirmOpen(false);
+      setConfirmTargetId(null);
     }
   };
 
@@ -249,6 +264,47 @@ export default function PayoutAccountsPage() {
           {reconcileLoading ? "Reconciling…" : "Reconcile Payouts"}
         </Button>
       </div>
+
+      <AlertDialog
+        open={confirmOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setConfirmOpen(false);
+            setConfirmTargetId(null);
+          }
+        }}
+      >
+        <AlertDialogTrigger asChild>
+          <button type="button" style={{ display: "none" }} />
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unlink payout account</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to unlink this payout account?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setConfirmOpen(false);
+                setConfirmTargetId(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleConfirmRemove}
+            >
+              Unlink
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
