@@ -1,4 +1,4 @@
-import { PaginatedResponse } from "./paginated.response";
+import { PaginationMeta } from "./paginated.response";
 
 export interface Specialization {
   id: string;
@@ -12,4 +12,10 @@ export interface Specialization {
   updated_at: string;
 }
 
-export interface IPaginatedSpecializationResponse extends PaginatedResponse<Specialization> {}
+/** Envelope instance paginated response format: { data: T[], meta: PaginationMeta } */
+export interface PaginatedEnvelopeResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
+}
+
+export type IPaginatedSpecializationResponse = PaginatedEnvelopeResponse<Specialization>;

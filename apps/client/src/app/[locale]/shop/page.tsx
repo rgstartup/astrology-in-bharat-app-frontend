@@ -3,7 +3,13 @@ import { ShopErrorBoundary } from "@/features/shop/components/shop-error-boundar
 import { ProductsSuspense } from "@/features/shop/components/products-suspense";
 import { ProductGrid } from "@/features/shop/components/product-grid.component";
 import { Sparkles, ShieldCheck } from "@repo/design/lucide";
-import type { ProductCategory, PaginatedResponse, Product } from "@repo/lib";
+import type { ProductCategory, Product, PaginationMeta } from "@repo/lib";
+
+// Envelope instance paginated response format
+interface PaginatedEnvelopeResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
+}
 
 interface ShopPageProps {
   searchParams: Promise<{
@@ -23,7 +29,7 @@ async function ProductsContent({
   search,
   sort,
 }: {
-  products: PaginatedResponse<Product>;
+  products: PaginatedEnvelopeResponse<Product>;
   categories: ProductCategory[];
   activeCategory?: string;
   search?: string;

@@ -1,4 +1,4 @@
-import { Product, ProductCategory, PaginatedResponse } from "@repo/lib";
+import { Product, ProductCategory, PaginationMeta } from "@repo/lib";
 import { ProductCard } from "./product-card.component";
 import { Categories } from "./categories.component";
 import { Sort } from "./sort.component";
@@ -6,8 +6,14 @@ import { ShopPagination } from "./shop-pagination.component";
 import { getProductPrice, getProductCategory } from "../utils/product-adapter";
 import { buildShopHref } from "../utils/shop-params";
 
+// Envelope instance paginated response format
+interface PaginatedEnvelopeResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
+}
+
 interface ProductGridProps {
-  products: PaginatedResponse<Product>;
+  products: PaginatedEnvelopeResponse<Product>;
   categories?: ProductCategory[];
   activeCategory?: string;
   search?: string;

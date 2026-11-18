@@ -202,7 +202,6 @@ type Story = StoryObj<typeof ProductGrid>;
 export const Default: Story = {
   args: {
     products: {
-      success: true,
       data: mockProducts,
       meta: { total: mockProducts.length, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false },
     },

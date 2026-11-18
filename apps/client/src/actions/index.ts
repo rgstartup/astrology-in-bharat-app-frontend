@@ -1,7 +1,7 @@
 import {
   createSafeFetchInstance,
-  createSafeFetchResultInstance,
 } from "@repo/safe-fetch";
+import { createExpertApiEnvelopeInstance } from "@/lib/api-envelope";
 export { type Result, type ApiErrorBody, ApiError } from "@repo/safe-fetch";
 export { API_ROUTES } from "@/lib/api-routes";
 export { AUTH_COOKIE_NAMES } from "@/lib/constants/auth";
@@ -25,7 +25,7 @@ export const api = createSafeFetchInstance({
   credentials: "include",
 });
 
-export const apiV2 = createSafeFetchResultInstance({
+export const apiV2 = createExpertApiEnvelopeInstance({
   baseUrl,
   headers: {
     "Content-Type": "application/json",

@@ -16,7 +16,7 @@ interface DashboardState {
   isModalOpen: boolean;
 
   // Actions
-  fetchDashboardData: (expertId: string) => Promise<void>;
+  fetchDashboardData: () => Promise<void>;
   setRatingStats: (stats: ReviewStats | null) => void;
   setReviews: (reviews: Review[]) => void;
   setReviewsTotal: (total: number) => void;
@@ -45,7 +45,7 @@ export const useDashboardStore = create<DashboardState>()((set, get) => ({
       const [statsResult, reviewsResult, dStatsResult] = await Promise.all([
         getReviewStats(),
         getReviews(1, 10),
-        getDashboardStats("total"),
+        getDashboardStats(),
       ]);
 
       if (!statsResult.ok)

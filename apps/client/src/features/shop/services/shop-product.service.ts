@@ -1,5 +1,11 @@
 import { apiV2, api } from "@/actions";
-import type { PaginatedResponse, Product, ProductCategory } from "@repo/lib";
+import type { Product, ProductCategory, PaginationMeta } from "@repo/lib";
+
+/** Envelope instance paginated response format: { data: T[], meta: PaginationMeta } */
+export interface PaginatedEnvelopeResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
+}
 
 export interface ShopProductQueryParams {
   search?: string;
@@ -11,7 +17,7 @@ export interface ShopProductQueryParams {
 }
 
 export const ShopProductService = {
-  getProducts: async (params?: ShopProductQueryParams): Promise<PaginatedResponse<Product>> => {
+  getProducts: async (params?: ShopProductQueryParams): Promise<PaginatedEnvelopeResponse<Product>> => {
     const searchParams = new URLSearchParams();
     if (params) {
       const { category: _category, sort: _sort, ...apiParams } = params;
@@ -24,10 +30,10 @@ export const ShopProductService = {
 
     const queryStr = searchParams.toString();
     const endpoint = queryStr ? `/products?${queryStr}` : "/products";
-    const res = await apiV2.get<PaginatedResponse<Product>>(endpoint);
+    const res = await apiV2.get<PaginatedEnvelopeResponse<Product>>(endpoint);
 
     if (!res.ok) {
-      return { success: false, data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false } };
+      return { data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false } };
     }
 
     return res.data;
@@ -53,8 +59,8 @@ export const ShopProductService = {
     }
   },
 
-  getProductCategories: async () => {
-    const res = await apiV2.get<PaginatedResponse<ProductCategory>>(
+  getProductCategories: async (): Promise<ProductCategory[]> => {
+    const res = await apiV2.get<PaginatedEnvelopeResponse<ProductCategory>>(
       "/product-categories",
     );
 
