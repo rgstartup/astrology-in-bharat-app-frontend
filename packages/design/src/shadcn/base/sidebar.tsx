@@ -6,10 +6,10 @@ import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 
-import { useIsMobile } from "./use-mobile";
+import { useIsMobile } from "../ui/use-mobile";
 import { Button } from "./button";
-import { Input } from "./input";
-import { Separator } from "./separator";
+import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +17,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "./sheet";
-import { Skeleton } from "./skeleton";
+import { Skeleton } from "../ui/skeleton";
 import {
   Tooltip,
   TooltipContent,

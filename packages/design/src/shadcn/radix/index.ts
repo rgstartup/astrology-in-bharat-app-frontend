@@ -1,8 +1,11 @@
 /**
  * Radix UI (@radix-ui/react-*) variant entry point.
- * Add Radix-backed components to this folder using:
- * pnpm dlx shadcn@latest add <component> --base radix -c frontend/packages/design
  */
+
+// Re-export all shared UI components from ui/ (Button, Card, Input, etc.)
+export * from "../ui";
+
+// Radix-backed primitives
 export {
   AlertDialog,
   AlertDialogTrigger,
@@ -15,4 +18,3 @@ export {
   AlertDialogTitle,
   AlertDialogDescription,
 } from "./alert-dialog";
-export { Button } from "../base/button";

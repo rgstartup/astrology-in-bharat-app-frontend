@@ -1,6 +1,6 @@
 "use client";
 
-import { Toaster } from "../shadcn/base/toast";
+import { Toaster } from "../shadcn/ui/toast";
 
 export function ToastProvider() {
   return <Toaster />;
