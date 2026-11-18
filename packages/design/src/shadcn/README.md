@@ -65,6 +65,7 @@ Direct component imports map via package.json:
 ```tsx
 import { Button } from "@repo/design/shadcn/button";
 import { Progress } from "@repo/design/shadcn/progress";
+import { Toaster, toast } from "@repo/design/shadcn/sonner";
 ```
 
 ---
