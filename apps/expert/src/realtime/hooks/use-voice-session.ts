@@ -5,7 +5,7 @@ import type { RtcSession, RtcSnapshot } from "@repo/rtc";
 import type { ExpertSessionPhase } from "@/features/consultation/session";
 import { joinCall } from "@/realtime/topics/call";
 import { mediaReady } from "@/realtime/topics/consultation";
-import { realtimeSocket } from "@/realtime/socket";
+import { useSocketEvents } from "@/realtime/hooks/use-socket-event";
 import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 
 export interface ExpertVoiceRtcControls {
@@ -218,9 +218,8 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
   // under voice. Without this, globals (globalSession, globalActive,
   // globalConsultationId) persist across consultation boundaries, and join()
   // early-returns on restart instead of connecting to the new Agora channel.
-  useEffect(() => {
-    const socket = realtimeSocket();
-    const onEndedOrResumed = (payload: { consultationId?: number }) => {
+  const onEndedOrResumed = useCallback(
+    (payload: { consultationId?: number }) => {
       if (
         payload &&
         payload.consultationId !== undefined &&
@@ -229,16 +228,15 @@ export function useVoiceSession(): ExpertVoiceRtcControls {
         return;
       }
       void leave();
-    };
-    socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, onEndedOrResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, onEndedOrResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, onEndedOrResumed);
-    return () => {
-      socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, onEndedOrResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, onEndedOrResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, onEndedOrResumed);
-    };
-  }, [leave, globalConsultationId]);
+    },
+    [leave, globalConsultationId],
+  );
+
+  useSocketEvents({
+    [CONSULTATION_EVENTS.EVENTS.ENDED]: onEndedOrResumed,
+    [CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE]: onEndedOrResumed,
+    [CONSULTATION_EVENTS.EVENTS.RESUMED]: onEndedOrResumed,
+  });
 
   const toggleMic = useCallback(async (): Promise<void> => {
     if (!globalSession) return;

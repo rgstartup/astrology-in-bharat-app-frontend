@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useChatIncoming } from "@/realtime/hooks/use-chat-incoming";
 import { useVoiceSession } from "@/realtime/hooks/use-voice-session";
 import { useConsultationMedia } from "@/realtime/hooks/use-consultation-media";
-import { realtimeSocket } from "@/realtime/socket";
+import { useSocketEvent } from "@/realtime/hooks/use-socket-event";
 import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 import { ChatIncomingCard } from "./chat-incoming-card";
 import {
@@ -82,21 +82,22 @@ export function ChatIncomingStack() {
   }, []);
 
   // Listen for consultation cancellation
-  useEffect(() => {
-    const socket = realtimeSocket();
-    const onCancelled = (p: { consultationId: number | string }) => {
+  const onCancelled = useCallback(
+    (p: { consultationId: number | string }) => {
       if (p?.consultationId == null) return;
       const cid = Number(p.consultationId);
       if (activeModalId === cid) {
         setCancelledMap((prev) => ({ ...prev, [cid]: true }));
       }
-    };
+    },
+    [activeModalId],
+  );
 
-    socket.on(CONSULTATION_EVENTS.EVENTS.CANCELLED, onCancelled);
-    return () => {
-      socket.off(CONSULTATION_EVENTS.EVENTS.CANCELLED, onCancelled);
-    };
-  }, [activeModalId]);
+  useSocketEvent(
+    CONSULTATION_EVENTS.EVENTS.CANCELLED,
+    onCancelled,
+    activeModalId !== null,
+  );
 
   // Real microphone permission probe
   const handleGrantMic = async () => {

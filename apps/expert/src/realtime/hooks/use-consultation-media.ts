@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { realtimeSocket } from "@/realtime/socket";
+import { useCallback, useState } from "react";
+import { useSocketEvents } from "@/realtime/hooks/use-socket-event";
 import { CONSULTATION_EVENTS } from "@/realtime/topics/consultation";
 import type { ConsultationMediaReadyPayload } from "@/realtime/types/consultation";
 
@@ -54,34 +54,32 @@ export const useConsultationMedia = (
     setPeerActorType(null);
   }, []);
 
-  useEffect(() => {
-    if (!consultationId) return;
-    const socket = realtimeSocket();
-
-    const handleMediaReady = (payload: ConsultationMediaReadyPayload): void => {
+  const handleMediaReady = useCallback(
+    (payload: ConsultationMediaReadyPayload): void => {
       if (Number(payload.consultationId) !== consultationId) return;
       // Socket.IO `to(room).emit()` excludes the sender, so an echo of our
       // own readiness should never arrive — but guard defensively anyway.
       if (payload.actorType === actorType) return;
       setPeerReadyState(true);
       setPeerActorType(payload.actorType);
-    };
+    },
+    [consultationId, actorType],
+  );
 
-    const handleStarted = (): void => {
-      // `consultation:started` is only broadcast by `orchestrator.start()`,
-      // which runs on the second `media_ready` — so receiving it means both
-      // sides are media-ready even if the sender never saw the echo.
-      setPeerReadyState(true);
-    };
+  const handleStarted = useCallback((): void => {
+    // `consultation:started` is only broadcast by `orchestrator.start()`,
+    // which runs on the second `media_ready` — so receiving it means both
+    // sides are media-ready even if the sender never saw the echo.
+    setPeerReadyState(true);
+  }, []);
 
-    socket.on(CONSULTATION_EVENTS.EVENTS.MEDIA_READY, handleMediaReady);
-    socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
-
-    return (): void => {
-      socket.off(CONSULTATION_EVENTS.EVENTS.MEDIA_READY, handleMediaReady);
-      socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
-    };
-  }, [consultationId, actorType]);
+  useSocketEvents(
+    {
+      [CONSULTATION_EVENTS.EVENTS.MEDIA_READY]: handleMediaReady,
+      [CONSULTATION_EVENTS.EVENTS.STARTED]: handleStarted,
+    },
+    Boolean(consultationId),
+  );
 
   return {
     localReady,
@@ -92,3 +90,5 @@ export const useConsultationMedia = (
     reset,
   };
 };
+
+export default useConsultationMedia;

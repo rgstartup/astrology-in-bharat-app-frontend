@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { realtimeSocket } from "@/realtime/socket";
+import { useCallback, useState } from "react";
+import { useSocketEvents } from "@/realtime/hooks/use-socket-event";
 import {
   MEDIA_EVENTS,
   endCall,
@@ -26,23 +26,35 @@ export const useCall = (consultationId?: number | string | null) => {
   const [iceCandidate, setIceCandidate] = useState<CallSignalPayload | null>(null);
   const [ended, setEnded] = useState<CallEndedPayload | null>(null);
 
-  useEffect(() => {
-    if (!isValidId) return;
-    const socket = realtimeSocket();
+  const matches = useCallback(
+    (payload: { consultationId?: number }) =>
+      payload && Number(payload.consultationId) === id,
+    [id],
+  );
 
-    const matches = (payload: { consultationId?: number }) =>
-      payload && Number(payload.consultationId) === id;
-
-    const handleOffer = (payload: CallSignalPayload) => {
+  const handleOffer = useCallback(
+    (payload: CallSignalPayload) => {
       if (matches(payload)) setOffer(payload);
-    };
-    const handleAnswer = (payload: CallSignalPayload) => {
+    },
+    [matches],
+  );
+
+  const handleAnswer = useCallback(
+    (payload: CallSignalPayload) => {
       if (matches(payload)) setAnswer(payload);
-    };
-    const handleIceCandidate = (payload: CallSignalPayload) => {
+    },
+    [matches],
+  );
+
+  const handleIceCandidate = useCallback(
+    (payload: CallSignalPayload) => {
       if (matches(payload)) setIceCandidate(payload);
-    };
-    const handleEnd = (payload: ConsultationEndedPayload) => {
+    },
+    [matches],
+  );
+
+  const handleEnd = useCallback(
+    (payload: ConsultationEndedPayload) => {
       if (matches(payload)) {
         setEnded({
           consultationId: payload.consultationId,
@@ -50,32 +62,26 @@ export const useCall = (consultationId?: number | string | null) => {
           reason: payload.reason,
         });
       }
-    };
+    },
+    [matches],
+  );
 
-    const handleConnect = () => {
+  const handleConnect = useCallback(() => {
+    if (isValidId) {
       joinCall(id).catch(() => undefined);
-    };
-
-    if (!socket.connected) {
-      socket.connect();
-    } else {
-      handleConnect();
     }
-
-    socket.on(MEDIA_EVENTS.OFFER, handleOffer);
-    socket.on(MEDIA_EVENTS.ANSWER, handleAnswer);
-    socket.on(MEDIA_EVENTS.ICE_CANDIDATE, handleIceCandidate);
-    socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnd);
-    socket.on("connect", handleConnect);
-
-    return () => {
-      socket.off(MEDIA_EVENTS.OFFER, handleOffer);
-      socket.off(MEDIA_EVENTS.ANSWER, handleAnswer);
-      socket.off(MEDIA_EVENTS.ICE_CANDIDATE, handleIceCandidate);
-      socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnd);
-      socket.off("connect", handleConnect);
-    };
   }, [id, isValidId]);
+
+  useSocketEvents(
+    {
+      [MEDIA_EVENTS.OFFER]: handleOffer,
+      [MEDIA_EVENTS.ANSWER]: handleAnswer,
+      [MEDIA_EVENTS.ICE_CANDIDATE]: handleIceCandidate,
+      [CONSULTATION_EVENTS.EVENTS.ENDED]: handleEnd,
+      connect: handleConnect,
+    },
+    isValidId,
+  );
 
   const sendOffer = useCallback(
     (sdp: Record<string, unknown>) => {
@@ -108,3 +114,5 @@ export const useCall = (consultationId?: number | string | null) => {
 
   return { offer, answer, iceCandidate, ended, sendOffer, sendAnswer, sendIceCandidate, end };
 };
+
+export default useCall;

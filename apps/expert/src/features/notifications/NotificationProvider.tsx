@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useCallback, createContext, useContext, useMemo } from "react";
-import { realtimeSocket, connectRealtimeSocket } from "@/realtime/socket";
-import { getSocketTokenAction } from "@/actions/auth";
+import { useRealtime } from "@/realtime/socket-provider";
+import { useSocketEvent } from "@/realtime/hooks/use-socket-event";
 import { useAuthStore } from "@/store/auth.store";
 import { useNotificationStore } from "./store";
 import {
@@ -31,7 +31,7 @@ export function NotificationProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const socket = realtimeSocket();
+  const { socket } = useRealtime();
   const { user, isAuthenticated } = useAuthStore();
   const {
     setNotifications,
@@ -58,54 +58,34 @@ export function NotificationProvider({
   }, [fetchInitial]);
 
   // Realtime subscription: join expert notification room, listen for new notifications.
-  // Socket is connected with the expert JWT (auth token) via connectRealtimeSocket —
-  // never left anonymous.
-  useEffect(() => {
-    if (!isAuthenticated || !user) return;
+  // Connection lifecycle is owned by RealtimeProvider.
+  const onConnect = useCallback(() => {
+    if (!socket || !isAuthenticated || !user) return;
+    socket.emit(SUBSCRIBE_EVENT, {}, (ack: { success?: boolean } | undefined) => {
+      if (ack?.success === false) {
+        console.warn("[NotificationProvider] subscribe ack not successful");
+      }
+    });
+  }, [socket, isAuthenticated, user]);
 
-    let cancelled = false;
-
-    // Ensure the socket is connected with the auth token before subscribing.
-    (async () => {
-      const token = await getSocketTokenAction();
-      if (!cancelled) connectRealtimeSocket(token);
-    })();
-
-    const onConnect = () => {
-      socket.emit(SUBSCRIBE_EVENT, {}, (ack: { success?: boolean } | undefined) => {
-        if (!cancelled && ack?.success === false) {
-          console.warn("[NotificationProvider] subscribe ack not successful");
-        }
-      });
-    };
-
-    const onNew = (payload: { notification: ExpertNotification }) => {
+  const onNew = useCallback(
+    (payload: { notification: ExpertNotification }) => {
       prependNotification(payload.notification);
-      toast(payload.notification.title, {
-        description: payload.notification.message,
-      });
-    };
+      toast(payload.notification.message || payload.notification.title);
+    },
+    [prependNotification],
+  );
 
-    const onRead = (payload: { notificationId: number }) => {
+  const onRead = useCallback(
+    (payload: { notificationId: number }) => {
       markRead(payload.notificationId);
-    };
+    },
+    [markRead],
+  );
 
-    socket.on("connect", onConnect);
-    socket.on(NEW_EVENT, onNew);
-    socket.on(READ_EVENT, onRead);
-
-    // If already connected, subscribe immediately
-    if (socket.connected) {
-      onConnect();
-    }
-
-    return () => {
-      cancelled = true;
-      socket.off("connect", onConnect);
-      socket.off(NEW_EVENT, onNew);
-      socket.off(READ_EVENT, onRead);
-    };
-  }, [socket, isAuthenticated, user?.id, prependNotification, markRead]);
+  useSocketEvent("connect", onConnect, isAuthenticated && !!user);
+  useSocketEvent(NEW_EVENT, onNew, isAuthenticated && !!user);
+  useSocketEvent(READ_EVENT, onRead, isAuthenticated && !!user);
 
   // Reset store on logout
   useEffect(() => {

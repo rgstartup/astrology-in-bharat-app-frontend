@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { realtimeSocket } from "@/realtime/socket";
+import { useRealtime } from "@/realtime/socket-provider";
+import { useSocketEvents } from "@/realtime/hooks/use-socket-event";
 import {
   CHAT_EVENTS,
   joinChat,
@@ -62,17 +63,15 @@ export const useChat = (
   // joinChat can fail on hard refresh if the socket hasn't finished
   // authenticating yet. Retry a few times so the room still recovers.
   const joinChatRetryRef = useRef(0);
+  const { socket } = useRealtime();
 
-  useEffect(() => {
-    if (!isValidId) return;
-    const socket = realtimeSocket();
-
-    /**
-     * Merge a server budget into state. `elapsedSeconds` is the server's live
-     * elapsed, so the resume base is recovered by subtracting local anchor
-     * drift at receive time; a fresh anchor without it (older servers) resets.
-     */
-    const applyBudget = (ack: {
+  /**
+   * Merge a server budget into state. `elapsedSeconds` is the server's live
+   * elapsed, so the resume base is recovered by subtracting local anchor
+   * drift at receive time; a fresh anchor without it (older servers) resets.
+   */
+  const applyBudget = useCallback(
+    (ack: {
       maxMinutes?: number;
       startedAt?: string | null;
       elapsedSeconds?: number;
@@ -97,21 +96,30 @@ export const useChat = (
           baseSeconds,
         };
       });
-    };
+    },
+    [],
+  );
 
-    const handleMessage = (payload: ChatMessagePayload) => {
+  const handleMessage = useCallback(
+    (payload: ChatMessagePayload) => {
       if (payload && Number(payload.consultationId) === id) {
         setMessages((prev) => [...prev, payload]);
       }
-    };
+    },
+    [id],
+  );
 
-    const handleTyping = (payload: ChatTypingPayload) => {
+  const handleTyping = useCallback(
+    (payload: ChatTypingPayload) => {
       if (payload && Number(payload.consultationId) === id) {
         setRemoteTyping(Boolean(payload.isTyping));
       }
-    };
+    },
+    [id],
+  );
 
-    const handleEnded = (payload: ChatEndedPayload) => {
+  const handleEnded = useCallback(
+    (payload: ChatEndedPayload) => {
       if (
         payload &&
         Number(payload.consultationId) === id &&
@@ -125,9 +133,12 @@ export const useChat = (
         // endedVerdict relay in useChatRoomSession.
         setConsultationStatus("completed");
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleAccepted = (payload: any) => {
+  const handleAccepted = useCallback(
+    (payload: any) => {
       if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
@@ -143,18 +154,24 @@ export const useChat = (
         tokenExpiresAt: payload.tokenExpiresAt ?? null,
         channelName: payload.channelName ?? null,
       });
-    };
+    },
+    [id],
+  );
 
-    const handleStarted = (payload: any) => {
+  const handleStarted = useCallback(
+    (payload: any) => {
       if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
       setPaused(null);
       setConsultationStatus("active");
       applyBudget(payload);
-    };
+    },
+    [id, applyBudget],
+  );
 
-    const handlePaused = (payload: any) => {
+  const handlePaused = useCallback(
+    (payload: any) => {
       if (endedRef.current) return;
       if (
         payload &&
@@ -175,9 +192,12 @@ export const useChat = (
           setBudget((prev) => ({ ...prev, maxMinutes: payload.maxMinutes }));
         }
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleResumed = (payload: ChatResumedPayload) => {
+  const handleResumed = useCallback(
+    (payload: ChatResumedPayload) => {
       if (!payload || Number(payload.consultationId) !== id) return;
       // RESUMED starts a fresh active lifecycle after the paused cycle.
       endedRef.current = false;
@@ -185,9 +205,12 @@ export const useChat = (
       setPaused(null);
       setConsultationStatus("active");
       applyBudget(payload);
-    };
+    },
+    [id, applyBudget],
+  );
 
-    const handleBudgetTick = (payload: any) => {
+  const handleBudgetTick = useCallback(
+    (payload: any) => {
       if (
         payload &&
         Number(payload.consultationId) === id &&
@@ -200,9 +223,12 @@ export const useChat = (
           baseSeconds: prev.baseSeconds,
         }));
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleBudgetRestored = (payload: any) => {
+  const handleBudgetRestored = useCallback(
+    (payload: any) => {
       if (endedRef.current) return;
       if (
         payload &&
@@ -212,115 +238,104 @@ export const useChat = (
         setPaused(null);
         applyBudget(payload);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum, applyBudget],
+  );
 
-    const handleConnect = () => {
-      const socket = realtimeSocket();
-      const auth = socket.auth as { token?: string } | undefined;
-      if (!auth?.token) {
-        // Socket is anonymous — JWT auth hasn't been applied yet.
-        // connectRealtimeSocket(token) will reconnect with auth and fire
-        // another 'connect' event; skip joinChat until then.
-        console.info("[ExpertVoice] handleConnect: anonymous socket, skipping joinChat", {
-          consultationId: id,
-        });
-        return;
-      }
-      // Reset retry counter on each connection attempt so a fresh connect
-      // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
-      joinChatRetryRef.current = 0;
-      const attempt = ++joinChatRetryRef.current;
-      console.info("[ExpertVoice] handleConnect: joinChat", {
+  const handleConnect = useCallback(() => {
+    const auth = socket?.auth as { token?: string } | undefined;
+    if (!auth?.token) {
+      // Socket is anonymous — JWT auth hasn't been applied yet.
+      // connectRealtimeSocket(token) will reconnect with auth and fire
+      // another 'connect' event; skip joinChat until then.
+      console.info("[ExpertVoice] handleConnect: anonymous socket, skipping joinChat", {
         consultationId: id,
-        mode,
-        attempt,
-        endedRef: endedRef.current,
       });
-      joinChat(id, mode)
-        .then((ack) => {
-          // Only accept a valid joinChat ack; an auth error resolves truthy
-          // but lacks consultationStatus — treat as failure and retry.
-          if (ack && typeof ack.consultationStatus === "string") {
-            joinChatRetryRef.current = 0;
-            console.info("[ExpertVoice] handleConnect: joinChat ack", {
-              consultationId: id,
-              hasAck: Boolean(ack),
-              consultationStatus: ack?.consultationStatus ?? null,
-              hasVoiceToken: Boolean(ack?.token),
-              channelName: ack?.channelName ?? null,
-            });
-            applyBudget(ack);
-            if (ack && typeof ack.clientName === "string" && ack.clientName) {
-              setClientName(ack.clientName);
-            }
-            if (ack?.consultationStatus) setConsultationStatus(ack.consultationStatus);
-            if (ack?.token) {
-              setVoiceToken({
-                token: ack.token,
-                tokenExpiresAt: ack.tokenExpiresAt ?? null,
-                channelName: ack.channelName ?? null,
-              });
-            }
-            return;
-          }
-          throw new Error(
-            `Invalid joinChat ack: ${JSON.stringify(ack)?.slice(0, 200)}`,
-          );
-        })
-        .catch((err) => {
-          console.error("[ExpertVoice] handleConnect: joinChat failed", {
-            consultationId: id,
-            attempt,
-            error: err instanceof Error ? err.message : String(err),
-          });
-          if (attempt < 3) {
-            console.info("[ExpertVoice] handleConnect: retrying joinChat", {
-              consultationId: id,
-              nextAttempt: attempt + 1,
-            });
-            setTimeout(() => handleConnect(), 1000);
-          }
-        });
-    };
-
-    if (!socket.connected) {
-      socket.connect();
-    } else {
-      handleConnect();
+      return;
     }
+    // Reset retry counter on each connection attempt so a fresh connect
+    // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
+    joinChatRetryRef.current = 0;
+    const attempt = ++joinChatRetryRef.current;
+    console.info("[ExpertVoice] handleConnect: joinChat", {
+      consultationId: id,
+      mode,
+      attempt,
+      endedRef: endedRef.current,
+    });
+    joinChat(id, mode)
+      .then((ack) => {
+        // Only accept a valid joinChat ack; an auth error resolves truthy
+        // but lacks consultationStatus — treat as failure and retry.
+        if (ack && typeof ack.consultationStatus === "string") {
+          joinChatRetryRef.current = 0;
+          console.info("[ExpertVoice] handleConnect: joinChat ack", {
+            consultationId: id,
+            hasAck: Boolean(ack),
+            consultationStatus: ack?.consultationStatus ?? null,
+            hasVoiceToken: Boolean(ack?.token),
+            channelName: ack?.channelName ?? null,
+          });
+          applyBudget(ack);
+          if (ack && typeof ack.clientName === "string" && ack.clientName) {
+            setClientName(ack.clientName);
+          }
+          if (ack?.consultationStatus) setConsultationStatus(ack.consultationStatus);
+          if (ack?.token) {
+            setVoiceToken({
+              token: ack.token,
+              tokenExpiresAt: ack.tokenExpiresAt ?? null,
+              channelName: ack.channelName ?? null,
+            });
+          }
+          return;
+        }
+        throw new Error(
+          `Invalid joinChat ack: ${JSON.stringify(ack)?.slice(0, 200)}`,
+        );
+      })
+      .catch((err) => {
+        console.error("[ExpertVoice] handleConnect: joinChat failed", {
+          consultationId: id,
+          attempt,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        if (attempt < 3) {
+          console.info("[ExpertVoice] handleConnect: retrying joinChat", {
+            consultationId: id,
+            nextAttempt: attempt + 1,
+          });
+          setTimeout(() => handleConnect(), 1000);
+        }
+      });
+  }, [id, mode, socket, applyBudget]);
 
-    socket.on(CHAT_EVENTS.MESSAGE, handleMessage);
-    socket.on(CHAT_EVENTS.TYPING, handleTyping);
-    socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
-    socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
-    socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
-    socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
-    socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
-    socket.on("connect", handleConnect);
+  useSocketEvents(
+    {
+      [CHAT_EVENTS.MESSAGE]: handleMessage,
+      [CHAT_EVENTS.TYPING]: handleTyping,
+      [CONSULTATION_EVENTS.EVENTS.ENDED]: handleEnded,
+      [CONSULTATION_EVENTS.EVENTS.ACCEPTED]: handleAccepted,
+      [CONSULTATION_EVENTS.EVENTS.STARTED]: handleStarted,
+      [CONSULTATION_EVENTS.EVENTS.PAUSED]: handlePaused,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO]: handleResumed,
+      [CONSULTATION_EVENTS.BUDGET.TICK]: handleBudgetTick,
+      [CONSULTATION_EVENTS.BUDGET.RESTORED]: handleBudgetRestored,
+      connect: handleConnect,
+    },
+    isValidId,
+  );
 
+  useEffect(() => {
+    if (!isValidId) return;
     return () => {
-      socket.off(CHAT_EVENTS.MESSAGE, handleMessage);
-      socket.off(CHAT_EVENTS.TYPING, handleTyping);
-      socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
-      socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleStarted);
-      socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handlePaused);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
-      socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
-      socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
-      socket.off("connect", handleConnect);
       setConsultationStatus(null);
       leaveChat(id).catch(() => undefined);
     };
-  }, [id, isValidId, sessionId, sessionIdNum, isValidSessionId, mode]);
+  }, [id, isValidId]);
 
   const send = useCallback(
     (input: Omit<SendChatMessageInput, "consultationId">) => {

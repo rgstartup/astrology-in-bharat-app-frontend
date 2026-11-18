@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import api from "@/api/api";
-import { realtimeSocket } from "@/realtime/socket";
+import { useSocketEvent } from "@/realtime/hooks/use-socket-event";
 import { PRESENCE_EVENTS } from "@/realtime/topics/presence";
 import {
   ExpertClientStatus,
@@ -56,24 +56,22 @@ export function useExpertAvailability(): UseExpertAvailabilityResult {
   }, [isAuthenticated, user]);
 
   // Sync own realtime presence (auto-joined `expert:{id}` room)
-  useEffect(() => {
-    if (!isAuthenticated || !user) return;
+  const currentExpertId = user?.userId || user?.id;
 
-    const currentExpertId = user?.userId || user?.id;
-    const socket = realtimeSocket();
-
-    const handlePresenceChanged = (payload: PresenceChangedEventPayload) => {
+  const handlePresenceChanged = useCallback(
+    (payload: PresenceChangedEventPayload) => {
       if (payload && String(payload.expertId) === String(currentExpertId)) {
         setIsOnline(payload.status === ExpertClientStatus.ONLINE);
       }
-    };
+    },
+    [currentExpertId],
+  );
 
-    socket.on(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
-
-    return () => {
-      socket.off(PRESENCE_EVENTS.UPDATED, handlePresenceChanged);
-    };
-  }, [isAuthenticated, user]);
+  useSocketEvent(
+    PRESENCE_EVENTS.UPDATED,
+    handlePresenceChanged,
+    isAuthenticated && !!user,
+  );
 
   const toggleAvailability = useCallback(async () => {
     setLoading(true);

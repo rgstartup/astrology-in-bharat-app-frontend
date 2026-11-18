@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { realtimeSocket } from "@/realtime/socket";
+import { useRealtime } from "@/realtime/socket-provider";
+import { useSocketEvents } from "@/realtime/hooks/use-socket-event";
 import {
   CONSULTATION_EVENTS,
   acceptConsultation,
@@ -57,12 +58,10 @@ export const useConsultation = (
   // the socket hasn't finished authenticating yet. Retry a few times so the
   // room still recovers even if the first round trips are lost.
   const consultStatusRetryRef = useRef(0);
+  const { socket } = useRealtime();
 
-  useEffect(() => {
-    if (!isValidId) return;
-    const socket = realtimeSocket();
-
-    const handleState = (payload: ConsultationStatePayload) => {
+  const handleState = useCallback(
+    (payload: ConsultationStatePayload) => {
       if (!payload || Number(payload.consultationId) !== id) return;
       // A backend-confirmed active state restarts the lifecycle after a
       // prior end (e.g. re-initiated "continue" session). Always process:
@@ -83,18 +82,24 @@ export const useConsultation = (
       if (payload.state === "active") {
         setBudgetHold(null);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleResumed = (payload: ConsultationStatePayload) => {
+  const handleResumed = useCallback(
+    (payload: ConsultationStatePayload) => {
       if (!payload || Number(payload.consultationId) !== id) return;
       endedRef.current = false;
       setEnded(null);
       setState({ ...payload, state: "active" });
       setBudgetHold(null);
       setBudgetWarning(null);
-    };
+    },
+    [id],
+  );
 
-    const handleEnded = (payload: ConsultationEndedPayload) => {
+  const handleEnded = useCallback(
+    (payload: ConsultationEndedPayload) => {
       if (
         payload &&
         Number(payload.consultationId) === id &&
@@ -105,9 +110,12 @@ export const useConsultation = (
         setState((prev) => (prev ? { ...prev, state: "completed" } : null));
         setBudgetHold(null);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleAccepted = (
+  const handleAccepted = useCallback(
+    (
       payload: ConsultationStatePayload & {
         token?: string;
         tokenExpiresAt?: string;
@@ -120,9 +128,12 @@ export const useConsultation = (
       setBudgetHold(null);
       setBudgetWarning(null);
       setState({ ...payload, state: "accepted" });
-    };
+    },
+    [id],
+  );
 
-    const handleBudgetTick = (payload: ConsultationBudgetTickPayload) => {
+  const handleBudgetTick = useCallback(
+    (payload: ConsultationBudgetTickPayload) => {
       if (endedRef.current) return;
       if (
         payload &&
@@ -131,9 +142,12 @@ export const useConsultation = (
       ) {
         setBudgetTick(payload);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleBudgetWarning = (payload: ConsultationBudgetWarningPayload) => {
+  const handleBudgetWarning = useCallback(
+    (payload: ConsultationBudgetWarningPayload) => {
       if (endedRef.current) return;
       if (
         payload &&
@@ -142,9 +156,12 @@ export const useConsultation = (
       ) {
         setBudgetWarning(payload);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleBudgetExhausted = (payload: ConsultationBudgetHoldPayload) => {
+  const handleBudgetExhausted = useCallback(
+    (payload: ConsultationBudgetHoldPayload) => {
       if (endedRef.current) return;
       if (
         payload &&
@@ -153,9 +170,12 @@ export const useConsultation = (
       ) {
         setBudgetHold(payload);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    const handleBudgetRestored = (payload: ConsultationStatePayload) => {
+  const handleBudgetRestored = useCallback(
+    (payload: ConsultationStatePayload) => {
       if (endedRef.current) return;
       if (
         payload &&
@@ -166,106 +186,94 @@ export const useConsultation = (
         setBudgetWarning(null);
         setState(payload);
       }
-    };
+    },
+    [id, isValidSessionId, sessionIdNum],
+  );
 
-    /** Rejoin rooms + refresh state; safe to run on every (re)connect. */
-    const handleConnect = () => {
-      const socket = realtimeSocket();
-      const auth = socket.auth as { token?: string } | undefined;
-      if (!auth?.token) {
-        // Socket is anonymous — JWT auth hasn't been applied yet.
-        // connectRealtimeSocket(token) will reconnect with auth and fire
-        // another 'connect' event; skip until then.
-        console.info("[ExpertVoice] handleConnect: anonymous socket, skipping consult status fetch", {
-          consultationId: id,
-        });
-        return;
-      }
-      // Reset retry counter on each connection attempt so a fresh connect
-      // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
-      consultStatusRetryRef.current = 0;
-      const attempt = ++consultStatusRetryRef.current;
-      console.info("[ExpertVoice] handleConnect: joinConsultationRooms+GET_STATUS", {
+  /** Rejoin rooms + refresh state; safe to run on every (re)connect. */
+  const handleConnect = useCallback(() => {
+    const auth = socket?.auth as { token?: string } | undefined;
+    if (!auth?.token) {
+      // Socket is anonymous — JWT auth hasn't been applied yet.
+      // connectRealtimeSocket(token) will reconnect with auth and fire
+      // another 'connect' event; skip until then.
+      console.info("[ExpertVoice] handleConnect: anonymous socket, skipping consult status fetch", {
         consultationId: id,
-        attempt,
       });
-      joinConsultationRooms(id)
-        .then(() => getConsultationStatus(id))
-        .then((status) => {
-          // Only accept a valid ConsultationStatePayload; an auth error ack
-          // (e.g. {code: "UNAUTHENTICATED", ...}) resolves truthy but is not
-          // a status payload — treat it as a failure and retry.
-          if (status && typeof status.state === "string") {
-            consultStatusRetryRef.current = 0;
-            console.info("[ExpertVoice] handleConnect: GET_STATUS ack", {
-              consultationId: id,
-              hasStatus: Boolean(status),
-              state: status?.state ?? null,
-              startedAt: status?.startedAt ?? null,
-              elapsedSeconds: status?.elapsedSeconds ?? null,
-            });
-            setState(status);
-            return;
-          }
-          throw new Error(
-            `Invalid GET_STATUS payload: ${JSON.stringify(status)?.slice(0, 200)}`,
-          );
-        })
-        .catch((err) => {
-          console.error("[ExpertVoice] handleConnect: joinConsultationRooms+GET_STATUS failed", {
-            consultationId: id,
-            attempt,
-            error: err instanceof Error ? err.message : String(err),
-          });
-          if (attempt < 3) {
-            console.info("[ExpertVoice] handleConnect: retrying consult status fetch", {
-              consultationId: id,
-              nextAttempt: attempt + 1,
-            });
-            setTimeout(() => handleConnect(), 1000);
-          }
-        });
-    };
-
-    if (!socket.connected) {
-      socket.connect();
-    } else {
-      handleConnect();
+      return;
     }
+    // Reset retry counter on each connection attempt so a fresh connect
+    // (e.g. after JWT auth resolves and socket reconnects) gets full retries.
+    consultStatusRetryRef.current = 0;
+    const attempt = ++consultStatusRetryRef.current;
+    console.info("[ExpertVoice] handleConnect: joinConsultationRooms+GET_STATUS", {
+      consultationId: id,
+      attempt,
+    });
+    joinConsultationRooms(id)
+      .then(() => getConsultationStatus(id))
+      .then((status) => {
+        // Only accept a valid ConsultationStatePayload; an auth error ack
+        // (e.g. {code: "UNAUTHENTICATED", ...}) resolves truthy but is not
+        // a status payload — treat it as a failure and retry.
+        if (status && typeof status.state === "string") {
+          consultStatusRetryRef.current = 0;
+          console.info("[ExpertVoice] handleConnect: GET_STATUS ack", {
+            consultationId: id,
+            hasStatus: Boolean(status),
+            state: status?.state ?? null,
+            startedAt: status?.startedAt ?? null,
+            elapsedSeconds: status?.elapsedSeconds ?? null,
+          });
+          setState(status);
+          return;
+        }
+        throw new Error(
+          `Invalid GET_STATUS payload: ${JSON.stringify(status)?.slice(0, 200)}`,
+        );
+      })
+      .catch((err) => {
+        console.error("[ExpertVoice] handleConnect: joinConsultationRooms+GET_STATUS failed", {
+          consultationId: id,
+          attempt,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        if (attempt < 3) {
+          console.info("[ExpertVoice] handleConnect: retrying consult status fetch", {
+            consultationId: id,
+            nextAttempt: attempt + 1,
+          });
+          setTimeout(() => handleConnect(), 1000);
+        }
+      });
+  }, [id, socket]);
 
-    socket.on(CONSULTATION_EVENTS.EVENTS.STATE, handleState);
-    socket.on(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
-    socket.on(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
-    socket.on(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
-    socket.on(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
-    socket.on(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
-    socket.on(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
-    socket.on(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
-    socket.on("connect", handleConnect);
+  useSocketEvents(
+    {
+      [CONSULTATION_EVENTS.EVENTS.STATE]: handleState,
+      [CONSULTATION_EVENTS.EVENTS.STARTED]: handleState,
+      [CONSULTATION_EVENTS.EVENTS.PAUSED]: handleState,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO]: handleResumed,
+      [CONSULTATION_EVENTS.EVENTS.ENDED]: handleEnded,
+      [CONSULTATION_EVENTS.EVENTS.ACCEPTED]: handleAccepted,
+      [CONSULTATION_EVENTS.BUDGET.TICK]: handleBudgetTick,
+      [CONSULTATION_EVENTS.BUDGET.WARNING]: handleBudgetWarning,
+      [CONSULTATION_EVENTS.BUDGET.EXHAUSTED]: handleBudgetExhausted,
+      [CONSULTATION_EVENTS.BUDGET.RESTORED]: handleBudgetRestored,
+      connect: handleConnect,
+    },
+    isValidId,
+  );
 
+  useEffect(() => {
+    if (!isValidId) return;
     return () => {
-      socket.off(CONSULTATION_EVENTS.EVENTS.STATE, handleState);
-      socket.off(CONSULTATION_EVENTS.EVENTS.STARTED, handleState);
-      socket.off(CONSULTATION_EVENTS.EVENTS.PAUSED, handleState);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_CHAT, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VOICE, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.RESUMED_VIDEO, handleResumed);
-      socket.off(CONSULTATION_EVENTS.EVENTS.ENDED, handleEnded);
-      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, handleAccepted);
-      socket.off(CONSULTATION_EVENTS.BUDGET.TICK, handleBudgetTick);
-      socket.off(CONSULTATION_EVENTS.BUDGET.WARNING, handleBudgetWarning);
-      socket.off(CONSULTATION_EVENTS.BUDGET.EXHAUSTED, handleBudgetExhausted);
-      socket.off(CONSULTATION_EVENTS.BUDGET.RESTORED, handleBudgetRestored);
-      socket.off("connect", handleConnect);
       leaveConsultationRooms(id).catch(() => undefined);
     };
-  }, [id, isValidId, sessionId, sessionIdNum, isValidSessionId]);
+  }, [id, isValidId]);
 
   const accept = useCallback(() => {
     if (!isValidId) return Promise.reject(new Error("Missing consultationId"));

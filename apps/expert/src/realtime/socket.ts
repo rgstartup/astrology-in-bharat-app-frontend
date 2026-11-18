@@ -28,7 +28,13 @@ export const realtimeSocket = (): Socket => {
 
 export const isRealtimeSocketConnected = (): boolean => socket?.connected ?? false;
 
-/** Connect with optional JWT (`socket.auth`). Anonymous when omitted. */
+/**
+ * Connect with optional JWT (`socket.auth`). Anonymous when omitted.
+ *
+ * @internal NOTE: Socket connection lifecycle is managed strictly by `RealtimeProvider`.
+ * Components and hooks should never invoke `connectRealtimeSocket` directly.
+ * Instead, listen to events using `useSocketEvent` or query status with `useRealtimeStatus`.
+ */
 export const connectRealtimeSocket = (token?: string | null): Socket => {
   const active = realtimeSocket();
   if (token) {

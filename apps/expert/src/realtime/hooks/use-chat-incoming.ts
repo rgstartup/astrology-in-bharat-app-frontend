@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { realtimeSocket } from "@/realtime/socket";
+import { useSocketEvents } from "@/realtime/hooks/use-socket-event";
 import {
   acceptConsultation,
   rejectConsultation,
@@ -25,45 +25,37 @@ export const useChatIncoming = () => {
     channelName: null,
   });
 
-  useEffect(() => {
-    const socket = realtimeSocket();
-    const onIncoming = (p: ChatIncomingPayload) => {
-      if (p?.consultationId == null) return;
-      // Accept-time voice token arrives on the incoming payload for voice/video.
-      if (p.token) {
-        setVoiceToken({
-          token: p.token,
-          tokenExpiresAt: p.tokenExpiresAt ?? null,
-          channelName: p.channelName ?? null,
-        });
-      }
-      setPending((prev) =>
-        prev.some((q) => q.consultationId === p.consultationId)
-          ? prev
-          : [...prev, p],
-      );
-    };
-    // Request settled elsewhere (client cancel, timer/cron expiry, another
-    // device) — drop the card.
-    const onSettled = (p: { consultationId: number | string }) => {
-      if (p?.consultationId == null) return;
-      setPending((prev) =>
-        prev.filter((q) => q.consultationId !== Number(p.consultationId)),
-      );
-    };
-
-    socket.on(CONSULTATION_EVENTS.EVENTS.INCOMING, onIncoming);
-    socket.on(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onSettled);
-    socket.on(CONSULTATION_EVENTS.EVENTS.REJECTED, onSettled);
-    socket.on(CONSULTATION_EVENTS.EVENTS.CANCELLED, onSettled);
-
-    return () => {
-      socket.off(CONSULTATION_EVENTS.EVENTS.INCOMING, onIncoming);
-      socket.off(CONSULTATION_EVENTS.EVENTS.ACCEPTED, onSettled);
-      socket.off(CONSULTATION_EVENTS.EVENTS.REJECTED, onSettled);
-      socket.off(CONSULTATION_EVENTS.EVENTS.CANCELLED, onSettled);
-    };
+  const onIncoming = useCallback((p: ChatIncomingPayload) => {
+    if (p?.consultationId == null) return;
+    // Accept-time voice token arrives on the incoming payload for voice/video.
+    if (p.token) {
+      setVoiceToken({
+        token: p.token,
+        tokenExpiresAt: p.tokenExpiresAt ?? null,
+        channelName: p.channelName ?? null,
+      });
+    }
+    setPending((prev) =>
+      prev.some((q) => q.consultationId === p.consultationId)
+        ? prev
+        : [...prev, p],
+    );
   }, []);
+
+  // Request settled elsewhere (client cancel, timer/cron expiry, another device) — drop the card.
+  const onSettled = useCallback((p: { consultationId: number | string }) => {
+    if (p?.consultationId == null) return;
+    setPending((prev) =>
+      prev.filter((q) => q.consultationId !== Number(p.consultationId)),
+    );
+  }, []);
+
+  useSocketEvents({
+    [CONSULTATION_EVENTS.EVENTS.INCOMING]: onIncoming,
+    [CONSULTATION_EVENTS.EVENTS.ACCEPTED]: onSettled,
+    [CONSULTATION_EVENTS.EVENTS.REJECTED]: onSettled,
+    [CONSULTATION_EVENTS.EVENTS.CANCELLED]: onSettled,
+  });
 
   const router = useRouter();
 
@@ -105,3 +97,5 @@ export const useChatIncoming = () => {
 
   return { pending, accept, reject, dismiss, voiceToken };
 };
+
+export default useChatIncoming;
