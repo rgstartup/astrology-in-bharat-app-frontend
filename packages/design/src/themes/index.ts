@@ -16,3 +16,6 @@ export {
   type ThemeColors,
   type ThemeName,
 };
+
+export * from "./types";
+export * from "./primitives";

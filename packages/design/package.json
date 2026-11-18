@@ -10,7 +10,7 @@
   ],
   "exports": {
     "./tailwind": "./src/tailwind/index.ts",
-    "./tokens": "./src/tokens/index.ts",
+    "./tokens": "./src/themes/primitives/index.ts",
     "./themes": "./src/themes/index.ts",
     "./styles": {
       "types": "./styles/index.d.ts",

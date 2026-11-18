@@ -1,4 +1,4 @@
-import { colors } from "../tokens/primitives/colors";
+import { colors } from "./primitives/colors";
 import type { DesignTheme } from "./types";
 
 export const vedicTheme: DesignTheme = {
