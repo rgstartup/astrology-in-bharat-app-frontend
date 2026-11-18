@@ -92,4 +92,5 @@ export const shadcnPreset = {
   },
 };
 
+export const designPreset = shadcnPreset;
 export default shadcnPreset;

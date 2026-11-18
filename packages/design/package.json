@@ -9,7 +9,7 @@
     "./styles/**"
   ],
   "exports": {
-    "./tailwind": "./src/tailwind/index.ts",
+    "./tailwind": "./src/shadcn/tailwind.config.ts",
     "./tokens": "./src/themes/bharat/index.ts",
     "./themes": "./src/themes/index.ts",
     "./themes/bharat": "./src/themes/bharat/index.ts",
