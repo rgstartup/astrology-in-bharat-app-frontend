@@ -10,9 +10,8 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogClose,
   Button,
-} from "@repo/design/shadcn";
+} from "@repo/design/shadcn/radix";
 import { AnimatePresence } from "framer-motion";
 import { isToday } from "date-fns";
 import {
@@ -168,12 +167,15 @@ const NotificationPage = () => {
         </div>
       </div>
 
-      <AlertDialog open={openDialog !== "none"} onOpenChange={(open) => {
-        if (!open) {
-          setOpenDialog("none");
-          setDeleteTargetId(null);
-        }
-      }}>
+      <AlertDialog
+        open={openDialog !== "none"}
+        onOpenChange={(open) => {
+          if (!open) {
+            setOpenDialog("none");
+            setDeleteTargetId(null);
+          }
+        }}
+      >
         <AlertDialogContent>
           {openDialog === "clear-all" && (
             <>

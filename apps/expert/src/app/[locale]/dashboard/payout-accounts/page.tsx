@@ -25,7 +25,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogTrigger,
-} from "@repo/design/shadcn";
+} from "@repo/design/shadcn/radix";
 import { CreditCard } from "@repo/design/lucide";
 import { getErrorMessage } from "@repo/lib";
 
