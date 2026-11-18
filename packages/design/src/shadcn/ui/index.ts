@@ -30,6 +30,18 @@ export {
 export { ShadcnAutoplay, type ShadcnAutoplayOptions } from "./autoplay";
 export { Checkbox } from "./checkbox";
 export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./dialog";
+export {
   Empty,
   EmptyMedia,
   EmptyHeader,

@@ -4,7 +4,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@repo/design/shadcn";
 
 interface ChatImagePreviewDialogProps {
   previewImageUrl: string | null;

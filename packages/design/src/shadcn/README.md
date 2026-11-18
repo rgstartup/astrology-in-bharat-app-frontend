@@ -10,18 +10,23 @@ Components are organized into a shared `ui/` layer and isolated primitive varian
 
 ```text
 frontend/packages/design/src/shadcn/
-├── ui/                      # Shared UI components (Card, Badge, Button, Input, Table, Toast, etc.)
+├── components.json          # Shadcn CLI configuration (isolated to shadcn layer)
+├── tailwind.config.ts       # Pure Shadcn Tailwind preset (semantic colors & radius)
+├── styles/
+│   └── shadcn.css           # Pure semantic CSS variables & animations
+├── ui/                      # Shared UI components (Card, Badge, Button, Dialog, Input, Table, Toast, etc.)
 │   ├── button.tsx
 │   ├── card.tsx
-│   ├── dialog.tsx (if agnostic) / input.tsx / table.tsx
+│   ├── dialog.tsx           # Radix Dialog with asChild support
+│   ├── input.tsx
 │   └── index.ts             # Exports all shared UI components
 ├── base/                    # Base UI (@base-ui/react) primitive wrappers
-│   ├── dialog.tsx
 │   ├── dropdown-menu.tsx
 │   ├── sheet.tsx
 │   └── index.ts             # Exports Base primitives + re-exports ../ui
 ├── radix/                   # Radix UI (@radix-ui/react-*) primitives
 │   ├── alert-dialog.tsx
+│   ├── sonner.tsx           # Radix toast provider
 │   └── index.ts             # Exports Radix primitives + re-exports ../ui
 ├── aria/                    # React Aria Components (react-aria-components) primitives
 │   └── index.ts             # Exports Aria primitives + re-exports ../ui
@@ -89,17 +94,17 @@ When writing UI or switching variants, observe these API differences:
 
 ## 4. CLI Workflow: Adding Components
 
-`components.json` is located in `frontend/packages/design/components.json`.
+`components.json` is located in `frontend/packages/design/src/shadcn/components.json`.
 
-Always execute from repository root with `-c frontend/packages/design` or inside `frontend/packages/design`:
+Execute from repository root with `-c frontend/packages/design/src/shadcn` or inside `frontend/packages/design/src/shadcn`:
 
 ```bash
 # Add Base UI component:
-pnpm dlx shadcn@latest add dialog --base base -c frontend/packages/design
+pnpm dlx shadcn@latest add dropdown-menu --base base -c frontend/packages/design/src/shadcn
 
 # Add Radix UI component:
-pnpm dlx shadcn@latest add dialog --base radix -c frontend/packages/design
+pnpm dlx shadcn@latest add dialog --base radix -c frontend/packages/design/src/shadcn
 
 # Add React Aria component:
-pnpm dlx shadcn@latest add dialog --base aria -c frontend/packages/design
+pnpm dlx shadcn@latest add dialog --base aria -c frontend/packages/design/src/shadcn
 ```
