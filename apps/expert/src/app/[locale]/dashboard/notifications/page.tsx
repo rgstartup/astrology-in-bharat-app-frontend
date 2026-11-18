@@ -2,6 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { Bell, BellOff, Trash2 } from "@repo/design/lucide";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogClose,
+  Button,
+} from "@repo/design/shadcn";
 import { AnimatePresence } from "framer-motion";
 import { isToday } from "date-fns";
 import {
@@ -20,6 +31,10 @@ const NotificationPage = () => {
     useNotificationActions();
 
   const [isMounted, setIsMounted] = useState(false);
+  const [openDialog, setOpenDialog] = useState<"none" | "clear-all" | "delete">(
+    "none",
+  );
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -27,13 +42,22 @@ const NotificationPage = () => {
 
   const onClearAll = () => {
     if (notifications.length === 0) return;
-    if (!confirm("Clear all notifications?")) return;
-    deleteAllNotifications();
+    setOpenDialog("clear-all");
   };
 
   const onDeleteItem = (id: number) => {
-    if (!confirm("Delete this notification?")) return;
-    deleteNotification(id);
+    setDeleteTargetId(id);
+    setOpenDialog("delete");
+  };
+
+  const onConfirmDialog = () => {
+    if (openDialog === "clear-all") {
+      deleteAllNotifications();
+    } else if (openDialog === "delete" && deleteTargetId !== null) {
+      deleteNotification(deleteTargetId);
+    }
+    setOpenDialog("none");
+    setDeleteTargetId(null);
   };
 
   const onMarkRead = (id: number) => {
@@ -43,7 +67,10 @@ const NotificationPage = () => {
   if (!isMounted) return null;
 
   const grouped = notifications.reduce(
-    (acc: { today: ExpertNotification[]; earlier: ExpertNotification[] }, n) => {
+    (
+      acc: { today: ExpertNotification[]; earlier: ExpertNotification[] },
+      n,
+    ) => {
       if (isToday(new Date(n.createdAt))) {
         acc.today.push(n);
       } else {
@@ -69,13 +96,15 @@ const NotificationPage = () => {
               Notifications
             </h5>
             {notifications.length > 0 && (
-              <button
-                onClick={onClearAll}
-                className="px-3 py-2 sm:px-5 sm:py-2.5 text-red-500 hover:text-red-600 font-bold text-xs sm:text-sm bg-red-50 hover:bg-red-100 rounded-xl sm:rounded-2xl transition-all flex items-center gap-1.5 sm:gap-2 border-0 shadow-sm cursor-pointer hover:cursor-pointer"
-              >
-                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                Clear All
-              </button>
+              <AlertDialogTrigger asChild>
+                <button
+                  onClick={onClearAll}
+                  className="px-3 py-2 sm:px-5 sm:py-2.5 text-red-500 hover:text-red-600 font-bold text-xs sm:text-sm bg-red-50 hover:bg-red-100 rounded-xl sm:rounded-2xl transition-all flex items-center gap-1.5 sm:gap-2 border-0 shadow-sm cursor-pointer hover:cursor-pointer"
+                >
+                  <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                  Clear All
+                </button>
+              </AlertDialogTrigger>
             )}
           </div>
 
@@ -97,7 +126,9 @@ const NotificationPage = () => {
                 {grouped.today.length > 0 && (
                   <section>
                     <div className="flex items-center gap-4 mb-6">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Today</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+                        Today
+                      </span>
                       <div className="h-px flex-1 bg-gray-100/50"></div>
                     </div>
                     <div className="space-y-4">
@@ -136,6 +167,75 @@ const NotificationPage = () => {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={openDialog !== "none"} onOpenChange={(open) => {
+        if (!open) {
+          setOpenDialog("none");
+          setDeleteTargetId(null);
+        }
+      }}>
+        <AlertDialogContent>
+          {openDialog === "clear-all" && (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear all notifications</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to clear all notifications? This cannot
+                  be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setOpenDialog("none");
+                    setDeleteTargetId(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={onConfirmDialog}
+                >
+                  Clear All
+                </Button>
+              </AlertDialogFooter>
+            </>
+          )}
+          {openDialog === "delete" && (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete notification</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this notification?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setOpenDialog("none");
+                    setDeleteTargetId(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={onConfirmDialog}
+                >
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

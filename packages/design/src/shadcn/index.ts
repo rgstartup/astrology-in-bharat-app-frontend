@@ -1,5 +1,17 @@
 export { Alert, AlertTitle, AlertDescription } from "./alert";
 export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+  AlertDialogClose,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from "./alert-dialog";
+export {
   Attachment,
   AttachmentMedia,
   AttachmentContent,
