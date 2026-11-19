@@ -4,5 +4,6 @@ import { ActivityFeedClient } from "@/features/dashboard/components/ActivityFeed
 export default async function RecentActivityPage() {
   const result = await getRecentAppointments();
   const initialData = result.ok ? result.data : [];
+
   return <ActivityFeedClient initialData={initialData} />;
 }
