@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useRecentActivityStore } from "@/features/dashboard/store/recent-activity.store";
 import { User as UserIcon, Clock as ClockIcon } from "@repo/design/lucide";
 import { format, formatDistanceToNow } from "date-fns";
-import { ActivitySkeleton } from "./DashboardSkeletons";
+import { ActivitySkeleton } from "@/components/dashboard/DashboardSkeletons";
 import RecentActivityEmpty from "@/app/[locale]/dashboard/@recent-activity/RecentActivityEmpty";
 
 const User = UserIcon as any;
@@ -22,7 +22,7 @@ interface ActivityFeedClientProps {
 }
 
 export function ActivityFeedClient({ initialData }: ActivityFeedClientProps) {
-  const { data, loading, error, fetch } = useRecentActivityStore();
+  const { data, loading, fetch } = useRecentActivityStore();
 
   // Hydrate store from server-provided initial data
   useEffect(() => {
@@ -72,14 +72,24 @@ export function ActivityFeedClient({ initialData }: ActivityFeedClientProps) {
             >
               <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center shrink-0 overflow-hidden">
                 {activity.avatar ? (
-                  <img src={activity.avatar} alt={activity.name} className="w-full h-full object-cover" />
+                  <img
+                    src={activity.avatar}
+                    alt={activity.name}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <User className="w-5 h-5 text-[#fd6410]" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-gray-900 leading-tight">
-                  <span className="font-bold text-[#fd6410]">{activity.time}</span> consult to <span className="font-semibold text-gray-900">{activity.name}</span>
+                  <span className="font-bold text-[#fd6410]">
+                    {activity.time}
+                  </span>{" "}
+                  consult to{" "}
+                  <span className="font-semibold text-gray-900">
+                    {activity.name}
+                  </span>
                 </p>
                 <p className="text-[10px] font-medium text-gray-700 mt-1 flex items-center gap-1">
                   {activity.relativeTime}

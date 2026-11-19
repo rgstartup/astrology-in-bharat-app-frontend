@@ -1,5 +1,5 @@
 import { getDashboardStats } from "@/features/dashboard/api/server";
-import { StatsClient } from "@/components/dashboard/StatsClient";
+import { StatsClient } from "@/features/dashboard/components/StatsClient";
 
 export default async function StatsPage() {
   const result = await getDashboardStats("monthly");

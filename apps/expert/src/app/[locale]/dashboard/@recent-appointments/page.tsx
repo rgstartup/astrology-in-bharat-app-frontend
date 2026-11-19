@@ -1,5 +1,5 @@
 import { getRecentAppointments } from "@/features/dashboard/api/server";
-import { UpcomingAppointmentsClient } from "@/components/dashboard/UpcomingAppointmentsClient";
+import { UpcomingAppointmentsClient } from "@/features/dashboard/components/UpcomingAppointmentsClient";
 
 export default async function RecentAppointmentsPage() {
   const result = await getRecentAppointments();

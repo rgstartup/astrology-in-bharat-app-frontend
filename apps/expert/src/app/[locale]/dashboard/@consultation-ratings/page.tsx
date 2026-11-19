@@ -1,5 +1,5 @@
 import { getReviewStats, getReviews } from "@/features/dashboard/api/server";
-import { ConsultationRatingsClient } from "@/components/dashboard/ConsultationRatingsClient";
+import { ConsultationRatingsClient } from "@/features/dashboard/components/ConsultationRatingsClient";
 
 export default async function ConsultationRatingsPage() {
   const [statsResult, reviewsResult] = await Promise.all([

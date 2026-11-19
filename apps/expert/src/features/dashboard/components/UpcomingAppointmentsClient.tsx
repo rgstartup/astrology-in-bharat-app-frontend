@@ -4,7 +4,7 @@ import { useRecentAppointmentsStore } from "@/features/dashboard/store/recent-ap
 import { Search, CalendarDays } from "@repo/design/lucide";
 import { cn } from "@/lib/cn";
 import { format } from "date-fns";
-import { TableSkeleton } from "./DashboardSkeletons";
+import { TableSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import UpcomingAppointmentsEmpty from "@/app/[locale]/dashboard/@recent-appointments/UpcomingAppointmentsEmpty";
 
 interface RecentAppointment {

@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Star } from "@repo/design/lucide";
-import { Button } from "../ui/button";
-import { RatingSkeleton } from "./DashboardSkeletons";
+import { Button } from "@/components/ui/button";
+import { RatingSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import { useConsultationRatingsStore } from "@/features/dashboard/store/consultation-ratings.store";
-import { ReviewsList } from "./ReviewsList";
-import { ReviewsModal } from "./ReviewsModal";
+import { ReviewsList } from "@/components/dashboard/ReviewsList";
+import { ReviewsModal } from "@/components/dashboard/ReviewsModal";
 import ConsultationRatingsEmpty from "@/app/[locale]/dashboard/@consultation-ratings/ConsultationRatingsEmpty";
 
 interface RatingDistribution {

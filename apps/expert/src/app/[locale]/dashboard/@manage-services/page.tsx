@@ -1,5 +1,5 @@
 import { getExpertProfile } from "@/features/dashboard/api/server";
-import { ManageConsultationsClient } from "@/components/dashboard/ManageConsultationsClient";
+import { ManageConsultationsClient } from "@/features/dashboard/components/ManageConsultationsClient";
 
 export default async function ManageServicesPage() {
   const result = await getExpertProfile();
