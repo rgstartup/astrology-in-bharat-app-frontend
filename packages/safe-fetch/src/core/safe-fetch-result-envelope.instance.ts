@@ -29,6 +29,15 @@ export interface EnvelopeResponse<T = unknown> {
   meta: EnvelopeMeta;
 }
 
+/**
+ * Result returned by envelope-aware safe-fetch instances.
+ * Binds ok to envelope.success, data directly to envelope.data,
+ * and meta to envelope.meta.
+ */
+export type EnvelopeResult<T, TErrorBody extends ApiErrorBody = ApiErrorBody> =
+  | { ok: true; data: T; error?: never; meta: EnvelopeMeta }
+  | { ok: false; data: T | null; error: ApiError<TErrorBody>; meta?: EnvelopeMeta };
+
 /** Granular field error item inside details array. */
 export interface EnvelopeErrorDetail {
   field?: string;
@@ -126,20 +135,67 @@ export class EnvelopeError extends Error {
 }
 
 /**
- * @desc Unwrap a backend envelope Result into a plain data Result.
- * - Network/abort errors (result.ok === false): pass through unchanged.
- * - Envelope success === false: build ApiError from envelope.error.
- * - Envelope success === true: return envelope.data unwrapped.
+ * Instance contract for envelope-aware safe-fetch.
+ * All HTTP methods return Promise<EnvelopeResult<T, TErrorBody>>.
  */
-async function unwrapEnvelope<
+export interface SafeFetchEnvelopeInstance {
+  <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ): Promise<EnvelopeResult<T, TErrorBody>>;
+  get: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => Promise<EnvelopeResult<T, TErrorBody>>;
+  post: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => Promise<EnvelopeResult<T, TErrorBody>>;
+  put: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => Promise<EnvelopeResult<T, TErrorBody>>;
+  patch: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body?: unknown,
+    init?: SafeFetchInit,
+  ) => Promise<EnvelopeResult<T, TErrorBody>>;
+  delete: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    init?: SafeFetchInit,
+  ) => Promise<EnvelopeResult<T, TErrorBody>>;
+  upload: <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body: FormData,
+    init?: SafeFetchInit,
+  ) => Promise<EnvelopeResult<T, TErrorBody>>;
+  extend: (overrides: SafeFetchInstanceConfig) => SafeFetchEnvelopeInstance;
+}
+
+/**
+ * @desc Unwrap a backend envelope Result into an EnvelopeResult.
+ * - Network/abort errors (result.ok === false): return { ok: false, data: null, error, meta: undefined }.
+ * - Envelope success === false: return { ok: false, data: envelope.data, error, meta: envelope.meta }.
+ * - Envelope success === true: return { ok: true, data: envelope.data, meta: envelope.meta }.
+ */
+export async function unwrapEnvelope<
   T,
   TErrorBody extends ApiErrorBody = ApiErrorBody,
 >(
   promise: Promise<Result<EnvelopeResponse<T>, TErrorBody>>,
   onError?: SafeFetchInstanceConfig["onError"],
-): Promise<Result<T, TErrorBody>> {
+): Promise<EnvelopeResult<T, TErrorBody>> {
   const result = await promise;
-  if (!result.ok) return result;
+  if (!result.ok) {
+    return {
+      ok: false,
+      data: null,
+      error: result.error,
+      meta: undefined,
+    };
+  }
 
   const envelope = result.data;
   if (!envelope.success) {
@@ -160,36 +216,47 @@ async function unwrapEnvelope<
     );
 
     if (onError) await onError(error as ApiError<TErrorBody>);
-    return { ok: false, error };
+    return {
+      ok: false,
+      data: (envelope.data as T | null) ?? null,
+      error,
+      meta: envelope.meta,
+    };
   }
 
-  return { ok: true, data: envelope.data as T };
+  return {
+    ok: true,
+    data: envelope.data as T,
+    meta: envelope.meta,
+  };
 }
 
 /**
  * @desc Creates a safe-fetch instance that automatically unwraps the symmetric
- * backend response envelope. Success returns envelope.data; failure returns
- * a safe-fetch ApiError built from envelope.error.
+ * backend response envelope, binding result.ok to envelope.success, result.data
+ * to envelope.data, and result.meta to envelope.meta.
  *
  * Usage:
  *   const api = createSafeFetchEnvelopeInstance({ baseUrl, ... });
- *   const { data } = await api.get("/users");      // data is unwrapped
- *   const { error } = await api.post("/users", b); // error is ApiError
+ *   const { ok, data, meta } = await api.get("/users");
+ *   if (ok) {
+ *     // data is T, meta is EnvelopeMeta (meta.pagination, meta.requestId)
+ *   }
  */
 export function createSafeFetchEnvelopeInstance(
   config: SafeFetchInstanceConfig = {},
-): SafeFetchResultInstance {
+): SafeFetchEnvelopeInstance {
   const base = createSafeFetchResultInstance(config);
 
   const callable = (async <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     init?: SafeFetchInit,
-  ): Promise<Result<T, TErrorBody>> => {
+  ): Promise<EnvelopeResult<T, TErrorBody>> => {
     return unwrapEnvelope(
       base<EnvelopeResponse<T>, TErrorBody>(url, init),
       config.onError,
     );
-  }) as SafeFetchResultInstance;
+  }) as SafeFetchEnvelopeInstance;
 
   callable.get = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
@@ -263,4 +330,4 @@ export function createSafeFetchEnvelopeInstance(
 /**
  * Default safeFetchEnvelope instance for direct unwrapped requests.
  */
-export const safeFetchEnvelope = createSafeFetchEnvelopeInstance();
+export const safeFetchEnvelope: SafeFetchEnvelopeInstance = createSafeFetchEnvelopeInstance();

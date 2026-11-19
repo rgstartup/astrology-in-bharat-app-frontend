@@ -124,7 +124,7 @@ export function useExploreExperts(initialExperts?: Expert[]) {
   useEffect(() => {
     fetchSpecializations().then((result) => {
       if (!result.ok) return;
-      const list = result.data.data;
+      const list = result.data;
       if (list && list.length > 0) {
         setSpecializationsList(list);
       }

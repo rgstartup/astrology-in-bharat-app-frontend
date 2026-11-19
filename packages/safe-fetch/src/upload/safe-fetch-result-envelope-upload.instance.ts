@@ -21,6 +21,7 @@ import {
   type EnvelopeResponse,
   type EnvelopeErrorPayload,
   type EnvelopeMeta,
+  type EnvelopeResult,
   EnvelopeError,
 } from "../core/safe-fetch-result-envelope.instance";
 
@@ -28,14 +29,24 @@ export {
   type EnvelopeResponse,
   type EnvelopeErrorPayload,
   type EnvelopeMeta,
+  type EnvelopeResult,
   EnvelopeError,
 };
 
+export interface SafeFetchUploadEnvelopeInstance {
+  upload<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
+    url: string,
+    body: FormData | File | Blob,
+    init?: SafeUploadInit,
+  ): Promise<EnvelopeResult<T, TErrorBody>>;
+  extend: (overrides: SafeFetchInstanceConfig) => SafeFetchUploadEnvelopeInstance;
+}
+
 /**
- * @desc Unwrap a backend envelope Result into a plain data Result.
- * - Network/abort errors (result.ok === false): pass through unchanged.
- * - Envelope success === false: build ApiError from envelope.error.
- * - Envelope success === true: return envelope.data unwrapped.
+ * @desc Unwrap a backend envelope Result into an EnvelopeResult.
+ * - Network/abort errors (result.ok === false): return { ok: false, data: null, error, meta: undefined }.
+ * - Envelope success === false: return { ok: false, data: envelope.data, error, meta: envelope.meta }.
+ * - Envelope success === true: return { ok: true, data: envelope.data, meta: envelope.meta }.
  */
 async function unwrapEnvelope<
   T,
@@ -43,9 +54,16 @@ async function unwrapEnvelope<
 >(
   promise: Promise<Result<EnvelopeResponse<T>, TErrorBody>>,
   onError?: SafeFetchInstanceConfig["onError"],
-): Promise<Result<T, TErrorBody>> {
+): Promise<EnvelopeResult<T, TErrorBody>> {
   const result = await promise;
-  if (!result.ok) return result;
+  if (!result.ok) {
+    return {
+      ok: false,
+      data: null,
+      error: result.error,
+      meta: undefined,
+    };
+  }
 
   const envelope = result.data;
   if (!envelope.success) {
@@ -66,10 +84,19 @@ async function unwrapEnvelope<
     );
 
     if (onError) await onError(error as ApiError<TErrorBody>);
-    return { ok: false, error };
+    return {
+      ok: false,
+      data: (envelope.data as T | null) ?? null,
+      error,
+      meta: envelope.meta,
+    };
   }
 
-  return { ok: true, data: envelope.data as T };
+  return {
+    ok: true,
+    data: envelope.data as T,
+    meta: envelope.meta,
+  };
 }
 
 /**
@@ -79,19 +106,19 @@ async function unwrapEnvelope<
  *
  * Usage:
  *   const api = createSafeFetchUploadEnvelopeInstance({ baseUrl, ... });
- *   const { data } = await api.upload("/users", formData); // data is unwrapped
+ *   const { ok, data, meta } = await api.upload("/users", formData);
  */
 export function createSafeFetchUploadEnvelopeInstance(
   config: SafeFetchInstanceConfig = {},
-): SafeFetchUploadInstance {
+): SafeFetchUploadEnvelopeInstance {
   const base = createSafeFetchUploadInstance(config);
 
-  const callable: SafeFetchUploadInstance = {
+  const callable: SafeFetchUploadEnvelopeInstance = {
     async upload<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
       url: string,
       body: FormData | File | Blob,
       init?: SafeUploadInit,
-    ): Promise<Result<T, TErrorBody>> {
+    ): Promise<EnvelopeResult<T, TErrorBody>> {
       return unwrapEnvelope(
         base.upload<EnvelopeResponse<T>, TErrorBody>(url, body, init),
         config.onError,
@@ -113,4 +140,4 @@ export function createSafeFetchUploadEnvelopeInstance(
 /**
  * @desc Default client-only XHR upload envelope instance (no base URL).
  */
-export const safeUploadEnvelope = createSafeFetchUploadEnvelopeInstance();
+export const safeUploadEnvelope: SafeFetchUploadEnvelopeInstance = createSafeFetchUploadEnvelopeInstance();

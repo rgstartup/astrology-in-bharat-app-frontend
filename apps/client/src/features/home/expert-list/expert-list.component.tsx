@@ -64,7 +64,7 @@ const ExpertList: React.FC<ExpertListDataProps> = ({
       const query = new URLSearchParams(params).toString();
 
       const result = await apiV2
-        .get<IFetchExpertsResponse>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
+        .get<IExpert[]>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
         .finally(() => setLoading(false));
 
       if (!result.ok) {
@@ -96,9 +96,9 @@ const ExpertList: React.FC<ExpertListDataProps> = ({
         return;
       }
 
-      const list = result.data.data || [];
+      const list = result.data || [];
       setExperts(list.length > 0 ? list : defaultList);
-      setHasMore(Boolean(result.data.meta?.hasNextPage));
+      setHasMore(Boolean((result.meta?.pagination as PaginationMeta | undefined)?.hasNextPage));
     } catch {
       setLoading(false);
       setExperts(defaultList);

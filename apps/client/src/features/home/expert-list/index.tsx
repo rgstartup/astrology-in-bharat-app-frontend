@@ -31,7 +31,7 @@ async function getInitialExpertListProps({ searchParams, title }: ExpertListProp
     ),
   ).toString();
 
-  const result = await apiV2.get<IFetchExpertsResponse>(`${API_ROUTES.EXPERTS.LIST}?${params}`);
+  const result = await apiV2.get<IExpert[]>(`${API_ROUTES.EXPERTS.LIST}?${params}`);
 
   const listProps: ExpertListDataProps = {
     initialExperts: [] as IExpert[],
@@ -45,8 +45,8 @@ async function getInitialExpertListProps({ searchParams, title }: ExpertListProp
     return listProps;
   }
 
-  listProps.initialExperts = result.data.data;
-  listProps.initialPagination = result.data.meta;
+  listProps.initialExperts = result.data || [];
+  listProps.initialPagination = result.meta?.pagination as PaginationMeta | undefined;
   listProps.title = title;
 
   return listProps;

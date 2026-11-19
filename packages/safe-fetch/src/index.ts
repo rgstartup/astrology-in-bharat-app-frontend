@@ -47,18 +47,23 @@ export {
 export {
   createSafeFetchUploadEnvelopeInstance,
   safeUploadEnvelope,
+  type SafeFetchUploadEnvelopeInstance,
 } from "./upload";
 
 // Envelope wrapper (opt-in). Handles symmetric backend response envelope.
 export type {
   EnvelopeResponse,
   EnvelopeErrorPayload,
+  EnvelopeErrorDetail,
   EnvelopeMeta,
+  EnvelopeResult,
+  SafeFetchEnvelopeInstance,
 } from "./core/safe-fetch-result-envelope.instance";
 export {
   EnvelopeError,
   createSafeFetchEnvelopeInstance,
   safeFetchEnvelope,
+  unwrapEnvelope,
 } from "./core/safe-fetch-result-envelope.instance";
 
 import safeFetch from "./core/safe-fetch";

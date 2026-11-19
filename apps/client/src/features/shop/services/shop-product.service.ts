@@ -30,13 +30,16 @@ export const ShopProductService = {
 
     const queryStr = searchParams.toString();
     const endpoint = queryStr ? `/products?${queryStr}` : "/products";
-    const res = await apiV2.get<PaginatedEnvelopeResponse<Product>>(endpoint);
+    const res = await apiV2.get<Product[]>(endpoint);
 
     if (!res.ok) {
       return { data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false } };
     }
 
-    return res.data;
+    return {
+      data: res.data || [],
+      meta: (res.meta?.pagination as PaginationMeta) || { total: 0, page: 1, limit: 20, totalPages: 1, hasNextPage: false, hasPrevPage: false },
+    };
   },
 
   getProductById: async (id: string | number): Promise<Product | null> => {
@@ -60,12 +63,12 @@ export const ShopProductService = {
   },
 
   getProductCategories: async (): Promise<ProductCategory[]> => {
-    const res = await apiV2.get<PaginatedEnvelopeResponse<ProductCategory>>(
+    const res = await apiV2.get<ProductCategory[]>(
       "/product-categories",
     );
 
     if (!res.ok) return [];
 
-    return res.data.data;
+    return res.data || [];
   },
 };

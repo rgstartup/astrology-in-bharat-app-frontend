@@ -31,11 +31,15 @@ export { createSafeFetchResultInstance } from "./safe-fetch-result.instance";
 export {
   createSafeFetchEnvelopeInstance,
   safeFetchEnvelope,
+  unwrapEnvelope,
 } from "./safe-fetch-result-envelope.instance";
 export type {
   EnvelopeResponse,
   EnvelopeErrorPayload,
+  EnvelopeErrorDetail,
   EnvelopeMeta,
+  EnvelopeResult,
+  SafeFetchEnvelopeInstance,
 } from "./safe-fetch-result-envelope.instance";
 export { EnvelopeError } from "./safe-fetch-result-envelope.instance";
 

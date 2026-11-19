@@ -9,4 +9,5 @@ export {
 export {
   createSafeFetchUploadEnvelopeInstance,
   safeUploadEnvelope,
+  type SafeFetchUploadEnvelopeInstance,
 } from "./safe-fetch-result-envelope-upload.instance";

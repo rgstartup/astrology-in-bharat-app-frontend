@@ -16,6 +16,8 @@ import {
   type EnvelopeResponse,
   type EnvelopeErrorPayload,
   type EnvelopeMeta,
+  type EnvelopeResult,
+  type SafeFetchEnvelopeInstance,
   EnvelopeError,
 } from "../core/safe-fetch-result-envelope.instance";
 import type {
@@ -28,14 +30,16 @@ export {
   type EnvelopeResponse,
   type EnvelopeErrorPayload,
   type EnvelopeMeta,
+  type EnvelopeResult,
+  type SafeFetchEnvelopeInstance,
   EnvelopeError,
 };
 
 /**
- * @desc Unwrap a backend envelope Result into a plain data Result.
- * - Network/abort errors (result.ok === false): pass through unchanged.
- * - Envelope success === false: build ApiError from envelope.error.
- * - Envelope success === true: return envelope.data unwrapped.
+ * @desc Unwrap a backend envelope Result into an EnvelopeResult.
+ * - Network/abort errors (result.ok === false): return { ok: false, data: null, error, meta: undefined }.
+ * - Envelope success === false: return { ok: false, data: envelope.data, error, meta: envelope.meta }.
+ * - Envelope success === true: return { ok: true, data: envelope.data, meta: envelope.meta }.
  */
 async function unwrapEnvelope<
   T,
@@ -43,9 +47,16 @@ async function unwrapEnvelope<
 >(
   promise: Promise<Result<EnvelopeResponse<T>, TErrorBody>>,
   onError?: SafeFetchInstanceConfig["onError"],
-): Promise<Result<T, TErrorBody>> {
+): Promise<EnvelopeResult<T, TErrorBody>> {
   const result = await promise;
-  if (!result.ok) return result;
+  if (!result.ok) {
+    return {
+      ok: false,
+      data: null,
+      error: result.error,
+      meta: undefined,
+    };
+  }
 
   const envelope = result.data;
   if (!envelope.success) {
@@ -66,10 +77,19 @@ async function unwrapEnvelope<
     );
 
     if (onError) await onError(error as ApiError<TErrorBody>);
-    return { ok: false, error };
+    return {
+      ok: false,
+      data: (envelope.data as T | null) ?? null,
+      error,
+      meta: envelope.meta,
+    };
   }
 
-  return { ok: true, data: envelope.data as T };
+  return {
+    ok: true,
+    data: envelope.data as T,
+    meta: envelope.meta,
+  };
 }
 
 /**
@@ -84,23 +104,23 @@ async function unwrapEnvelope<
  *     retry: 3,
  *     retryIntervalMs: 1000,
  *   });
- *   const { data } = await api.get("/users");      // data is unwrapped, retried on network error
+ *   const { ok, data, meta } = await api.get("/users");
  */
 export function createSafeFetchRetryEnvelopeInstance(
   config: SafeFetchInstanceConfig = {},
-): SafeFetchResultInstance {
+): SafeFetchEnvelopeInstance {
   const base = createSafeFetchResultInstance(config);
   const retried = withRetryResult(base, config);
 
   const callable = (async <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
     init?: SafeFetchInit,
-  ): Promise<Result<T, TErrorBody>> => {
+  ): Promise<EnvelopeResult<T, TErrorBody>> => {
     return unwrapEnvelope(
       retried<EnvelopeResponse<T>, TErrorBody>(url, init),
       config.onError,
     );
-  }) as SafeFetchResultInstance;
+  }) as SafeFetchEnvelopeInstance;
 
   callable.get = <T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
     url: string,
@@ -174,4 +194,4 @@ export function createSafeFetchRetryEnvelopeInstance(
 /**
  * @desc Default client-only retry envelope instance (no base URL).
  */
-export const safeFetchRetryEnvelope = createSafeFetchRetryEnvelopeInstance();
+export const safeFetchRetryEnvelope: SafeFetchEnvelopeInstance = createSafeFetchRetryEnvelopeInstance();

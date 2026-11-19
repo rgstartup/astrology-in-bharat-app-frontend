@@ -1,4 +1,4 @@
-import type { Result, ApiErrorBody } from "@repo/safe-fetch";
+import type { Result, ApiErrorBody, EnvelopeResult } from "@repo/safe-fetch";
 import { ApiError } from "@repo/safe-fetch";
 
 /** Backend symmetric response envelope. */
@@ -79,15 +79,22 @@ function extractFieldErrors(
 }
 
 /**
- * Unwraps a backend envelope Result into a plain data Result.
- * - Network/abort errors (result.ok === false): pass through unchanged.
- * - Envelope success === false: return error with envelope error details.
- * - Envelope success === true: return envelope.data unwrapped.
+ * Unwraps a backend envelope Result (e.g. from safeFetchResultInstance) into an EnvelopeResult.
+ * - Network/abort errors (result.ok === false): return { ok: false, data: null, error, meta: undefined }.
+ * - Envelope success === false: return { ok: false, data: envelope.data, error, meta: envelope.meta }.
+ * - Envelope success === true: return { ok: true, data: envelope.data, meta: envelope.meta }.
  */
 export function unwrapEnvelope<T, TErrorBody extends ApiErrorBody = ApiErrorBody>(
   result: Result<EnvelopeResponse<T>, TErrorBody>
-): Result<T, TErrorBody> {
-  if (!result.ok) return result;
+): EnvelopeResult<T, TErrorBody> {
+  if (!result.ok) {
+    return {
+      ok: false,
+      data: null,
+      error: result.error,
+      meta: undefined,
+    };
+  }
 
   const envelope = result.data;
   if (!envelope.success) {
@@ -106,8 +113,17 @@ export function unwrapEnvelope<T, TErrorBody extends ApiErrorBody = ApiErrorBody
         fieldErrors: extractFieldErrors(envelope.error?.details),
       },
     );
-    return { ok: false, error };
+    return {
+      ok: false,
+      data: (envelope.data as T | null) ?? null,
+      error,
+      meta: envelope.meta,
+    };
   }
 
-  return { ok: true, data: envelope.data as T };
+  return {
+    ok: true,
+    data: envelope.data as T,
+    meta: envelope.meta,
+  };
 }
