@@ -17,61 +17,19 @@ import type {
 } from "./upload";
 import type { SafeFetchInstanceConfig } from "../core";
 
-/** Backend symmetric response envelope. */
-export interface EnvelopeResponse<T = unknown> {
-  success: boolean;
-  data: T | null;
-  error: EnvelopeErrorPayload | null;
-  meta: EnvelopeMeta;
-}
+import {
+  type EnvelopeResponse,
+  type EnvelopeErrorPayload,
+  type EnvelopeMeta,
+  EnvelopeError,
+} from "../core/safe-fetch-result-envelope.instance";
 
-/** Error payload carried inside a failed envelope. */
-export interface EnvelopeErrorPayload {
-  code: string;
-  message: string;
-  details?: Record<string, unknown>;
-  path?: string;
-  timestamp: string;
-}
-
-/** Metadata carried inside every envelope response. */
-export interface EnvelopeMeta {
-  timestamp: string;
-  pagination?: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
-  message?: string;
-}
-
-/**
- * @desc Error thrown when the backend envelope indicates failure.
- * Converts to a safe-fetch-compatible ApiErrorBody via toApiErrorBody().
- */
-export class EnvelopeError extends Error {
-  constructor(
-    public readonly error: EnvelopeErrorPayload,
-    public readonly meta: EnvelopeMeta,
-  ) {
-    super(error.message);
-    this.name = "EnvelopeError";
-  }
-
-  toApiErrorBody(): ApiErrorBody {
-    return {
-      message: this.error.message,
-      errorCode: this.error.code,
-      fieldErrors: this.error.details?.fieldErrors as FieldErrors | undefined,
-      statusCode: (this.error.details?.httpStatus as number) ?? 500,
-      path: this.error.path,
-      timestamp: this.error.timestamp,
-    };
-  }
-}
+export {
+  type EnvelopeResponse,
+  type EnvelopeErrorPayload,
+  type EnvelopeMeta,
+  EnvelopeError,
+};
 
 /**
  * @desc Unwrap a backend envelope Result into a plain data Result.
@@ -91,19 +49,19 @@ async function unwrapEnvelope<
 
   const envelope = result.data;
   if (!envelope.success) {
-    const statusCode =
-      (envelope.error?.details?.httpStatus as number | undefined) ?? 500;
-    const fieldErrors = envelope.error?.details?.fieldErrors as
-      | FieldErrors
-      | undefined;
+    const errorBody = new EnvelopeError(
+      envelope.error!,
+      envelope.meta,
+    ).toApiErrorBody();
+
     const error = new ApiError<TErrorBody>(
-      statusCode,
+      errorBody.statusCode ?? 500,
       envelope.error?.message ?? "Request failed",
       envelope.error as unknown as TErrorBody,
       undefined,
       {
         errorCode: envelope.error?.code,
-        fieldErrors,
+        fieldErrors: errorBody.fieldErrors,
       },
     );
 

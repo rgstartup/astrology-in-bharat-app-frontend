@@ -23,32 +23,72 @@ import type {
 /** Backend symmetric response envelope. */
 export interface EnvelopeResponse<T = unknown> {
   success: boolean;
+  type?: 'entity' | 'collection' | 'paginated' | 'boolean' | 'empty' | 'error';
   data: T | null;
   error: EnvelopeErrorPayload | null;
   meta: EnvelopeMeta;
+}
+
+/** Granular field error item inside details array. */
+export interface EnvelopeErrorDetail {
+  field?: string;
+  code: string;
+  message: string;
 }
 
 /** Error payload carried inside a failed envelope. */
 export interface EnvelopeErrorPayload {
   code: string;
   message: string;
-  details?: Record<string, unknown>;
+  details?: EnvelopeErrorDetail[] | Record<string, unknown>;
   path?: string;
-  timestamp: string;
+  timestamp?: string;
 }
 
 /** Metadata carried inside every envelope response. */
 export interface EnvelopeMeta {
   timestamp: string;
+  requestId?: string;
+  path?: string;
+  message?: string;
   pagination?: {
-    total: number;
     page: number;
     limit: number;
+    totalItems: number;
     totalPages: number;
     hasNextPage: boolean;
-    hasPrevPage: boolean;
+    hasPreviousPage: boolean;
+    total?: number;
+    hasPrevPage?: boolean;
   };
-  message?: string;
+}
+
+/**
+ * Extracts a normalized fieldErrors map from details array or record.
+ */
+function extractFieldErrors(
+  details?: EnvelopeErrorDetail[] | Record<string, unknown>,
+): FieldErrors | undefined {
+  if (!details) return undefined;
+
+  if (Array.isArray(details)) {
+    const fieldErrors: FieldErrors = {};
+    for (const item of details) {
+      if (item && item.field && item.message) {
+        const field = item.field;
+        const list = fieldErrors[field] ?? [];
+        list.push(item.message);
+        fieldErrors[field] = list;
+      }
+    }
+    return Object.keys(fieldErrors).length > 0 ? fieldErrors : undefined;
+  }
+
+  if (typeof details === "object" && details !== null && "fieldErrors" in details) {
+    return (details as { fieldErrors: FieldErrors }).fieldErrors;
+  }
+
+  return undefined;
 }
 
 /**
@@ -70,13 +110,17 @@ export class EnvelopeError extends Error {
    * details.httpStatus -> statusCode (default 500).
    */
   toApiErrorBody(): ApiErrorBody {
+    const legacyDetails = !Array.isArray(this.error.details)
+      ? (this.error.details as Record<string, unknown> | undefined)
+      : undefined;
+
     return {
       message: this.error.message,
       errorCode: this.error.code,
-      fieldErrors: this.error.details?.fieldErrors as FieldErrors | undefined,
-      statusCode: (this.error.details?.httpStatus as number) ?? 500,
-      path: this.error.path,
-      timestamp: this.error.timestamp,
+      fieldErrors: extractFieldErrors(this.error.details),
+      statusCode: (legacyDetails?.httpStatus as number) ?? 500,
+      path: this.meta?.path ?? this.error.path,
+      timestamp: this.meta?.timestamp ?? this.error.timestamp,
     };
   }
 }
@@ -99,10 +143,11 @@ async function unwrapEnvelope<
 
   const envelope = result.data;
   if (!envelope.success) {
-    const statusCode =
-      (envelope.error?.details?.httpStatus as number | undefined) ?? 500;
-    const fieldErrors = envelope.error?.details?.fieldErrors as
-      FieldErrors | undefined;
+    const legacyDetails = !Array.isArray(envelope.error?.details)
+      ? (envelope.error?.details as Record<string, unknown> | undefined)
+      : undefined;
+    const statusCode = (legacyDetails?.httpStatus as number | undefined) ?? 500;
+    const fieldErrors = extractFieldErrors(envelope.error?.details);
     const error = new ApiError<TErrorBody>(
       statusCode,
       envelope.error?.message ?? "Request failed",
