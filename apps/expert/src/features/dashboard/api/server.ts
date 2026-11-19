@@ -1,16 +1,22 @@
-import { headers } from "next/headers";
+import { cookies } from "next/headers";
+
 import { createSafeFetchEnvelopeInstance } from "@repo/safe-fetch";
 import type { EnvelopeResult } from "@repo/safe-fetch";
-import type { DashboardStats, ExpertReviewsStats, ExpertReview } from "@repo/lib";
+import type {
+  DashboardStats,
+  ExpertReviewsStats,
+  ExpertReview,
+} from "@repo/lib";
 
 async function getServerApi() {
-  const headerStore = await headers();
-  const cookieHeader = headerStore.get("cookie");
+  const cookieStore = await cookies();
 
   return createSafeFetchEnvelopeInstance({
     baseUrl: process.env.NEXT_PUBLIC_API_URL!,
     credentials: "include",
-    headers: cookieHeader ? { Cookie: cookieHeader } : {},
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
   });
 }
 
@@ -23,9 +29,11 @@ export async function getDashboardStats(
   period = "monthly",
 ): Promise<EnvelopeResult<DashboardStats>> {
   const api = await getServerApi();
-  return api.get<DashboardStats>(
-    `/expert/me/dashboard/stats?period=${period}`,
-  );
+  return api.get<DashboardStats>(`/expert/me/dashboard/stats`, {
+    params: {
+      period,
+    },
+  });
 }
 
 /**
@@ -103,9 +111,7 @@ export async function getReviews(
   });
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
-  return api.get<ExpertReview[]>(
-    `/expert/me/reviews?${params.toString()}`,
-  );
+  return api.get<ExpertReview[]>(`/expert/me/reviews?${params.toString()}`);
 }
 
 /**
