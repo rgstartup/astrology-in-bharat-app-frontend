@@ -28,7 +28,10 @@ export { createSafeFetchInstance } from "./safe-fetch.instance";
 export { createSafeFetchResultInstance } from "./safe-fetch-result.instance";
 
 // ---- Envelope-aware instance (new) ----
-export { createSafeFetchEnvelopeInstance } from "./safe-fetch-result-envelope.instance";
+export {
+  createSafeFetchEnvelopeInstance,
+  safeFetchEnvelope,
+} from "./safe-fetch-result-envelope.instance";
 export type {
   EnvelopeResponse,
   EnvelopeErrorPayload,

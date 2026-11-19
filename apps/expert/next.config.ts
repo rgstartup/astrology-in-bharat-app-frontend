@@ -32,9 +32,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   // Allow large file uploads (videos up to 50MB)
   experimental: {
     serverActions: {

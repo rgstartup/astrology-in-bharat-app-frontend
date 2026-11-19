@@ -259,3 +259,8 @@ export function createSafeFetchEnvelopeInstance(
 
   return callable;
 }
+
+/**
+ * Default safeFetchEnvelope instance for direct unwrapped requests.
+ */
+export const safeFetchEnvelope = createSafeFetchEnvelopeInstance();

@@ -58,6 +58,7 @@ export type {
 export {
   EnvelopeError,
   createSafeFetchEnvelopeInstance,
+  safeFetchEnvelope,
 } from "./core/safe-fetch-result-envelope.instance";
 
 import safeFetch from "./core/safe-fetch";

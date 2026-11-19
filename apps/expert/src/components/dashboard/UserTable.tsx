@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { format } from "date-fns";
 import { TableSkeleton } from "./DashboardSkeletons";
+import UpcomingAppointmentsEmpty from "@/app/[locale]/dashboard/@recent-appointments/UpcomingAppointmentsEmpty";
 
 interface RecentAppointment {
   id: string | string;
@@ -184,11 +185,7 @@ export const UpcomingAppointments: React.FC = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={4} className="py-8 text-center text-gray-700 text-sm">
-                    {searchTerm ? "No appointments match your search." : "No appointments found."}
-                  </td>
-                </tr>
+                <UpcomingAppointmentsEmpty />
               )}
             </tbody>
           </table>

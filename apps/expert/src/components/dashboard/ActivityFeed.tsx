@@ -5,6 +5,7 @@ const Clock = ClockIcon as any;
 import { getRecentAppointments as getRecentSessions } from '@/features/dashboard/api';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ActivitySkeleton } from './DashboardSkeletons';
+import RecentActivityEmpty from '@/app/[locale]/dashboard/@recent-activity/RecentActivityEmpty';
 
 interface Activity {
   name: string;
@@ -78,9 +79,7 @@ export const RecentActivity: React.FC = () => {
             </div>
           ))
         ) : (
-          <div className="text-center py-8">
-            <p className="text-sm text-gray-700">No recent activity found.</p>
-          </div>
+          <RecentActivityEmpty />
         )}
       </div>
     </div>
