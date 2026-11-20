@@ -1,8 +1,12 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:6543";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname, "../../.."),
+  },
   transpilePackages: ["@repo/ui"],
   images: {
     remotePatterns: [

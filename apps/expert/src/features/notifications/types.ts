@@ -8,13 +8,8 @@ export interface ExpertNotification {
   [key: string]: unknown;
 }
 
-export interface NotificationsResponse {
-  success: boolean;
-  data: ExpertNotification[];
-  meta: { totalCount: number; limit: number; offset: number };
-}
+export type NotificationsResponse = ExpertNotification[];
 
-export interface UnreadCountResponse {
-  success: boolean;
+export interface NotificationCount {
   count: number;
 }

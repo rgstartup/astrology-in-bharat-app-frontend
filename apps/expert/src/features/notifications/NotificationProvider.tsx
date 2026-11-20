@@ -49,7 +49,7 @@ export function NotificationProvider({
       getNotifications(),
       getUnreadCount(),
     ]);
-    if (listRes.status === "fulfilled") setNotifications(listRes.value.data);
+    if (listRes.status === "fulfilled") setNotifications(listRes.value);
     if (countRes.status === "fulfilled") setUnreadCount(countRes.value.count);
   }, [isAuthenticated, user, setNotifications, setUnreadCount]);
 

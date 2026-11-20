@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 // ─── Security Headers ──────────────────────────────────────────────────────────
@@ -26,6 +27,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+    turbopack: {
+        root: path.resolve(__dirname, "../../.."),
+    },
     images: {
         remotePatterns: [
             {

@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import AGORA_CSP_REQUIREMENTS from "@repo/rtc/agora/csp";
@@ -32,6 +33,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname, "../../.."),
+  },
   // Allow large file uploads (videos up to 50MB)
   experimental: {
     serverActions: {
