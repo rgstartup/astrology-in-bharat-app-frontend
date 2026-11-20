@@ -20,7 +20,4 @@ export {
   isBrowser,
 } from "./config";
 
-export {
-  merchantSocket,
-} from "./merchant.socket";
 

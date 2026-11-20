@@ -21,29 +21,10 @@ const socketOptions = {
 
 export const socket: Socket = io(socketUrl, socketOptions);
 
-/** Socket.IO namespace for merchant availability updates. */
-export const merchantSocket: Socket = io(`${socketUrl}/merchant`, socketOptions);
+export const socket: Socket = io(socketUrl, socketOptions);
 
 socket.on("connect", () => {
   console.log("[Socket] Connected to the root namespace:", socket.id);
-});
-
-merchantSocket.on("connect", () => {
-  console.log(
-    "[Socket] Connected to the merchant namespace:",
-    merchantSocket.id,
-  );
-});
-
-merchantSocket.on("connect_error", (error) => {
-  console.warn(
-    "[Socket] Merchant connection failed. Check NEXT_PUBLIC_SOCKET_URL, the backend /merchant namespace, and its CORS settings.",
-    getErrorMessage(error),
-  );
-});
-
-merchantSocket.on("merchant_status_changed", (data) => {
-  console.log("[Socket] Received merchant status update:", data);
 });
 
 export default socket;

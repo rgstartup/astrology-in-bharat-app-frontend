@@ -12,7 +12,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { AuthInitializer } from "@/components/layout/AuthInitializer";
 import { RealtimeProvider } from "@/realtime/socket.provider";
-import MerchantStatusProvider from "@/providers/MerchantStatusProvider";
+
 import NotificationProvider from "@/providers/NotificationProvider";
 import { SmoothScroll } from "@repo/design/components";
 import { Toaster } from "@repo/design/shadcn";
@@ -68,7 +68,6 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className="min-h-screen bg-white text-black font-sans">
         <NextIntlClientProvider>
           <RealtimeProvider>
-            <MerchantStatusProvider>
               <NotificationProvider>
                 <QueryProvider>
                   <ConsultationPrepProvider>
@@ -81,7 +80,6 @@ export default async function LocaleLayout({ children, params }: Props) {
                   </ConsultationPrepProvider>
                 </QueryProvider>
               </NotificationProvider>
-            </MerchantStatusProvider>
           </RealtimeProvider>
           <AuthInitializer initialUser={initialUser} />
         </NextIntlClientProvider>
