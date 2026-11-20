@@ -1,19 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import {
-  apiV2,
-  API_ROUTES,
-  AUTH_COOKIE_NAMES,
-  Result,
-  ApiError,
-} from "@/actions";
-import {
-  setAccessToken,
-  setRefreshToken,
-  clearAuthCookies,
-  getAccessToken,
-} from "./cookie";
+import { apiV2Server, API_ROUTES, AUTH_COOKIE_NAMES, Result } from "@/actions/server-api";
+import { apiV2 } from "@/actions";
+import { setAccessToken, setRefreshToken, getAccessToken } from "./cookie";
 import type { IAuthUser } from "@/store/authStore";
 
 import type { AuthResponse, AuthActionResponse } from "@/lib/types";
@@ -117,13 +107,7 @@ export async function getMeAction(): Promise<Result<IAuthUser>> {
   const token = await getAccessToken();
   if (!token) return UnauthorizedErrorResult;
 
-  return apiV2
-    .extend({
-      headers: {
-        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
-      },
-    })
-    .get<IAuthUser>(API_ROUTES.AUTH.ME);
+  return apiV2Server.get<IAuthUser>(API_ROUTES.AUTH.ME);
 }
 
 // ─────────────────────────────────────────────────────────
@@ -132,14 +116,5 @@ export async function getMeAction(): Promise<Result<IAuthUser>> {
 export async function getWalletBalanceAction(): Promise<
   Result<{ balance: number }>
 > {
-  const token = await getAccessToken();
-  if (!token) return UnauthorizedErrorResult;
-
-  return apiV2
-    .extend({
-      headers: {
-        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
-      },
-    })
-    .get<{ balance: number }>(API_ROUTES.WALLET.ROOT);
+  return apiV2Server.get<{ balance: number }>(API_ROUTES.WALLET.ROOT);
 }

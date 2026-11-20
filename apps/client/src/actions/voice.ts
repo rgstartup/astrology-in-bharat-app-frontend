@@ -1,7 +1,6 @@
 "use server";
 
-import { apiV2, AUTH_COOKIE_NAMES, API_ROUTES, type ApiErrorBody } from "@/actions";
-import { getAccessToken } from "@/actions/cookie";
+import { apiV2Server, AUTH_COOKIE_NAMES, API_ROUTES, type ApiErrorBody } from "@/actions/server-api";
 
 export interface VoiceEligibilityData {
   isEligibleForFree: boolean;
@@ -36,23 +35,12 @@ function toErrorResult(err: {
   };
 }
 
-function authHeaders(accessToken: string | undefined) {
-  return {
-    headers: {
-      Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`,
-    },
-  };
-}
-
 export async function checkVoiceEligibilityAction(
   expertId: number | string,
 ): Promise<VoiceActionResult<VoiceEligibilityData>> {
-  const accessToken = await getAccessToken();
-  const res = await apiV2
-    .extend(authHeaders(accessToken))
-    .get<VoiceEligibilityData>(
-      `${API_ROUTES.VOICE.ELIGIBILITY}?expertId=${Number(expertId)}`,
-    );
+  const res = await apiV2Server.get<VoiceEligibilityData>(
+    `${API_ROUTES.VOICE.ELIGIBILITY}?expertId=${Number(expertId)}`,
+  );
   if (res.ok) return { ok: true, data: res.data };
   return toErrorResult(res.error);
 }
@@ -67,10 +55,9 @@ export async function checkVoiceEligibilityAction(
 export async function getVoiceTokenAction(
   consultationId: number,
 ): Promise<VoiceActionResult<VoiceTokenData>> {
-  const accessToken = await getAccessToken();
-  const res = await apiV2
-    .extend(authHeaders(accessToken))
-    .get<VoiceTokenData>(`${API_ROUTES.VOICE.TOKEN}/${consultationId}`);
+  const res = await apiV2Server.get<VoiceTokenData>(
+    `${API_ROUTES.VOICE.TOKEN}/${consultationId}`,
+  );
   if (res.ok) return { ok: true, data: res.data };
   return toErrorResult(res.error);
 }

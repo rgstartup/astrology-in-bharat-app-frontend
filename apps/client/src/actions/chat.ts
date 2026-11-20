@@ -1,12 +1,12 @@
 "use server";
 
 import {
-  apiV2,
+  apiV2Server,
   AUTH_COOKIE_NAMES,
   API_ROUTES,
   type ApiErrorBody,
-} from "@/actions";
-import { getAccessToken } from "@/actions/cookie";
+} from "@/actions/server-api";
+import { apiV2 } from "@/actions";
 import { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { type IExpert } from "@repo/lib";
 
@@ -67,23 +67,15 @@ export async function initiateConsultationAction(
   metadata: SomeoneElseData | null = null,
   consultationId?: number,
 ): Promise<InitiateConsultationResult> {
-  const accessToken = await getAccessToken();
-
-  const res = await apiV2
-    .extend({
-      headers: {
-        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`,
-      },
-    })
-    .post<InitiateConsultationData, InitiateConsultationErrorBody>(
-      API_ROUTES.CONSULTATION.INITIATE,
-      {
-        expert_id: Number(expertId),
-        mode,
-        ...(consultationId != null ? { consultation_id: consultationId } : {}),
-        ...(metadata ? { metadata } : {}),
-      },
-    );
+  const res = await apiV2Server.post<InitiateConsultationData, InitiateConsultationErrorBody>(
+    API_ROUTES.CONSULTATION.INITIATE,
+    {
+      expert_id: Number(expertId),
+      mode,
+      ...(consultationId != null ? { consultation_id: consultationId } : {}),
+      ...(metadata ? { metadata } : {}),
+    },
+  );
 
   if (res.ok) return { ok: true, data: res.data };
 
@@ -136,22 +128,19 @@ export interface ChatHistoryResponse {
  * Fetch persisted history for a consultation the client participates in.
  */
 export async function getChatHistoryAction(consultationId: number) {
-  const accessToken = await getAccessToken();
-
-  return apiV2
-    .extend({
-      headers: {
-        Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`,
-      },
-    })
-    .get<ChatHistoryResponse>(`${API_ROUTES.CHAT.HISTORY}/${consultationId}`);
+  return apiV2Server.get<ChatHistoryResponse>(
+    `${API_ROUTES.CHAT.HISTORY}/${consultationId}`,
+  );
 }
 
 /**
  * Fetch expert for chat prep via canonical /experts/:id.
  */
 export async function getChatPrepExpertAction(expertId: string | number) {
-  return apiV2.get<IExpert>(
+  const res = await apiV2.get<IExpert>(
     API_ROUTES.EXPERTS.ACCOUNT.replace(":id", String(expertId)),
   );
+
+  console.log(res);
+  return res;
 }
