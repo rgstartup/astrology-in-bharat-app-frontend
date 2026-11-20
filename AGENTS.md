@@ -42,7 +42,6 @@
 - Use `@repo/ui` for shared UI elements (`Button`, `Loading`, `CloseButton`, etc.).
 - Use `@repo/lib` for helper functions, error handling (`getErrorMessage`), and token decoding.
 - Use `@repo/safe-fetch` (`createSafeFetchInstance`) for API clients with type-safe response wrappers `[data, error]`.
-- Use `@repo/store` for shared Zustand store definitions.
 - Use `@repo/routes` for shared path constants (`PATHS`).
 
 ## 5. UI, Styling & State Management
@@ -332,7 +331,7 @@ src/
 │   └── layout/                  # Shared application layouts
 ├── hooks/                       # Hooks shared across unrelated features
 ├── lib/                         # Cross-feature utilities & infrastructure
-├── store/                       # Genuinely cross-feature client state (@repo/store)
+├── store/                       # App-level shared client state (localized per app)
 ├── types/                       # Application-wide types (genuinely shared only)
 └── config/                      # App configuration
 ```
@@ -347,13 +346,13 @@ src/
 ### 13.3 Feature Boundaries & Dependencies
 
 - Routes compose features and page-level components.
-- Features may use shared UI primitives and shared infrastructure (`@repo/ui`, `@repo/lib`, `@repo/store`, `@repo/routes`).
+- Features may use shared UI primitives and shared infrastructure (`@repo/ui`, `@repo/lib`, `@repo/routes`).
 - Shared UI primitives and shared infrastructure must not depend on business-specific features.
 - A feature must not import another feature's private implementation files; consume only via the owning feature's public `index.ts`.
 - Cross-feature communication should use explicit public APIs, shared contracts, or appropriately scoped state.
 - Avoid circular dependencies.
 - Use feature-level `index.ts` files as deliberate public interfaces, not mandatory barrel files for every directory.
-- Do not introduce a new state-management library, dependency-injection framework, event system, or architectural pattern solely to facilitate a refactor. Preserve existing conventions: `@tanstack/react-query` for server state, Zustand for client UI state, `@repo/store` for shared stores.
+- Do not introduce a new state-management library, dependency-injection framework, event system, or architectural pattern solely to facilitate a refactor. Preserve existing conventions: `@tanstack/react-query` for server state, Zustand for client UI state.
 
 ### 13.4 Separation of Responsibilities
 
@@ -374,7 +373,7 @@ Use the narrowest state scope that correctly supports the required behavior:
 
 - **Local component state:** `useState`/`useReducer` for state owned by one component (e.g. dropdown visibility, local form interaction).
 - **Feature-level state:** lift to the nearest common owner or a feature hook/store when multiple related components need coordinated behavior.
-- **Global state:** shared Zustand stores (`@repo/store`, `src/store/`) only when state must be shared across independent parts of the app (e.g. authenticated user info, wallet balance).
+- **Global state:** shared Zustand stores (`src/store/`) only when state must be shared across independent parts of the app (e.g. authenticated user info, wallet balance).
 
 State-management rules:
 

@@ -8,7 +8,6 @@ import React, {
   useCallback,
 } from "react";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@repo/store";
 import { getErrorMessage } from "@repo/lib";
 import { SafeFetchInstance } from "@repo/safe-fetch";
 
@@ -56,7 +55,7 @@ export const CartProvider = ({
   children: React.ReactNode;
   api: SafeFetchInstance;
 }) => {
-  const { isAuthenticated } = useAuthStore();
+  const isAuthenticated = true;
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 

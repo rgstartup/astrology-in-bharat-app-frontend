@@ -363,9 +363,6 @@ importers:
       '@repo/safe-fetch':
         specifier: workspace:*
         version: link:../../packages/safe-fetch
-      '@repo/store':
-        specifier: workspace:*
-        version: link:../../packages/store
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -938,31 +935,6 @@ importers:
         specifier: 5.8.3
         version: 5.8.3
 
-  packages/store:
-    dependencies:
-      '@repo/lib':
-        specifier: workspace:*
-        version: link:../lib
-      '@repo/safe-fetch':
-        specifier: workspace:*
-        version: link:../safe-fetch
-      react-toastify:
-        specifier: ^11.0.5
-        version: 11.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      zustand:
-        specifier: ^5.0.11
-        version: 5.0.15(@types/react@19.3.0)(immer@11.1.18)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-
   packages/storybook:
     devDependencies:
       '@babel/core':
@@ -1063,9 +1035,6 @@ importers:
       '@repo/safe-fetch':
         specifier: workspace:*
         version: link:../safe-fetch
-      '@repo/store':
-        specifier: workspace:*
-        version: link:../store
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

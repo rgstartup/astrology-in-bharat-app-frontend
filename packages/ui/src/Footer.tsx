@@ -2,11 +2,48 @@
 import React from "react";
 import Link from "next/link";
 import { PATHS, URLS } from "@repo/routes";
-import { useLanguageStore, footerTranslations } from "@repo/store";
+
+const footerTranslations = {
+  en: {
+    aboutText: "Astrology in Bharat is India's trusted astrology platform offering accurate guidance through verified experts using authentic Indian astrology systems.",
+    freeCalculator: "Free Calculator",
+    astrologyServices: "Astrology Services",
+    importantLinks: "Important Links",
+    helpfulInfo: "Helpful Info",
+    marriageAge: "Marriage Age",
+    dahejCalculator: "Dahej Calculator",
+    loveCompatibility: "Love Compatibility",
+    luckyNumber: "Lucky Number",
+    lifePath: "Life Path",
+    nakshatraFinder: "Nakshatra Finder",
+    onlinePuja: "Online Puja",
+    talkToExpert: "Talk to Expert",
+    videoConsultation: "Video Consultation",
+    kundliMatching: "Kundli Matching",
+    kundliPrediction: "Kundli Prediction",
+    numerologyReport: "Numerology Report",
+    dailyHoroscope: "Daily Horoscope",
+    expertLogin: "Expert Login",
+    expertRegistration: "Expert Registration",
+    userRegistration: "User Registration",
+    merchantLogin: "Merchant Login",
+    merchantRegistration: "Merchant Registration",
+    shubhMuhurat: "Hindu Calendar",
+    shopProducts: "Shop Our Products",
+    aboutUs: "About Us",
+    contactUs: "Contact Us",
+    refundPolicy: "Refund Policy",
+    privacyPolicy: "Privacy Policy",
+    termsConditions: "Terms & Conditions",
+    copyrightNotice: "Copyright Notice",
+    helpSupport: "Help & Support",
+    sessionHistory: "Session",
+    copyright: "© 2026 Astrology in Bharat (Powered by Astrology in Bharat Services). All Rights Reserved.",
+  },
+} as const;
 
 const Footer: React.FC = () => {
-  const { lang } = useLanguageStore();
-  const t = footerTranslations[lang as keyof typeof footerTranslations] || footerTranslations.en;
+  const t = footerTranslations.en;
 
   return (
     <>

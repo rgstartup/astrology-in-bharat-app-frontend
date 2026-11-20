@@ -29,7 +29,6 @@
     "@repo/lib": "workspace:*",
     "@repo/routes": "workspace:*",
     "@repo/safe-fetch": "workspace:*",
-    "@repo/store": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.473.0",

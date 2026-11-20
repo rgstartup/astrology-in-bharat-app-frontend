@@ -39,9 +39,9 @@ const NotificationComponent = () => {
   const fetchNotificationsFn = useCallback(async () => {
     setLoading(true);
     try {
-      const [res, error] = await getNotifications();
-      if (error) throw error;
-      setNotifications(res?.data ?? []);
+      const res = await getNotifications();
+      if (!res.ok) throw res.error;
+      setNotifications(res.data?.data ?? []);
     } catch (err) {
       console.error("Failed to fetch notifications", err);
     } finally {
@@ -52,8 +52,8 @@ const NotificationComponent = () => {
   const handleClearAll = useCallback(async () => {
     setLoading(true);
     try {
-      const [_, error] = await clearNotifications();
-      if (error) throw error;
+      const res = await clearNotifications();
+      if (!res.ok) throw res.error;
       reset();
     } catch (err) {
       console.error("Failed to clear notifications in header", err);
@@ -66,8 +66,8 @@ const NotificationComponent = () => {
     async (id: string) => {
       setLoading(true);
       try {
-        const [_, error] = await markNotificationAsReadApi(id);
-        if (error) throw error;
+        const res = await markNotificationAsReadApi(id);
+        if (!res.ok) throw res.error;
 
         markNotificationAsRead(id);
       } catch (err) {
@@ -82,10 +82,10 @@ const NotificationComponent = () => {
   const fetchUnreadCountFn = useCallback(async () => {
     setLoading(true);
     try {
-      const [res, error] = await getUnreadNotificationsCount();
-      if (error) throw error;
+      const res = await getUnreadNotificationsCount();
+      if (!res.ok) throw res.error;
 
-      setUnreadCount(res?.count ?? 0);
+      setUnreadCount(res.data?.count ?? 0);
     } catch (error) {
       console.error("Failed to fetch unread notifications count", error);
     } finally {

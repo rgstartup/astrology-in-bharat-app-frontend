@@ -20,7 +20,6 @@
     "@repo/routes": "workspace:*",
     "@repo/rtc": "workspace:*",
     "@repo/safe-fetch": "workspace:*",
-    "@repo/store": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.104.0",
