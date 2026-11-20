@@ -13,7 +13,6 @@ import { ExpertCardProps } from "@/lib/types";
 import { useHomeTranslations } from "@/i18n/useHomeTranslations";
 import { useTranslations } from "next-intl";
 import { getYoutubeId, getYoutubeEmbedUrl } from "@/utils/video-utils";
-import { usePreloadExpertStore } from "@/store/preloadExpertStore";
 import { isVideoConsultationEnabled } from "@/lib/feature-flags";
 import { PATHS } from "@repo/routes";
 import { withCallbackUrl } from "@/utils/getPathnameOrDefault";
@@ -314,7 +313,6 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
 
   const [show, setShow] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const { setPreloadedExpert } = usePreloadExpertStore();
 
   React.useEffect(() => {
     return () => {
@@ -462,26 +460,6 @@ const ExpertCard: React.FC<ExpertCardProps> = ({ expertData, cardClassName = "" 
           onClick={() => {
             setIsNavigating(true);
             document.body.style.cursor = "wait";
-            setPreloadedExpert({
-              id,
-              image: image || "/images/dummy-expert.jpg",
-              name,
-              expertise,
-              experience,
-              languages,
-              price,
-              chat_price,
-              call_price,
-              video_call_price,
-              report_price,
-              horoscope_price,
-              video,
-              ratings,
-              isAvailableForConsultation: isAvailable,
-              is_available: isAvailable,
-              total_likes: currentLikes,
-              custom_services,
-            });
           }}
         >
           {isNavigating && (
