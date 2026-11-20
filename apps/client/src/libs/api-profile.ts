@@ -67,26 +67,6 @@ export const getWalletTransactions = async (params?: { purpose?: string, limit?:
     return await api.get('/wallet/transactions', { params } as any) as any;
 };
 
-export const getNotifications = async (params?: { limit?: number, offset?: number }): Promise<[any | null, ApiError | null]> => {
-    return await api.get('/notifications', { params } as any) as any;
-};
-
-export const getUnreadCount = async (): Promise<[any | null, ApiError | null]> => {
-    return await api.get('/notifications/unread-count') as any;
-};
-
-export const markNotificationAsRead = async (id: string): Promise<[any | null, ApiError | null]> => {
-    return await api.patch(`/notifications/${id}/read`) as any;
-};
-
-export const deleteNotification = async (id: string): Promise<[any | null, ApiError | null]> => {
-    return await api.delete(`/notifications/${id}`) as any;
-};
-
-export const clearAllNotifications = async (): Promise<[any | null, ApiError | null]> => {
-    return await api.delete('/notifications/all') as any;
-};
-
 // Rewards & Coupons
 export const getMyRewards = async (): Promise<[any | null, ApiError | null]> => {
     return await api.get('/coupons/my-rewards') as any;

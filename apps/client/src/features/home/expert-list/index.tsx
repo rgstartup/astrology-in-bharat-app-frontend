@@ -1,6 +1,5 @@
 import { API_ROUTES, apiV2 } from "@/actions";
 import allowedParams from "./data/allowed-params";
-import { IFetchExpertsResponse } from "./api/fetch-expert";
 import ExpertList, { ExpertListDataProps } from "./expert-list.component";
 import { IExpert, PaginationMeta } from "@repo/lib";
 
@@ -9,7 +8,10 @@ export interface ExpertListProps {
   title?: string;
 }
 
-async function getInitialExpertListProps({ searchParams, title }: ExpertListProps): Promise<ExpertListDataProps> {
+async function getInitialExpertListProps({
+  searchParams,
+  title,
+}: ExpertListProps): Promise<ExpertListDataProps> {
   const filteredParams = Object.keys(searchParams)
     .filter((key) => allowedParams.includes(key))
     .reduce(
@@ -26,12 +28,14 @@ async function getInitialExpertListProps({ searchParams, title }: ExpertListProp
     ...filteredParams,
   };
   const params = new URLSearchParams(
-    Object.entries(queryParams).filter(
-      (entry): entry is [string, string] => Boolean(entry[1]),
+    Object.entries(queryParams).filter((entry): entry is [string, string] =>
+      Boolean(entry[1]),
     ),
   ).toString();
 
-  const result = await apiV2.get<IExpert[]>(`${API_ROUTES.EXPERTS.LIST}?${params}`);
+  const result = await apiV2.get<IExpert[]>(
+    `${API_ROUTES.EXPERTS.LIST}?${params}`,
+  );
 
   const listProps: ExpertListDataProps = {
     initialExperts: [] as IExpert[],
@@ -46,7 +50,8 @@ async function getInitialExpertListProps({ searchParams, title }: ExpertListProp
   }
 
   listProps.initialExperts = result.data || [];
-  listProps.initialPagination = result.meta?.pagination as PaginationMeta | undefined;
+  listProps.initialPagination = result.meta?.pagination as
+    PaginationMeta | undefined;
   listProps.title = title;
 
   return listProps;

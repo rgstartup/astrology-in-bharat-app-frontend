@@ -1,6 +1,7 @@
 "use client";
 
 import type { PayoutAccountLink } from "@/features/payout-accounts/api";
+import { payoutAccountDisplay } from "@/features/payout-accounts/utils/payout-account-details";
 import { StatusBadge } from "./status-badge.component";
 import { PayoutAccountActions } from "./payout-account-actions.component";
 
@@ -23,6 +24,11 @@ export function PayoutAccountRow({
   onRefresh,
   refreshing,
 }: PayoutAccountRowProps) {
+  const { accountLabel, secondary } = payoutAccountDisplay(
+    link.details,
+    link.externalAccountId,
+  );
+
   return (
     <tr
       key={link.id}
@@ -31,15 +37,8 @@ export function PayoutAccountRow({
       <td className="px-8 py-6">
         <div className="flex flex-col gap-1">
           <span className="text-[13px] font-bold text-gray-900">
-            {link.accountNumberMasked
-              ? `•••• ${link.accountNumberMasked}`
-              : (link.externalAccountId ?? "—")}
+            {accountLabel}
           </span>
-          {link.ifsc && (
-            <span className="text-[11px] text-gray-500 font-mono">
-              {link.ifsc}
-            </span>
-          )}
           <span className="text-[11px] text-gray-500">
             Created{" "}
             {new Date(link.createdAt).toLocaleDateString("en-IN", {
@@ -52,9 +51,9 @@ export function PayoutAccountRow({
       </td>
       <td className="px-8 py-6 text-center">
         <span
-          className={`text-[11px] font-mono font-bold ${link.ifsc ? "text-gray-700" : "text-gray-400"}`}
+          className={`text-[11px] font-mono font-bold ${secondary !== "—" ? "text-gray-700" : "text-gray-400"}`}
         >
-          {link.ifsc ?? "—"}
+          {secondary}
         </span>
       </td>
       <td className="px-8 py-6 text-center">

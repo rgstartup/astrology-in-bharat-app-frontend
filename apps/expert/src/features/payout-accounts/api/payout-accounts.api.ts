@@ -41,9 +41,8 @@ export interface PayoutAccountLink {
   isPrimary: boolean;
   activatedAt: string | null;
   createdAt: string;
-  accountNumberMasked: string | null;
-  bankName: string | null;
-  ifsc: string | null;
+  /** Type-specific structured details (bank_account: account_number_masked/bank_name/ifsc; vpa: vpa_id; wallet: wallet_handle; card: last4/brand). */
+  details: Record<string, unknown> | null;
 }
 
 export interface InitiatePayoutOnboardingOutput {

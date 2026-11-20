@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { toast } from "@repo/design/shadcn";
 import { PATHS } from "@repo/routes";
