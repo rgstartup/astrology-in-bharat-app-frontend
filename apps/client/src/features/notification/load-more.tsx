@@ -1,4 +1,4 @@
-import { Language } from "@repo/store";
+import { Language } from "@/store/languageStore";
 
 interface LoadMoreNotificationProps {
   show: boolean;
