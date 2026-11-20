@@ -16,7 +16,7 @@ import CalculatorHero from "./common/hero";
 import BreakupPatchupForm from "./BreakupPatchupForm.component";
 
 import { BreakupPatchupResult } from "@/lib/types";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { breakupPatchupTranslations } from "@/lib/translations/calculators/breakup-patchup";
 
 const premiumCardStyles = `

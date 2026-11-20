@@ -8,7 +8,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 import CalculatorHero from "./common/hero";
 import LoveCompatibilityForm from "./LoveCompatibilityForm.component";
 
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { loveCompatibilityTranslations } from "@/lib/translations/calculators/love-compatibility";
 
 import { LoveCompatibilityResult as ResultType } from "@/lib/types";

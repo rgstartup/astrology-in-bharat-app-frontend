@@ -15,7 +15,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import LoyalPartnerForm from "./LoyalPartnerForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { loyalPartnerTranslations } from "@/lib/translations/calculators/loyal-partner";
 
 import { LoyaltyResult } from "@/lib/types/calculator";

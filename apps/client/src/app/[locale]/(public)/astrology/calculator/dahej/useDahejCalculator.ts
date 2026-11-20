@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { dahejTranslations } from "@/lib/translations/calculators/dahej";
 import { ResultData, JewelrySet } from "@/lib/types";
 import { cars, jewelrySets, landProperties } from "./constants";

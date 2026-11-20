@@ -13,7 +13,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import NakshatraFinderForm from "./NakshatraFinderForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { nakshatraFinderTranslations } from "@/lib/translations/calculators/nakshatra-finder";
 import { NakshatraResult } from "@/lib/types/calculator";
 

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { useAuthStore } from "@/store/authStore";
 import { profileTranslations } from "../../../lib/translations/profile";
 import { api } from "@/actions";

@@ -13,7 +13,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import LifePathForm from "./LifePathForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { lifePathTranslations } from "@/lib/translations/calculators/life-path";
 
 import { LifePathNumber, LifePathResult } from "@/lib/types";

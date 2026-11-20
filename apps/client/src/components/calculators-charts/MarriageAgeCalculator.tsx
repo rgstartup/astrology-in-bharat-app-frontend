@@ -14,7 +14,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import MarriageAgeForm from "./MarriageAgeForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { marriageAgeTranslations } from "@/lib/translations/calculators/marriage-age";
 
 import { MarriageResult } from "@/lib/types/calculator";

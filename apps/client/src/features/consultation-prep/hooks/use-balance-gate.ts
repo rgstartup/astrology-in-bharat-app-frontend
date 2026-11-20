@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { api } from "@/actions";
-import { useAuthStore } from "@repo/store";
+import { useAuthStore } from "@/store/authStore";
 
 /**
  * Wallet state needed before starting a consultation: auth flag, the
@@ -16,8 +15,13 @@ export function useBalanceGate() {
 
   const refreshBalanceNow = useCallback(async () => {
     if (!isAuthenticated) return;
-    await refreshBalance(api);
+    await refreshBalance();
   }, [isAuthenticated, refreshBalance]);
 
-  return { isAuthenticated, needsRecharge, setNeedsRecharge, refreshBalanceNow };
+  return {
+    isAuthenticated,
+    needsRecharge,
+    setNeedsRecharge,
+    refreshBalanceNow,
+  };
 }

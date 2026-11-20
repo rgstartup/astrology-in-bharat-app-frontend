@@ -13,7 +13,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import NameNumerologyForm from "./NameNumerologyForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { nameNumerologyTranslations } from "@/lib/translations/calculators/name-numerology";
 
 import { NameNumber, NameResult } from "@/lib/types/calculator";

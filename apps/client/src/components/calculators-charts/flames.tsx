@@ -14,7 +14,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import FlamesForm from "./FlamesForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { flamesTranslations } from "@/lib/translations/calculators/flames";
 import { FlamesLetter, FlamesResult } from "@/lib/types/calculator";
 

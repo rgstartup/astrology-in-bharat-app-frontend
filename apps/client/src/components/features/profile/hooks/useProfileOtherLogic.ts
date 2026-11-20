@@ -5,7 +5,9 @@ import { toast } from "@repo/design/shadcn";
 import {
   getNotifications,
   markNotificationAsRead,
-  clearAllNotifications,
+  clearNotifications,
+} from "@/features/notification/api/notification-api";
+import {
   getMyRewards,
   getSupportSettings,
   SupportSettings,
@@ -50,14 +52,14 @@ export const useProfileOtherLogic = (
         try {
           const limit = 10;
           const offset = (pageNumber - 1) * limit;
-          const [result, error] = (await getNotifications({
+          const result = await getNotifications({
             limit,
             offset,
-          })) as any;
+          });
 
-          if (!error && result) {
-            const myNotifs = result.data || [];
-            const totalCount = result.meta?.totalCount || 0;
+          if (result.ok && result.data) {
+            const myNotifs = result.data.data || [];
+            const totalCount = result.data.meta?.totalCount || 0;
 
             if (pageNumber === 1) {
               setNotifications(myNotifs);
@@ -98,9 +100,9 @@ export const useProfileOtherLogic = (
 
   const handleMarkAsRead = async (id: string) => {
     try {
-      const [, error] = (await markNotificationAsRead(id)) as any;
-      if (error) {
-        console.error("Failed to mark as read:", error);
+      const result = await markNotificationAsRead(id);
+      if (!result.ok) {
+        console.error("Failed to mark as read:", result.error);
         return;
       }
       setNotifications((prev) =>
@@ -115,9 +117,9 @@ export const useProfileOtherLogic = (
     if (!window.confirm("Are you sure you want to clear all notifications?"))
       return;
     try {
-      const [, error] = (await clearAllNotifications()) as any;
-      if (error) {
-        console.error("Failed to clear notifications:", error);
+      const result = await clearNotifications();
+      if (!result.ok) {
+        console.error("Failed to clear notifications:", result.error);
         toast.error("Failed to clear notifications");
         return;
       }

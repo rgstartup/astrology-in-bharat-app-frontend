@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { profileTranslations } from "@/lib/translations/profile";
 import PhoneVerifyModal from "./PhoneVerifyModal";
 import PersonalDetailsCard from "./PersonalDetailsCard";

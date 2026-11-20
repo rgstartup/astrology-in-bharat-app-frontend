@@ -14,7 +14,7 @@ import { GiLotus, GiSparkles } from "@repo/design/react-icons";
 
 import CalculatorHero from "./common/hero";
 import RelationshipFutureTimelineForm from "./RelationshipFutureTimelineForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { relationshipFutureTranslations } from "@/lib/translations/calculators/relationship-future";
 
 import {

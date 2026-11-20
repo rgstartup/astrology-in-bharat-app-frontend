@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { api } from "@/actions";
-import { useLanguageStore, horoscopeTranslations } from "@repo/store";
+import { useLanguageStore, horoscopeTranslations } from "@/store/languageStore";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
 import HeroComponent from "./hero.component";
 import ZodiacGrid from "./zodiac-grid.component";

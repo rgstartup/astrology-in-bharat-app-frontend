@@ -1,5 +1,5 @@
 import React from "react";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { profileTranslations } from "@/lib/translations/profile";
 
 interface SupportTabProps {

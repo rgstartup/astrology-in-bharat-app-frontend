@@ -12,7 +12,7 @@ import {
 } from "@repo/design/lucide";
 import LocationAutocomplete from "@/components/calculators-charts/LocationAutocomplete";
 import PlanetForm from "./PlanetForm.component";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { planetTranslations } from "@/lib/translations/calculators/planet";
 import CalculatorHero from "./common/hero";
 import {

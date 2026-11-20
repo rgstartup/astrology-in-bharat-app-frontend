@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PATHS } from "@repo/routes";
 import { getProductImageUrl } from "@/utils/image-utils";
-import { useLanguageStore } from "@repo/store";
+import { useLanguageStore } from "@/store/languageStore";
 import { profileTranslations } from "@/lib/translations/profile";
 import { cancelMyOrder } from "@/libs/api-profile";
 import { toast } from "@repo/design/shadcn";
