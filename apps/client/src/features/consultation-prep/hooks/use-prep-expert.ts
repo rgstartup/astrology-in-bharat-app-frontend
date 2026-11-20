@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "@repo/design/shadcn";
 import { type IExpert } from "@repo/lib";
-import { getChatPrepExpertAction } from "@/actions/chat";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
+import { API_ROUTES, apiV2 } from "@/actions";
 
 /**
  * Fetches the prep-time expert profile and resolves live availability
@@ -43,17 +43,22 @@ export function usePrepExpert(expertId: string) {
       if (!expertId) return null;
 
       setLoading(true);
-      const res = await getChatPrepExpertAction(expertId).finally(() =>
-        setLoading(false),
-      );
+      try {
+        const res = await apiV2.get<IExpert>(
+          API_ROUTES.EXPERTS.ACCOUNT.replace(":id", String(expertId)),
+        );
 
-      if (expertIdRef.current !== expertId) return null;
-      if (!res.ok) {
-        toast.error(res.error.message || "Failed to fetch expert");
-        return null;
+        if (expertIdRef.current !== expertId) return null;
+
+        if (!res.ok) {
+          toast.error(res.error.message || "Failed to fetch expert");
+          return null;
+        }
+        setExpert(res.data);
+        return res.data;
+      } finally {
+        setLoading(false);
       }
-      setExpert(res.data);
-      return res.data;
     }, [expertId]);
 
   // Fetch is on-demand; the composition root fires it when the dialog opens.
