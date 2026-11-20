@@ -1,4 +1,4 @@
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { getErrorMessage } from '@repo/lib';
 
 export interface CalendarDay {
@@ -41,14 +41,14 @@ export const getMonthlyCalendar = async (
       lang,
     });
 
-    const [result, error] = await api.get<any>(`/calendar/monthly?${query.toString()}`, { cache: 'no-store' } as any);
+    const result = await clientAPI.get<any>(`/calendar/monthly?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) {
-      console.warn(`[API Calendar] Fetch monthly warning:`, getErrorMessage(error));
+    if (!result.ok) {
+      console.warn(`[API Calendar] Fetch monthly warning:`, getErrorMessage(result.error));
       return { success: false, data: [], error: 'failed_to_fetch' };
     }
 
-    return { success: true, data: result.data || result || [] };
+    return { success: true, data: result.data?.data || result.data || [] };
   } catch (error: any) {
     console.error(`[API Calendar] Fetch monthly error:`, error);
     return { success: false, data: [], error: 'failed_to_fetch' };
@@ -63,14 +63,14 @@ export const getDailyPanchang = async (
 ): Promise<{ success: boolean; data: PanchangData | null; error?: string }> => {
   try {
     const query = new URLSearchParams({ date, lat, lon, lang });
-    const [result, error] = await api.get<any>(`/calendar/panchang/daily?${query.toString()}`, { cache: 'no-store' } as any);
+    const result = await clientAPI.get<any>(`/calendar/panchang/daily?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) {
-      console.warn(`[API Calendar] Fetch daily panchang warning:`, getErrorMessage(error));
+    if (!result.ok) {
+      console.warn(`[API Calendar] Fetch daily panchang warning:`, getErrorMessage(result.error));
       return { success: false, data: null, error: 'failed_to_fetch' };
     }
 
-    return { success: true, data: result.data || result || null };
+    return { success: true, data: result.data?.data || result.data || null };
   } catch (error: any) {
     console.error(`[API Calendar] Fetch daily panchang error:`, error);
     return { success: false, data: null, error: 'failed_to_fetch' };
@@ -83,14 +83,14 @@ export const getYearlyFestivals = async (
 ): Promise<{ success: boolean; data: FestivalItem[]; error?: string }> => {
   try {
     const query = new URLSearchParams({ year: year.toString(), lang });
-    const [result, error] = await api.get<any>(`/calendar/festivals?${query.toString()}`, { cache: 'no-store' } as any);
+    const result = await clientAPI.get<any>(`/calendar/festivals?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) {
-      console.warn(`[API Calendar] Fetch yearly festivals warning:`, getErrorMessage(error));
+    if (!result.ok) {
+      console.warn(`[API Calendar] Fetch yearly festivals warning:`, getErrorMessage(result.error));
       return { success: false, data: [], error: 'failed_to_fetch' };
     }
 
-    return { success: true, data: result.data || result || [] };
+    return { success: true, data: result.data?.data || result.data || [] };
   } catch (error: any) {
     console.error(`[API Calendar] Fetch yearly festivals error:`, error);
     return { success: false, data: [], error: 'failed_to_fetch' };
@@ -103,14 +103,14 @@ export const getFestivalDetails = async (
 ): Promise<{ success: boolean; data: any; error?: string }> => {
   try {
     const query = new URLSearchParams({ name, lang });
-    const [result, error] = await api.get<any>(`/calendar/festival-details?${query.toString()}`, { cache: 'no-store' } as any);
+    const result = await clientAPI.get<any>(`/calendar/festival-details?${query.toString()}`, { cache: 'no-store' } as any);
 
-    if (error) {
-      console.warn(`[API Calendar] Fetch festival details warning:`, getErrorMessage(error));
+    if (!result.ok) {
+      console.warn(`[API Calendar] Fetch festival details warning:`, getErrorMessage(result.error));
       return { success: false, data: null, error: 'failed_to_fetch' };
     }
 
-    return { success: true, data: result.data || result || null };
+    return { success: true, data: result.data?.data || result.data || null };
   } catch (error: any) {
     console.error(`[API Calendar] Fetch festival details error:`, error);
     return { success: false, data: null, error: 'failed_to_fetch' };

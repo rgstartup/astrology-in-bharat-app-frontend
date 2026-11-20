@@ -1,4 +1,4 @@
-import { API_ROUTES, apiV2 } from "@/actions";
+import { API_ROUTES, clientAPI } from "@/actions";
 import allowedParams from "./data/allowed-params";
 import ExpertList, { ExpertListDataProps } from "./expert-list.component";
 import { IExpert, PaginationMeta } from "@repo/lib";
@@ -33,7 +33,7 @@ async function getInitialExpertListProps({
     ),
   ).toString();
 
-  const result = await apiV2.get<IExpert[]>(
+  const result = await clientAPI.get<IExpert[]>(
     `${API_ROUTES.EXPERTS.LIST}?${params}`,
   );
 

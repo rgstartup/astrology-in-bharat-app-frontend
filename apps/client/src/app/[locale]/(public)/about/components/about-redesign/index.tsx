@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import AboutSeoContent from "./about-seo.component";
 import GuidanceCTA from "@/components/features/home/GuidanceCTA";
 import { ArrowRight, MessageSquare } from "@repo/design/lucide";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { platformStats } from "./data";
 import type {
   IPlatformStat,
@@ -62,14 +62,14 @@ function PlatformStatsGrid({ data }: { data?: IPlatformStat }) {
 }
 
 async function PlatformStats() {
-  const [response] = await api.get<IPlatformStatsResponse>(
+  const result = await clientAPI.get<IPlatformStatsResponse>(
     "/public/stats/platform-stats",
     { cache: "no-store" },
   );
 
   return (
     <PlatformStatsGrid
-      data={response?.success ? response.data : emptyPlatformStats}
+      data={result.ok && result.data?.success ? result.data.data : emptyPlatformStats}
     />
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { useLocale, useTranslations } from "next-intl";
 
 const HoroscopeSidebar = () => {
@@ -28,18 +28,18 @@ const HoroscopeSidebar = () => {
       const lat = "28.6139"; // default Delhi
       const lon = "77.2090";
 
-      const [panchangRes] = await api.get<any>(
+      const panchangResult = await clientAPI.get<any>(
         `${API_ROUTES.ASTROLOGY.PANCHANG}?datetime=${datetime}&lat=${lat}&lon=${lon}&lang=${lang}`,
       );
-      if (panchangRes?.data) {
-        setPanchang(panchangRes.data);
+      if (panchangResult.ok && panchangResult.data?.data) {
+        setPanchang(panchangResult.data.data);
       }
 
-      const [planetRes] = await api.get<any>(
+      const planetResult = await clientAPI.get<any>(
         `${API_ROUTES.ASTROLOGY.PLANETARY_POSITIONS}?datetime=${datetime}&lat=${lat}&lon=${lon}&lang=${lang}`,
       );
-      if (planetRes?.data) {
-        setPlanets(planetRes.data);
+      if (planetResult.ok && planetResult.data?.data) {
+        setPlanets(planetResult.data.data);
       }
     };
     fetchAstroData();

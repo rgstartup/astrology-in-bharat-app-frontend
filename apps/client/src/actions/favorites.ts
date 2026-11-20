@@ -1,6 +1,6 @@
 "use server";
 
-import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
+import { clientAPI, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
 import { getAccessToken } from "@/actions/cookie";
 import { getErrorMessage } from "@repo/lib";
 
@@ -32,7 +32,7 @@ export async function addExpertToFavoritesAction(
       String(expertId),
     );
 
-    const [res, error] = await api.post(
+    const result = await clientAPI.post(
       endpoint,
       {},
       {
@@ -43,16 +43,16 @@ export async function addExpertToFavoritesAction(
       },
     );
 
-    if (error) {
+    if (!result.ok) {
       return {
-        error: getErrorMessage(error) || "Failed to add expert to favorites",
+        error: getErrorMessage(result.error) || "Failed to add expert to favorites",
       };
     }
 
     return {
       success: true,
       isFavorite: true,
-      data: res,
+      data: result.data,
     };
   } catch (err) {
     return {
@@ -82,24 +82,24 @@ export async function removeExpertFromFavoritesAction(
       String(expertId),
     );
 
-    const [res, error] = await api.delete(endpoint, {
+    const result = await clientAPI.delete(endpoint, {
       headers: {
         Authorization: `Bearer ${token}`,
         Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
       },
     });
 
-    if (error) {
+    if (!result.ok) {
       return {
         error:
-          getErrorMessage(error) || "Failed to remove expert from favorites",
+          getErrorMessage(result.error) || "Failed to remove expert from favorites",
       };
     }
 
     return {
       success: true,
       isFavorite: false,
-      data: res,
+      data: result.data,
     };
   } catch (err) {
     return {
@@ -135,7 +135,7 @@ export async function getFavoriteExpertsAction(): Promise<any[]> {
       return [];
     }
 
-    const [res, error] = await api.get<any>(
+    const result = await clientAPI.get<any>(
       API_ROUTES.FAVORITES.EXPERT.LIST,
       {
         headers: {
@@ -145,11 +145,12 @@ export async function getFavoriteExpertsAction(): Promise<any[]> {
       },
     );
 
-    if (error || !res) {
+    if (!result.ok || !result.data) {
       return [];
     }
 
-    return Array.isArray(res) ? res : res?.data || res?.items || [];
+    const data = result.data;
+    return Array.isArray(data) ? data : data?.data || data?.items || [];
   } catch {
     return [];
   }

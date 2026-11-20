@@ -1,6 +1,3 @@
-import {
-  createSafeFetchInstance,
-} from "@repo/safe-fetch";
 import { createExpertApiEnvelopeInstance } from "@/lib/api-envelope";
 export { type Result, type ApiErrorBody, ApiError } from "@repo/safe-fetch";
 export { API_ROUTES } from "@/lib/api-routes";
@@ -17,15 +14,7 @@ export * from "./onboard";
 // address; NEXT_PUBLIC_API_URL is the browser-facing fallback.
 const baseUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL!;
 
-export const api = createSafeFetchInstance({
-  baseUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  credentials: "include",
-});
-
-export const apiV2 = createExpertApiEnvelopeInstance({
+export const clientAPI = createExpertApiEnvelopeInstance({
   baseUrl,
   headers: {
     "Content-Type": "application/json",

@@ -13,7 +13,7 @@ export { API_ROUTES, AUTH_COOKIE_NAMES, type Result, type ApiErrorBody, ApiError
  * (accessToken/refreshToken) on every request. Do NOT import this in
  * client components — it depends on `next/headers`.
  */
-export const apiV2Server = createExpertApiEnvelopeInstance({
+export const serverAPI = createExpertApiEnvelopeInstance({
   baseUrl,
   headers: {
     "Content-Type": "application/json",

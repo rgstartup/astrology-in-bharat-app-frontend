@@ -1,6 +1,6 @@
 "use server";
 
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import type { AuthActionResponse } from "@/lib/types";
 
 // ─────────────────────────────────────────────────────────
@@ -15,7 +15,7 @@ export async function resendOtpAction(
     payload.password = password;
   }
 
-  const result = await apiV2.post<{ message?: string }>(
+  const result = await clientAPI.post<{ message?: string }>(
     API_ROUTES.AUTH.REGISTER.INITIATE,
     payload,
   );

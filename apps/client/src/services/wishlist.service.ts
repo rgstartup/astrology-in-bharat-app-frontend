@@ -1,53 +1,53 @@
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { ApiError } from "@repo/safe-fetch";
 
 export const WishlistService = {
 
-    getWishlist: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get("/product-like") as any;
+    getWishlist: async () => {
+        return await clientAPI.get("/product-like");
     },
 
-    addToWishlist: async (productId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.post("/product-like/add", { productId }) as any;
+    addToWishlist: async (productId: string) => {
+        return await clientAPI.post("/product-like/add", { productId });
     },
 
-    removeFromWishlist: async (productId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.delete(`/product-like/remove/${productId}`) as any;
+    removeFromWishlist: async (productId: string) => {
+        return await clientAPI.delete(`/product-like/remove/${productId}`);
     },
 
-    getExpertWishlist: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get("/expert-like") as any;
+    getExpertWishlist: async () => {
+        return await clientAPI.get("/expert-like");
     },
 
-    addExpertToWishlist: async (expertId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.post("/expert-like/add", { expert_id: expertId }) as any;
+    addExpertToWishlist: async (expertId: string) => {
+        return await clientAPI.post("/expert-like/add", { expert_id: expertId });
     },
 
-    removeExpertFromWishlist: async (expertId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.delete(`/expert-like/remove/${expertId}`) as any;
+    removeExpertFromWishlist: async (expertId: string) => {
+        return await clientAPI.delete(`/expert-like/remove/${expertId}`);
     },
     
-    getPujaWishlist: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get("/puja-like") as any;
+    getPujaWishlist: async () => {
+        return await clientAPI.get("/puja-like");
     },
 
-    addPujaToWishlist: async (pujaId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.post("/puja-like/add", { pujaId }) as any;
+    addPujaToWishlist: async (pujaId: string) => {
+        return await clientAPI.post("/puja-like/add", { pujaId });
     },
 
-    removePujaFromWishlist: async (pujaId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.delete(`/puja-like/remove/${pujaId}`) as any;
+    removePujaFromWishlist: async (pujaId: string) => {
+        return await clientAPI.delete(`/puja-like/remove/${pujaId}`);
     },
 
-    getMerchantWishlist: async (): Promise<[any | null, ApiError | null]> => {
-        return await api.get("/merchant-like") as any;
+    getMerchantWishlist: async () => {
+        return await clientAPI.get("/merchant-like");
     },
 
-    addMerchantToWishlist: async (merchantId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.post("/merchant-like/add", { merchantId }) as any;
+    addMerchantToWishlist: async (merchantId: string) => {
+        return await clientAPI.post("/merchant-like/add", { merchantId });
     },
 
-    removeMerchantFromWishlist: async (merchantId: string): Promise<[any | null, ApiError | null]> => {
-        return await api.delete(`/merchant-like/remove/${merchantId}`) as any;
+    removeMerchantFromWishlist: async (merchantId: string) => {
+        return await clientAPI.delete(`/merchant-like/remove/${merchantId}`);
     }
 };

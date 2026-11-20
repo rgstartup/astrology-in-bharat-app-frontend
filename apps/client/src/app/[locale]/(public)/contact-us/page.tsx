@@ -18,9 +18,9 @@ const HelpSupportPage = () => {
   useEffect(() => {
     const fetchSupport = async () => {
       try {
-        const [data] = await getSupportSettings();
-        if (data) {
-          setSupportSettings(data);
+        const result = await getSupportSettings();
+        if (result.ok && result.data) {
+          setSupportSettings(result.data);
         }
       } catch (error) {
         console.error("Failed to load support settings:", error);

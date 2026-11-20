@@ -20,7 +20,7 @@ import {
   Users,
   Video,
 } from "@repo/design/lucide";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import Image from "next/image";
 import PujaDetailSeoContent from "./puja-detail-seo.component";
@@ -65,8 +65,9 @@ function usePujaWishlist(
   useEffect(() => {
     const fetchUserWishlist = async () => {
       if (!isAuthenticated || !id) return;
-      const [res] = await api.get<any>("/puja-like");
-      if (res) {
+      const result = await clientAPI.get<any>("/puja-like");
+      if (result.ok && result.data) {
+        const res = result.data;
         const items = Array.isArray(res)
           ? res
           : res.data || res.items || res.wishlist || [];
@@ -92,18 +93,18 @@ function usePujaWishlist(
     setLikesCount((prev) => (newLikedState ? prev + 1 : prev - 1));
 
     if (newLikedState) {
-      const [_, error] = await api.post("/puja-like/add", { pujaId: id });
-      if (error && error.status !== 409) {
+      const result = await clientAPI.post("/puja-like/add", { pujaId: id });
+      if (!result.ok && result.error?.status !== 409) {
         setLiked(!newLikedState);
         setLikesCount((prev) => (!newLikedState ? prev + 1 : prev - 1));
-        toast.error(getErrorMessage(error) || "Failed to add to wishlist");
+        toast.error(getErrorMessage(result.error) || "Failed to add to wishlist");
       }
     } else {
-      const [_, error] = await api.delete(`/puja-like/remove/${id}`);
-      if (error && error.status !== 404 && error.status !== 400) {
+      const result = await clientAPI.delete(`/puja-like/remove/${id}`);
+      if (!result.ok && result.error?.status !== 404 && result.error?.status !== 400) {
         setLiked(!newLikedState);
         setLikesCount((prev) => (!newLikedState ? prev + 1 : prev - 1));
-        toast.error(getErrorMessage(error) || "Failed to remove from wishlist");
+        toast.error(getErrorMessage(result.error) || "Failed to remove from wishlist");
       }
     }
   };
@@ -1121,13 +1122,13 @@ const PujaDetailPage = () => {
         ":id",
         id as string,
       );
-      const [res, error] = await api.get<ExpertPuja>(route);
-      if (error) {
+      const result = await clientAPI.get<ExpertPuja>(route);
+      if (!result.ok) {
         router.push("/astrology/online-puja");
-      } else if (res) {
-        setPuja(res);
-        if (res.is_online) setSelectedMode("online");
-        else if (res.is_home_visit) setSelectedMode("home_visit_without");
+      } else if (result.data) {
+        setPuja(result.data);
+        if (result.data.is_online) setSelectedMode("online");
+        else if (result.data.is_home_visit) setSelectedMode("home_visit_without");
       }
       setLoading(false);
     };
@@ -1135,11 +1136,11 @@ const PujaDetailPage = () => {
 
     const fetchRelatedPujas = async () => {
       setRelatedLoading(true);
-      const [res] = await api.get<ExpertPuja[]>(
+      const result = await clientAPI.get<ExpertPuja[]>(
         API_ROUTES.EXPERT.GET_ALL_PUJAS,
       );
-      if (res && Array.isArray(res)) {
-        setRelatedPujas(res.filter((p) => p.id !== id).slice(0, 5));
+      if (result.ok && result.data && Array.isArray(result.data)) {
+        setRelatedPujas(result.data.filter((p) => p.id !== id).slice(0, 5));
       }
       setRelatedLoading(false);
     };
@@ -1191,7 +1192,7 @@ const PujaDetailPage = () => {
       return;
     }
     setIsBooking(true);
-    const [, error] = (await api.post(API_ROUTES.PUJA.BOOKING, {
+    const result = await clientAPI.post(API_ROUTES.PUJA.BOOKING, {
       puja_id: id as string,
       scheduled_date: askExpertForDate ? null : scheduledDate,
       scheduled_time: askExpertForDate ? null : scheduledTime,
@@ -1199,9 +1200,9 @@ const PujaDetailPage = () => {
       mode: selectedMode,
       price: currentCost,
       user_message: userMessage,
-    })) as any;
-    if (error) {
-      toast.error(getErrorMessage(error) || t("detail.toastRequestFailed"));
+    });
+    if (!result.ok) {
+      toast.error(getErrorMessage(result.error) || t("detail.toastRequestFailed"));
     } else {
       toast.success(t("detail.toastRequestSent"));
       setScheduledDate("");

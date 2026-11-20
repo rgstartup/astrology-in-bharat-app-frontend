@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "@repo/design/shadcn";
-import { api as http } from "@/actions";
+import { clientAPI } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 import { getWalletTransactions } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";
@@ -112,19 +112,19 @@ export const useProfileWalletLogic = (
             return;
         }
 
-        const [orderRes, orderError] = await http.post<any>("/payment/orders/create", {
+        const orderResult = await clientAPI.post<any>("/payment/orders/create", {
             amount: rechargeAmount,
             type: "wallet_recharge",
         });
 
-        if (orderError) {
-            console.error("Order Creation Error:", orderError);
-            toast.error(getErrorMessage(orderError) || "Failed to create payment order.");
+        if (!orderResult.ok) {
+            console.error("Order Creation Error:", orderResult.error);
+            toast.error(getErrorMessage(orderResult.error) || "Failed to create payment order.");
             setIsProcessing(false);
             return;
         }
 
-        const orderPayload: any = (orderRes as any)?.data ?? orderRes;
+        const orderPayload: any = (orderResult.data as any)?.data ?? orderResult.data;
         const { id: order_id, amount, currency, key_id } = orderPayload || {};
         if (!order_id || !amount || !currency) {
             toast.error("Invalid payment order response");
@@ -140,7 +140,7 @@ export const useProfileWalletLogic = (
             description: "Wallet Recharge",
             order_id: order_id,
             handler: async (response: any) => {
-                const [verifyRes, verifyError] = await http.post<any>(
+                const verifyResult = await clientAPI.post<any>(
                     "/payment/orders/verify",
                     {
                         razorpay_order_id: response.razorpay_order_id,
@@ -149,11 +149,11 @@ export const useProfileWalletLogic = (
                     },
                 );
 
-                if (verifyError) {
-                    console.error("Verification error:", verifyError);
-                    toast.error(getErrorMessage(verifyError) || "Payment verification failed!");
+                if (!verifyResult.ok) {
+                    console.error("Verification error:", verifyResult.error);
+                    toast.error(getErrorMessage(verifyResult.error) || "Payment verification failed!");
                 } else {
-                    const verifyPayload: any = (verifyRes as any)?.data ?? verifyRes;
+                    const verifyPayload: any = (verifyResult.data as any)?.data ?? verifyResult.data;
                     if (verifyPayload?.success) {
                         toast.success(`Successfully recharged ₹${rechargeAmount}!`);
                         refreshBalance();

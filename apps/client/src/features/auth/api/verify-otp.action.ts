@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import type {
   VerifyOtpFormData,
@@ -16,7 +16,7 @@ import type {
 export async function verifyOtpAction(
   verifyData: VerifyOtpFormData,
 ): Promise<AuthActionResponse> {
-  const result = await apiV2.post<AuthResponse>(
+  const result = await clientAPI.post<AuthResponse>(
     API_ROUTES.AUTH.REGISTER.COMPLETE,
     {
       email: verifyData.email,

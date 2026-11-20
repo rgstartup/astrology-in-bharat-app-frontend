@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { Card, Button, Skeleton } from "@/features/dashboard";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { MessageSquare, Calendar, Clock, ArrowRight, UserCheck } from "@repo/design/lucide";
 
 export default function MyConsultationsPage() {
@@ -15,11 +15,11 @@ export default function MyConsultationsPage() {
     let isMounted = true;
     const fetchConsultations = async () => {
       setIsLoading(true);
-      const [res, err] = await api.get<any>("/consultations/history");
+      const result = await clientAPI.get<any>("/consultations/history");
       if (!isMounted) return;
 
-      if (!err && res) {
-        const data = res?.data ?? res;
+      if (result.ok && result.data) {
+        const data = result.data.data ?? result.data;
         setConsultations(Array.isArray(data) ? data : []);
       } else {
         setConsultations([]);

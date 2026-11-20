@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 
 export interface Quote {
   id: string;
@@ -21,10 +21,10 @@ export const useQuotesLoader = () => {
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const [data] = await api.get<Quote[]>(`/quotes`);
-        if (Array.isArray(data) && data.length > 0) {
-          setQuotes(data);
-          const randomQuote = data[Math.floor(Math.random() * data.length)];
+        const result = await clientAPI.get<Quote[]>(`/quotes`);
+        if (result.ok && result.data && Array.isArray(result.data) && result.data.length > 0) {
+          setQuotes(result.data);
+          const randomQuote = result.data[Math.floor(Math.random() * result.data.length)];
           setCurrentQuote(randomQuote ?? null);
         }
       } catch (error) {

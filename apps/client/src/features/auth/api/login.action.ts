@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { setAccessToken, setRefreshToken } from "@/actions/cookie";
 import type {
   LoginFormData,
@@ -10,7 +10,7 @@ import type {
 } from "@/lib/types";
 
 // ─────────────────────────────────────────────────────────
-// LOGIN — Calls backend via apiV2 (Server-Side Only)
+// LOGIN — Calls backend via clientAPI (Server-Side Only)
 // Credentials NEVER appear in the browser Network tab.
 // Supports OTP: when email is unverified, backend sends an OTP
 // (409). The same endpoint is then re-called with { email, password, otp }
@@ -19,7 +19,7 @@ import type {
 export async function loginAction(
   formData: LoginFormData,
 ): Promise<AuthActionResponse> {
-  const result = await apiV2.post<AuthResponse>(
+  const result = await clientAPI.post<AuthResponse>(
     API_ROUTES.AUTH.LOGIN.EMAIL,
     formData,
   );

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
 import type HomeMessages from "@messages/en/home.json";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 
 import TestimonialCarousel, {
   type TestimonialReview,
@@ -39,12 +39,12 @@ async function TestimonialContent() {
     text: review.text,
   }));
 
-  const [reviews, error] = await api.get<TestimonialReview[]>(
+  const result = await clientAPI.get<TestimonialReview[]>(
     "/reviews/platform/approved?limit=6",
   );
   const displayedReviews =
-    !error && Array.isArray(reviews) && reviews.length > 0
-      ? reviews
+    result.ok && Array.isArray(result.data) && result.data.length > 0
+      ? result.data
       : fallbackReviews;
 
   return (

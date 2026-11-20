@@ -1,11 +1,11 @@
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { AuthService } from "@/services/auth.service";
 import { updateClientProfile as updateClientProfileBase } from "@/libs/api-profile";
 import { PaginatedExpertResponse } from "@repo/lib";
 
 /**
  * Client Dashboard SafeFetch API Client
- * All requests return [data, error] tuples.
+ * All requests return envelope results ({ ok, data, error, meta }).
  */
 
 export async function fetchClientProfile() {
@@ -26,7 +26,7 @@ export async function fetchBirthAstrologyDetails(params: {
     lat: String(params.lat),
     lon: String(params.lon),
   });
-  return api.get<any>(`/astrology/birth-details?${query.toString()}`);
+  return clientAPI.get<any>(`/astrology/birth-details?${query.toString()}`);
 }
 
 /**
@@ -34,30 +34,30 @@ export async function fetchBirthAstrologyDetails(params: {
  * `GET /client/chat/active` once the backend exposes it; do not add new callers.
  */
 export async function fetchActiveClientConsultation() {
-  return api.get<any>("/chat/sessions/active-client");
+  return clientAPI.get<any>("/chat/sessions/active-client");
 }
 
 export async function fetchDailyHoroscope(sign: string, lang: string = "en") {
   const effectiveSign = (sign || "gemini").toLowerCase();
-  return api.get<any>(`/astrology/horoscope-daily?sign=${effectiveSign}&lang=${lang}`);
+  return clientAPI.get<any>(`/astrology/horoscope-daily?sign=${effectiveSign}&lang=${lang}`);
 }
 
 export async function fetchRecommendedExperts(limit: number = 4, sort: string = "rating") {
-  return api.get<PaginatedExpertResponse>(`${API_ROUTES.EXPERTS.LIST}?limit=${limit}&sort=${sort}`);
+  return clientAPI.get<PaginatedExpertResponse>(`${API_ROUTES.EXPERTS.LIST}?limit=${limit}&sort=${sort}`);
 }
 
 export async function fetchRecentKundliReports() {
-  return api.get<any>("/astrology/my-kundli-reports");
+  return clientAPI.get<any>("/astrology/my-kundli-reports");
 }
 
 export async function fetchConsultationHistory(limit?: number) {
   const url = limit ? `/consultations/history?limit=${limit}` : "/consultations/history";
-  return api.get<any>(url);
+  return clientAPI.get<any>(url);
 }
 
 export async function fetchMyOrders(limit?: number) {
   const url = limit ? `/orders/my-orders?limit=${limit}` : "/orders/my-orders";
-  return api.get<any>(url);
+  return clientAPI.get<any>(url);
 }
 
 export async function fetchWalletBalance() {

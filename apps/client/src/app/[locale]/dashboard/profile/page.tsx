@@ -34,10 +34,10 @@ export default function DashboardProfilePage() {
       place_of_birth: values.place_of_birth || null,
     };
 
-    const [, err] = await updateCurrentUser(payload);
+    const result = await updateCurrentUser(payload);
 
-    if (err) {
-      toast.error(err.message || "Failed to update profile. Please try again.");
+    if (!result.ok) {
+      toast.error(result.error?.message || "Failed to update profile. Please try again.");
     } else {
       toast.success("Profile saved!");
       updateUser({

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaComments, FaPhone, FaVideo, FaStar, FaArrowRight, FaCalendarTimes, FaCircle } from "@repo/design/react-icons";
 import { HiOutlineSparkles } from "@repo/design/react-icons";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 
@@ -341,15 +341,16 @@ const SessionHistory = () => {
     const fetchHistory = async () => {
       try {
         setLoading(true);
-        const [result, error] = await api.get<any>(
+        const apiResult = await clientAPI.get<any>(
           `/consultations/history?limit=${limit}&offset=${offset}`,
         );
 
-        if (error) {
-          toast.error(getErrorMessage(error) || "Failed to load session history");
+        if (!apiResult.ok) {
+          toast.error(getErrorMessage(apiResult.error) || "Failed to load session history");
           return;
         }
 
+        const result = apiResult.data;
         const items = Array.isArray(result) ? result : result?.items || result?.data || [];
         setSessions(items);
         setTotalRecords(result?.meta?.totalCount || items.length);

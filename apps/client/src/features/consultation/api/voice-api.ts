@@ -1,10 +1,10 @@
 "use client";
 
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 /** Check if the expert is eligible for a voice consultation. */
 export async function checkVoiceEligibilityAction(expertId: number | string) {
-  return apiV2.post<{
+  return clientAPI.post<{
     voicePrice: number;
     expertIsAvailable: boolean;
     hasBalance: boolean;
@@ -18,7 +18,7 @@ export async function initiateConsultationAction(
   mode: ConsultationMode,
   consultationId?: number,
 ) {
-  return apiV2.post<{ consultationId: number }>(
+  return clientAPI.post<{ consultationId: number }>(
     API_ROUTES.CONSULTATION.INITIATE,
     {
       expert_id: Number(expertId),

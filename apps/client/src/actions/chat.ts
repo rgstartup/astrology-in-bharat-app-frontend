@@ -1,12 +1,12 @@
 "use server";
 
 import {
-  apiV2Server,
+  serverAPI,
   AUTH_COOKIE_NAMES,
   API_ROUTES,
   type ApiErrorBody,
 } from "@/actions/server-api";
-import { apiV2 } from "@/actions";
+import { clientAPI } from "@/actions";
 import { ConsultationMode } from "@/features/consultation-prep/stores/consultationPrepStore";
 import { type IExpert } from "@repo/lib";
 
@@ -67,7 +67,7 @@ export async function initiateConsultationAction(
   metadata: SomeoneElseData | null = null,
   consultationId?: number,
 ): Promise<InitiateConsultationResult> {
-  const res = await apiV2Server.post<InitiateConsultationData, InitiateConsultationErrorBody>(
+  const res = await serverAPI.post<InitiateConsultationData, InitiateConsultationErrorBody>(
     API_ROUTES.CONSULTATION.INITIATE,
     {
       expert_id: Number(expertId),
@@ -128,7 +128,7 @@ export interface ChatHistoryResponse {
  * Fetch persisted history for a consultation the client participates in.
  */
 export async function getChatHistoryAction(consultationId: number) {
-  return apiV2Server.get<ChatHistoryResponse>(
+  return serverAPI.get<ChatHistoryResponse>(
     `${API_ROUTES.CHAT.HISTORY}/${consultationId}`,
   );
 }
@@ -137,7 +137,7 @@ export async function getChatHistoryAction(consultationId: number) {
  * Fetch expert for chat prep via canonical /experts/:id.
  */
 export async function getChatPrepExpertAction(expertId: string | number) {
-  const res = await apiV2.get<IExpert>(
+  const res = await clientAPI.get<IExpert>(
     API_ROUTES.EXPERTS.ACCOUNT.replace(":id", String(expertId)),
   );
 

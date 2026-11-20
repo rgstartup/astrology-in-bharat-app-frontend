@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { useLanguageStore, horoscopeTranslations } from "@/store/languageStore";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
 import HeroComponent from "./hero.component";
@@ -25,13 +25,13 @@ const HoroscopeContent = () => {
 
       await Promise.all(
         signs.map(async (sign) => {
-          const [res, err] = await api.get<any>(
+          const result = await clientAPI.get<any>(
             `/astrology/horoscope-daily?sign=${sign}&lang=${lang}`,
           );
-          if (!err && res?.data?.predictions) {
+          if (result.ok && result.data?.data?.predictions) {
             const overview =
-              res.data.predictions.find((p: any) => p.type === "love")
-                ?.description || res.data.predictions[0]?.description;
+              result.data.data.predictions.find((p: any) => p.type === "love")
+                ?.description || result.data.data.predictions[0]?.description;
             if (overview) {
               previews[sign.charAt(0).toUpperCase() + sign.slice(1)] =
                 overview.length > 80

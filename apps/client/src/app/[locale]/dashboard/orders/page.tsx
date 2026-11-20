@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { PATHS } from "@repo/routes";
 import { Card, Button, Skeleton } from "@/features/dashboard";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { ShoppingBag, Calendar, Package, ArrowRight } from "@repo/design/lucide";
 
 export default function MyOrdersDashboardPage() {
@@ -15,11 +15,11 @@ export default function MyOrdersDashboardPage() {
     let isMounted = true;
     const fetchOrders = async () => {
       setIsLoading(true);
-      const [res, err] = await api.get<any>("/orders/my-orders");
+      const result = await clientAPI.get<any>("/orders/my-orders");
       if (!isMounted) return;
 
-      if (!err && res) {
-        const data = res?.data ?? res;
+      if (result.ok && result.data) {
+        const data = result.data.data ?? result.data;
         setOrders(Array.isArray(data) ? data : []);
       } else {
         setOrders([]);

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@repo/design/shadcn";
-import { api as http } from "@/actions";
+import { clientAPI } from "@/actions";
 import { getClientProfile, applyCoupon, getMyRewards } from "@/libs/api-profile";
 import { loadRazorpay } from "@/libs/razorpay";
 import { useAuthStore } from "@/store/__authStore";
@@ -33,9 +33,9 @@ export const useCheckout = () => {
 
   useEffect(() => {
     const fetchPlatformFee = async () => {
-      const [res, err] = await http.get<any>("/settings/platform-fee");
-      if (!err && res) {
-        setPlatformFee(Number(res.platform_fee) || 0);
+      const result = await clientAPI.get<any>("/settings/platform-fee");
+      if (result.ok && result.data) {
+        setPlatformFee(Number(result.data.platform_fee) || 0);
       }
     };
     fetchPlatformFee();
@@ -110,12 +110,12 @@ export const useCheckout = () => {
     if (isOrder && buyNowInfo?.productId) {
       const fetchDirectProduct = async () => {
         setLoadingProduct(true);
-        const [data, fetchError] = await http.get<any>(`/products/${buyNowInfo.productId}`);
+        const result = await clientAPI.get<any>(`/products/${buyNowInfo.productId}`);
 
-        if (fetchError) {
-          console.error("Failed to fetch product for direct buy:", fetchError);
-        } else if (data) {
-          setDirectProduct(data.data || data);
+        if (!result.ok) {
+          console.error("Failed to fetch product for direct buy:", result.error);
+        } else if (result.data) {
+          setDirectProduct(result.data.data || result.data);
         }
         setLoadingProduct(false);
       };
@@ -132,16 +132,16 @@ export const useCheckout = () => {
     setIsApplying(true);
     const sType = searchParams.get("type") || (isOrder ? "product" : "chat");
 
-    const [res, error] = await applyCoupon(couponCode.trim(), baseTotal, sType);
+    const result = await applyCoupon(couponCode.trim(), baseTotal, sType);
 
-    if (error) {
-      console.error("Coupon Error:", error);
-      toast.error(getErrorMessage(error) || "Failed to apply coupon");
+    if (!result.ok) {
+      console.error("Coupon Error:", result.error);
+      toast.error(getErrorMessage(result.error) || "Failed to apply coupon");
       setIsApplying(false);
       return;
     }
 
-    const data = res.data || res;
+    const data = result.data.data || result.data;
     const disc = data.discountAmount;
     const isSuccess = data.success;
 
@@ -260,12 +260,12 @@ export const useCheckout = () => {
         endpoint = "/consultation/book-with-wallet";
       }
 
-      const [res, error] = await http.post<any>(endpoint, payload);
+      const result = await clientAPI.post<any>(endpoint, payload);
 
-      if (error) {
-        console.error("Wallet Payment Error:", error);
-        toast.error(getErrorMessage(error) || "Wallet payment failed. Please try again.");
-      } else if (res) {
+      if (!result.ok) {
+        console.error("Wallet Payment Error:", result.error);
+        toast.error(getErrorMessage(result.error) || "Wallet payment failed. Please try again.");
+      } else if (result.data) {
         toast.success(isOrder ? "Order placed successfully using wallet!" : "Consultation booked successfully!");
         refreshBalance();
         if (isOrder && !buyNowInfo) useCartStore.getState().resetCart();
@@ -313,20 +313,20 @@ export const useCheckout = () => {
           wallet_amount_to_use: walletAmountToUse,
         };
         console.log("[CHECKOUT] Split payment order payload:", splitOrderPayload);
-        const [splitOrderRes, splitOrderError] = await http.post<any>("/order", splitOrderPayload);
+        const splitOrderResult = await clientAPI.post<any>("/order", splitOrderPayload);
 
-        if (splitOrderError) {
-          toast.error(getErrorMessage(splitOrderError) || "Failed to initiate split payment.");
+        if (!splitOrderResult.ok) {
+          toast.error(getErrorMessage(splitOrderResult.error) || "Failed to initiate split payment.");
           setIsProcessing(false);
           return;
         }
 
-        const splitOrderData = (splitOrderRes as any)?.data ?? splitOrderRes;
+        const splitOrderData = (splitOrderResult.data as any)?.data ?? splitOrderResult.data;
         const dbOrderId = splitOrderData.id;
         const razorpayAmountDue = splitOrderData.razorpay_amount_due ?? razorpayAmount;
 
         // Step 2: Create Razorpay order for remaining amount
-        const [paymentOrderRes, paymentOrderError] = await http.post<any>("/payment/orders/create", {
+        const paymentOrderResult = await clientAPI.post<any>("/payment/orders/create", {
           amount: razorpayAmountDue,
           type: "product",
           coupon_code: undefined, // already applied
@@ -338,13 +338,13 @@ export const useCheckout = () => {
           },
         });
 
-        if (paymentOrderError) {
-          toast.error(getErrorMessage(paymentOrderError) || "Failed to create Razorpay order.");
+        if (!paymentOrderResult.ok) {
+          toast.error(getErrorMessage(paymentOrderResult.error) || "Failed to create Razorpay order.");
           setIsProcessing(false);
           return;
         }
 
-        const paymentOrderData: any = (paymentOrderRes as any)?.data ?? paymentOrderRes;
+        const paymentOrderData: any = (paymentOrderResult.data as any)?.data ?? paymentOrderResult.data;
         const { id: order_id, amount, currency, key_id } = paymentOrderData || {};
 
         if (!order_id || !amount || !currency) throw new Error("Invalid payment order response");
@@ -358,18 +358,18 @@ export const useCheckout = () => {
           order_id,
           handler: async (response: any) => {
             try {
-              const [verifyRes, verifyError] = await http.post<any>("/payment/orders/verify", {
+              const verifyResult = await clientAPI.post<any>("/payment/orders/verify", {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 shipping_address: address,
               });
-              if (verifyError) {
-                toast.error(getErrorMessage(verifyError) || "Payment verification failed!");
+              if (!verifyResult.ok) {
+                toast.error(getErrorMessage(verifyResult.error) || "Payment verification failed!");
                 setIsProcessing(false);
                 return;
               }
-              const verifyPayload: any = (verifyRes as any)?.data ?? verifyRes;
+              const verifyPayload: any = (verifyResult.data as any)?.data ?? verifyResult.data;
               if (verifyPayload?.success) {
                 toast.success("Order placed! ₹" + walletAmountToUse + " from wallet + ₹" + razorpayAmountDue + " via Razorpay.");
                 refreshBalance();
@@ -417,19 +417,19 @@ export const useCheckout = () => {
         };
         console.log("[CHECKOUT] Razorpay order payload (initial):", orderPayload);
         console.info("[CHECKOUT] Final Order Payload being sent to server:", JSON.stringify(orderPayload, null, 2));
-        const [createOrderRes, createError] = await http.post<any>(
+        const createOrderResult = await clientAPI.post<any>(
           "/order",
           orderPayload,
         );
 
-        if (createError) {
-          console.error("Failed to create order:", createError);
-          toast.error(getErrorMessage(createError) || "Failed to create order. Please try again.");
+        if (!createOrderResult.ok) {
+          console.error("Failed to create order:", createOrderResult.error);
+          toast.error(getErrorMessage(createOrderResult.error) || "Failed to create order. Please try again.");
           setIsProcessing(false);
           return;
         }
 
-        const orderData = (createOrderRes as any)?.data ?? createOrderRes;
+        const orderData = (createOrderResult.data as any)?.data ?? createOrderResult.data;
         dbOrderId = orderData.id;
         sessionStorage.removeItem("buyNowItem");
       }
@@ -446,18 +446,18 @@ export const useCheckout = () => {
         },
       };
 
-      const [orderRes, orderError] = await http.post<any>(
+      const orderResult = await clientAPI.post<any>(
         "/payment/orders/create",
         paymentOrderPayload,
       );
 
-      if (orderError) {
-        console.error("Order Creation Error:", orderError);
-        toast.error(getErrorMessage(orderError) || "Failed to create payment order.");
+      if (!orderResult.ok) {
+        console.error("Order Creation Error:", orderResult.error);
+        toast.error(getErrorMessage(orderResult.error) || "Failed to create payment order.");
         setIsProcessing(false);
         return;
       }
-      const orderPayloadData: any = (orderRes as any)?.data ?? orderRes;
+      const orderPayloadData: any = (orderResult.data as any)?.data ?? orderResult.data;
       const { id: order_id, amount, currency, key_id } =
         orderPayloadData || {};
 
@@ -476,7 +476,7 @@ export const useCheckout = () => {
         order_id: order_id,
         handler: async (response: any) => {
           try {
-            const [verifyRes, verifyError] = await http.post<any>(
+            const verifyResult = await clientAPI.post<any>(
               "/payment/orders/verify",
               {
                 razorpay_order_id: response.razorpay_order_id,
@@ -486,14 +486,14 @@ export const useCheckout = () => {
               },
             );
 
-            if (verifyError) {
-              console.error("Verification error:", verifyError);
-              toast.error(getErrorMessage(verifyError) || "Payment verification failed!");
+            if (!verifyResult.ok) {
+              console.error("Verification error:", verifyResult.error);
+              toast.error(getErrorMessage(verifyResult.error) || "Payment verification failed!");
               setIsProcessing(false);
               return;
             }
 
-            const verifyPayload: any = (verifyRes as any)?.data ?? verifyRes;
+            const verifyPayload: any = (verifyResult.data as any)?.data ?? verifyResult.data;
             if (verifyPayload?.success) {
               toast.success(
                 isOrder ? "Order placed successfully!" : "Payment successful!",

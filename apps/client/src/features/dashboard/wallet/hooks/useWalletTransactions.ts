@@ -7,7 +7,7 @@ import {
   IPaginatedClientWalletTransaction,
   ClientWallet,
 } from "@repo/lib";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { useAuthStore } from "@/store/authStore";
 
 const PAGE_SIZE = 10;
@@ -54,12 +54,12 @@ export function useWalletTransactions() {
           params.purpose = ClientWalletTransactionPurpose.RECHARGE;
         }
 
-        const [res, err] = await api.get<IPaginatedClientWalletTransaction>(
+        const result = await clientAPI.get<IPaginatedClientWalletTransaction>(
           API_ROUTES.CLIENT.WALLET.TRANSACTIONS,
           { params },
         );
 
-        if (err || !res?.data) {
+        if (!result.ok || !result.data?.data) {
           if (pageNum === 1) {
             setTabData((prev) => ({
               ...prev,
@@ -74,8 +74,8 @@ export function useWalletTransactions() {
           return;
         }
 
-        const txArray = res.data;
-        const hasNext = res.meta?.hasNextPage ?? false;
+        const txArray = result.data.data;
+        const hasNext = result.data.meta?.hasNextPage ?? false;
 
         setTabData((prev) => {
           const currentTabState = prev[currentFilter];
@@ -106,12 +106,12 @@ export function useWalletTransactions() {
   );
 
   const fetchWalletBalance = useCallback(async () => {
-    const [res, err] = await api.get<ClientWallet>(API_ROUTES.CLIENT.WALLET.ROOT);
+    const result = await clientAPI.get<ClientWallet>(API_ROUTES.CLIENT.WALLET.ROOT);
 
-    if (err || !res) {
+    if (!result.ok || !result.data) {
       return;
     }
-    useAuthStore.getState().updateBalance(res.balance);
+    useAuthStore.getState().updateBalance(result.data.balance);
   }, []);
 
   useEffect(() => {

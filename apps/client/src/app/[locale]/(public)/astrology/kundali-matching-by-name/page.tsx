@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import HeroComponent from "./hero.component";
 import MatchingForm from "./matching-form.component";
 import ResultComponent from "./result.component";
@@ -122,18 +122,18 @@ const KundaliMatchingByNamePage = () => {
         girl_place: girlDetails.locationName,
       };
 
-      const [rawData, fetchErr] = await api.post<any>(
+      const result = await clientAPI.post<any>(
         `/astrology/kundli-reports`,
         payload,
       );
 
-      if (fetchErr) {
-        const errMsg = fetchErr?.message || t("form.errorFailed");
+      if (!result.ok) {
+        const errMsg = result.error?.message || t("form.errorFailed");
         setError(typeof errMsg === "string" ? errMsg : JSON.stringify(errMsg));
         return;
       }
 
-      let finalData = rawData?.data ?? rawData;
+      let finalData = result.data?.data ?? result.data;
 
       if (finalData) {
         setMatchingResult(finalData);

@@ -1,6 +1,6 @@
 "use server";
 
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import {
   getErrorMessage,
   type IConsultationTopic,
@@ -33,19 +33,19 @@ export async function getConsultationTopicsAction(params?: {
     const qs = searchParams.toString();
     if (qs) url += `?${qs}`;
 
-    const [res, error] = await api.get<IConsultationTopicResponse>(url);
+    const result = await clientAPI.get<IConsultationTopicResponse>(url);
 
-    if (error) {
+    if (!result.ok) {
       return {
-        error: getErrorMessage(error) || "Failed to fetch consultation topics",
+        error: getErrorMessage(result.error) || "Failed to fetch consultation topics",
         data: [],
       };
     }
 
     return {
       success: true,
-      data: res?.data,
-      meta: res?.meta,
+      data: result.data?.data,
+      meta: result.data?.meta,
     };
   } catch (err) {
     return {

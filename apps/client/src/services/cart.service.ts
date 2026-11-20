@@ -1,9 +1,9 @@
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import type { Cart, BooleanMessage } from "@repo/lib";
 
 export const CartService = {
   getCart: async () => {
-    return await api
+    return await clientAPI
       .extend({
         headers: { "Cache-Control": "no-cache" },
       })
@@ -11,14 +11,14 @@ export const CartService = {
   },
 
   addToCart: async (productId: string, quantity: number) => {
-    return api.post<BooleanMessage>("/client/cart", { productId, quantity });
+    return clientAPI.post<BooleanMessage>("/client/cart", { productId, quantity });
   },
 
   updateQuantity: async (productId: string, quantity: number) => {
-    return api.put<BooleanMessage>("/client/cart", { productId, quantity });
+    return clientAPI.put<BooleanMessage>("/client/cart", { productId, quantity });
   },
 
   removeFromCart: async (productId: string) => {
-    return api.delete<BooleanMessage>(`client/cart/${productId}`);
+    return clientAPI.delete<BooleanMessage>(`client/cart/${productId}`);
   },
 };

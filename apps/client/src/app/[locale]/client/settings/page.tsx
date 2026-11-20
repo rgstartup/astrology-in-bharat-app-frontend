@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { api as http } from "@/actions";
+import { serverAPI } from "@/actions/server-api";
 import SettingsForm, { type ProfileData } from "./SettingsForm";
 import { PATHS } from "@repo/routes";
 
@@ -43,14 +43,14 @@ function parseProfileData(raw: any): ProfileData {
 async function fetchInitialProfile(): Promise<ProfileData> {
   try {
     cookies();
-    const [data, err] = await http.get<any>("/client/profile");
-    if (err) {
-      if (err.status === 401 || err.status === 403) {
+    const result = await serverAPI.get<any>("/client/profile");
+    if (!result.ok) {
+      if (result.error?.status === 401 || result.error?.status === 403) {
         redirect(PATHS.LOGIN);
       }
       return createEmptyProfile();
     }
-    return parseProfileData(data);
+    return parseProfileData(result.data);
   } catch (err: any) {
     if (err?.status === 401 || err?.status === 403) {
       redirect(PATHS.LOGIN);

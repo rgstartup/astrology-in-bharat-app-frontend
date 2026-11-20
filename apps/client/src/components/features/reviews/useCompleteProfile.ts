@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 
 export interface AddressDto {
@@ -175,17 +175,17 @@ export const useCompleteProfile = (onClose: () => void) => {
     }
 
     try {
-      const [data, fetchErr] = await api.post<any>(`/client/profile`, payload);
+      const result = await clientAPI.post<any>(`/client/profile`, payload);
 
-      if (fetchErr) {
-        if (fetchErr.status === 401) {
+      if (!result.ok) {
+        if (result.error?.status === 401) {
           setError("You are not authenticated. Please sign in first.");
           setTimeout(() => { onClose(); router.push("/login"); }, 3000);
         } else {
-          setError(getErrorMessage(fetchErr) || `An error occurred (${fetchErr.status})`);
+          setError(getErrorMessage(result.error) || `An error occurred (${result.error?.status})`);
         }
       } else {
-        setSuccessMessage(data?.message || "Profile saved successfully!");
+        setSuccessMessage(result.data?.message || "Profile saved successfully!");
         setTimeout(() => { onClose(); }, 1500);
       }
     } catch {

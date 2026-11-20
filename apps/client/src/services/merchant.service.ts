@@ -1,6 +1,7 @@
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { Store } from "@/lib/types/shop";
 import { Product } from "@/lib/types";
+
 
 
 
@@ -15,42 +16,42 @@ export const merchantService = {
         if (search) url += `&search=${encodeURIComponent(search)}`;
         if (city && city !== "All Cities") url += `&city=${encodeURIComponent(city)}`;
         
-        const [data, error] = await api.get<any>(url) as any;
+        const result = await clientAPI.get<any>(url);
         // Backend should return { merchants: [...] }
-        const merchants = data?.data?.merchants || data?.merchants || data?.data || data;
-        return [Array.isArray(merchants) ? merchants : [], error];
+        const merchants = result.data?.data?.merchants || result.data?.merchants || result.data?.data || result.data;
+        return Array.isArray(merchants) ? merchants : [];
     },
 
     /**
      * Fetch list of unique cities where merchants are active
      */
     getMerchantCities: async () => {
-        const [data, error] = await api.get<any>('/merchants/cities') as any;
+        const result = await clientAPI.get<any>('/merchants/cities');
         // console.log('Main App Cities API Response:', data);
         // Backend might return { cities: [] } or { data: [] }
-        const cities = data?.data?.cities || data?.cities || data?.data || data;
-        return [Array.isArray(cities) ? cities : [], error];
+        const cities = result.data?.data?.cities || result.data?.cities || result.data?.data || result.data;
+        return Array.isArray(cities) ? cities : [];
     },
 
     /**
      * Fetch a single merchant by ID
      */
     getMerchantById: async (id: string) => {
-        const [data, error] = await api.get<any>(`/merchants/${id}`) as any;
+        const result = await clientAPI.get<any>(`/merchants/${id}`);
         // If the backend wraps the response in a 'data' field, use it. Otherwise use the object itself.
-        const merchantData = data?.data || data;
-        return [merchantData as Store, error];
+        const merchantData = result.data?.data || result.data;
+        return merchantData as Store;
     },
 
     /**
      * Fetch products for a specific merchant
      */
     getMerchantProducts: async (id: string, page = 1, limit = 20) => {
-        const [data, error] = await api.get<any>(`/products?merchantId=${id}&page=${page}&limit=${limit}`) as any;
+        const result = await clientAPI.get<any>(`/products?merchantId=${id}&page=${page}&limit=${limit}`);
         // Handle all possible backend response formats:
         // { success: true, data: [...] } OR { data: [...] } OR { products: [...] } OR [...]
         let products: any[] = [];
-        const raw = data as any;
+        const raw = result.data as any;
         if (Array.isArray(raw)) {
             products = raw;
         } else if (raw?.data && Array.isArray(raw.data)) {
@@ -60,15 +61,15 @@ export const merchantService = {
         } else if (raw?.products && Array.isArray(raw.products)) {
             products = raw.products;
         }
-        return [products, error];
+        return products;
     },
 
     /**
      * Fetch reviews for a specific merchant
      */
     getMerchantReviews: async (id: string) => {
-        const [data, error] = await api.get<any>(`/reviews/merchant/${id}`) as any;
-        return [data?.data || data || [], error];
+        const result = await clientAPI.get<any>(`/reviews/merchant/${id}`);
+        return result.data?.data || result.data || [];
     },
 
     /**
@@ -83,7 +84,7 @@ export const merchantService = {
             comment: payload.comment
         };
         
-        const [data, error] = await api.post<any>('/reviews', body) as any;
-        return [data, error];
+        const result = await clientAPI.post<any>('/reviews', body);
+        return result.data;
     }
 };

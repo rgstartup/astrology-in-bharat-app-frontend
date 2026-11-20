@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { ZodiacSignsData } from "@/components/features/services/zodiac";
 import { FaArrowRight } from "@repo/design/react-icons";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 
 import ZodiacHeaderProfile from "./header-profile.component";
 import HoroscopeTabs from "./tabs.component";
@@ -56,23 +56,23 @@ export default function ZodiacDetailsPage() {
       setError(false);
 
       const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
-      const [data, fetchError] = await api.get<any>(
+      const dataResult = await clientAPI.get<any>(
         `/astrology/horoscope-daily?sign=${slug}&lang=${lang}`,
       );
 
       // Fetch panchang mock data for consistent lucky stats with calendar
-      const [panchangData, panchangError] = await api.get<any>(
+      const panchangResult = await clientAPI.get<any>(
         `/calendar/panchang/daily?date=${today}&lat=28.6139&lon=77.2090&lang=${lang}`,
       );
 
-      if (fetchError) {
-        console.error("Error fetching data:", fetchError);
+      if (!dataResult.ok) {
+        console.error("Error fetching data:", dataResult.error);
         setError(true);
-      } else if (data && data.data) {
+      } else if (dataResult.data && dataResult.data.data) {
         // Don't overwrite formatted date with API datetime, it returns mock Jan 1 2025 data
 
-        if (data.data.daily_predictions) {
-          setHoroscope(data.data.daily_predictions[0]);
+        if (dataResult.data.data.daily_predictions) {
+          setHoroscope(dataResult.data.data.daily_predictions[0]);
         } else {
           setError(true);
         }
@@ -80,9 +80,9 @@ export default function ZodiacDetailsPage() {
         setError(true);
       }
 
-      const panchangRaw = panchangData?.data || panchangData;
+      const panchangRaw = panchangResult.ok ? (panchangResult.data?.data || panchangResult.data) : null;
 
-      if (!panchangError && panchangRaw?.dailyHoroscope) {
+      if (panchangRaw?.dailyHoroscope) {
         const signDaily = panchangRaw.dailyHoroscope.find(
           (h: any) => h.sign.toLowerCase() === slug.toLowerCase(),
         );

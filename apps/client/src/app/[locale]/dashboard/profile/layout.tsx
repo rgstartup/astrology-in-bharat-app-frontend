@@ -7,7 +7,8 @@ export default async function ProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [profile] = await fetchCurrentUser();
+  const result = await fetchCurrentUser();
+  const profile = result.ok ? result.data : null;
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">

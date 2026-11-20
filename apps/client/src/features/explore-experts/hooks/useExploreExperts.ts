@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
 import { ExpertClientStatus, toExpertStatus } from "@/realtime/types/presence";
 import type { IExpert, Specialization } from "@repo/lib";
@@ -222,11 +222,11 @@ export function useExploreExperts(initialExperts?: Expert[]) {
       setLoading(true);
       try {
         const query = buildQuery(targetPage);
-        const [res, err] = await api.get<any>(
+        const result = await clientAPI.get<any>(
           `${API_ROUTES.EXPERTS.LIST}?${query}`,
         );
 
-        if (err || !res?.data) {
+        if (!result.ok || !result.data?.data) {
           // If error or empty response on first load, use client-side filtered fallback
           if (!append) {
             const currentFilters = filtersRef.current;
@@ -296,7 +296,7 @@ export function useExploreExperts(initialExperts?: Expert[]) {
           return;
         }
 
-        const newItems: Expert[] = res.data || [];
+        const newItems: Expert[] = result.data.data || [];
         if (newItems.length > 0) {
           const store = usePresenceStore.getState();
           store.batchSetExpertStatus(
@@ -314,7 +314,7 @@ export function useExploreExperts(initialExperts?: Expert[]) {
         }
         setExperts((prev) => {
           const updated = append ? [...prev, ...newItems] : newItems;
-          const total = res.meta?.total !== undefined ? res.meta.total : updated.length;
+          const total = result.data.meta?.total !== undefined ? result.data.meta.total : updated.length;
           setTotalCount(total);
           const nextListLength = updated.length;
           setHasMore(nextListLength < total);

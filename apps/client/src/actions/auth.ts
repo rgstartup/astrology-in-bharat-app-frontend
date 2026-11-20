@@ -1,8 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { apiV2Server, API_ROUTES, AUTH_COOKIE_NAMES, Result } from "@/actions/server-api";
-import { apiV2 } from "@/actions";
+import { serverAPI, API_ROUTES, AUTH_COOKIE_NAMES, Result } from "@/actions/server-api";
+import { clientAPI } from "@/actions";
 import { setAccessToken, setRefreshToken, getAccessToken } from "./cookie";
 import type { IAuthUser } from "@/store/authStore";
 
@@ -47,7 +47,7 @@ export async function completeRegistrationAction(
     ),
   );
 
-  const result = await apiV2.post<AuthResponse>(
+  const result = await clientAPI.post<AuthResponse>(
     "/auth/email/register/complete",
     payload,
   );
@@ -78,7 +78,7 @@ export async function completeRegistrationAction(
 export async function verifyEmailAction(
   token: string,
 ): Promise<AuthActionResponse> {
-  const result = await apiV2.get<AuthResponse>(
+  const result = await clientAPI.get<AuthResponse>(
     `/client/auth/email/verify?token=${encodeURIComponent(token)}`,
   );
 
@@ -107,7 +107,7 @@ export async function getMeAction(): Promise<Result<IAuthUser>> {
   const token = await getAccessToken();
   if (!token) return UnauthorizedErrorResult;
 
-  return apiV2Server.get<IAuthUser>(API_ROUTES.AUTH.ME);
+  return serverAPI.get<IAuthUser>(API_ROUTES.AUTH.ME);
 }
 
 // ─────────────────────────────────────────────────────────
@@ -116,5 +116,5 @@ export async function getMeAction(): Promise<Result<IAuthUser>> {
 export async function getWalletBalanceAction(): Promise<
   Result<{ balance: number }>
 > {
-  return apiV2Server.get<{ balance: number }>(API_ROUTES.WALLET.ROOT);
+  return serverAPI.get<{ balance: number }>(API_ROUTES.WALLET.ROOT);
 }

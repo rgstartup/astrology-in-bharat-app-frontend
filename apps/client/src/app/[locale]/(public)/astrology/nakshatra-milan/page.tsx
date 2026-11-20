@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 
 import HeroSection from "./hero.component";
 import InputForm from "./input-form.component";
@@ -103,20 +103,19 @@ const NakshatraMilanPage = () => {
         girl_lon: girlDetails.lon,
       }).toString();
 
-      const [[boyData, boyErr], [girlData, girlErr], [matchData, matchErr]] =
-        await Promise.all([
-          api.get<any>(`/astrology/birth-details?${boyQuery}`),
-          api.get<any>(`/astrology/birth-details?${girlQuery}`),
-          api.get<any>(`/astrology/matching/advanced?${matchQuery}`),
-        ]);
+      const [boyResult, girlResult, matchResult] = await Promise.all([
+        clientAPI.get<any>(`/astrology/birth-details?${boyQuery}`),
+        clientAPI.get<any>(`/astrology/birth-details?${girlQuery}`),
+        clientAPI.get<any>(`/astrology/matching/advanced?${matchQuery}`),
+      ]);
 
-      if (boyErr || girlErr || matchErr) {
+      if (!boyResult.ok || !girlResult.ok || !matchResult.ok) {
         setError("Failed to fetch birth details. Please check your inputs.");
       } else {
         setResults({
-          boy: boyData?.data || boyData,
-          girl: girlData?.data || girlData,
-          match: matchData?.data || matchData,
+          boy: boyResult.data?.data || boyResult.data,
+          girl: girlResult.data?.data || girlResult.data,
+          match: matchResult.data?.data || matchResult.data,
         });
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({

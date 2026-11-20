@@ -1,6 +1,6 @@
 "use server";
 
-import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
+import { clientAPI, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
 import { getAccessToken } from "@/actions/cookie";
 import { redirect } from "@/i18n/navigation";
 import { getLocale } from "next-intl/server";
@@ -13,7 +13,7 @@ export const fetchCurrentUser = async () => {
     redirect({ href: "/", locale });
   }
 
-  return await api
+  return await clientAPI
     .extend({
       headers: {
         Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,

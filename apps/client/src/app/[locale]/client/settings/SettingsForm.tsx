@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { api as http } from "@/actions";
+import { clientAPI } from "@/actions";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface AddressData {
@@ -80,9 +80,9 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
     e.preventDefault();
     setStatus("Saving...");
 
-    const [res, error] = await http.patch("/client/profile", formData);
+    const result = await clientAPI.patch("/client/profile", formData);
 
-    if (error) {
+    if (!result.ok) {
       setStatus("Update Failed!");
       return;
     }
@@ -91,10 +91,10 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
     if (fileInput?.files?.[0]) {
       const formDataWithFile = new FormData();
       formDataWithFile.append("file", fileInput.files[0]);
-      const [, picError] = await http.patch("/client/picture", formDataWithFile);
-      if (picError) {
+      const picResult = await clientAPI.patch("/client/picture", formDataWithFile);
+      if (!picResult.ok) {
         // We still continue if only the picture fails, or could show warning
-        console.error("Profile picture update failed", picError);
+        console.error("Profile picture update failed", picResult.error);
       }
     }
 

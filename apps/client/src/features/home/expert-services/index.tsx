@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import homepageData from "../data/services.data.json";
 import ServiceCard from "./service-card.component";
 import { Link } from "@/i18n/navigation";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import {
   AstrologyServiceItem,
   PaginatedAstrologyServiceResponse,
@@ -27,11 +27,11 @@ const ExpertServices = async () => {
   // Fetch astrology services from API
   let services: AstrologyServiceItem[] = [];
   try {
-    const [res, error] = await api.get<PaginatedAstrologyServiceResponse>(
+    const result = await clientAPI.get<PaginatedAstrologyServiceResponse>(
       `${API_ROUTES.ASTROLOGY.SERVICES}?limit=12&is_active=true&sort_by=sort_order&order=ASC`,
     );
-    if (!error && res?.data && res.data.length > 0) {
-      services = res.data;
+    if (result.ok && result.data?.data && result.data.data.length > 0) {
+      services = result.data.data;
     }
   } catch (err) {
     console.warn(

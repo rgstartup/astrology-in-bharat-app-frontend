@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 import PersonalGuidanceCard from "@/components/features/home/PersonalGuidanceCard";
@@ -158,17 +158,17 @@ const LoveCalculatorPage = () => {
     setLoading(true);
     setResult(null);
     try {
-      const [data, err] = await api.post<any>("/matchmaking/love-calculator", {
+      const result = await clientAPI.post<any>("/matchmaking/love-calculator", {
         yourName,
         partnerName,
       });
-      if (err || !data) {
-        toast.error(getErrorMessage(err) || t("form.errors.failedScore"));
-      } else if (data.success) {
-        setResult(data.data);
+      if (!result.ok || !result.data) {
+        toast.error(getErrorMessage(result.error) || t("form.errors.failedScore"));
+      } else if (result.data.success) {
+        setResult(result.data.data);
         toast.success(t("results.success.score"));
       } else {
-        toast.error(getErrorMessage(data) || t("form.errors.generic"));
+        toast.error(getErrorMessage(result.data) || t("form.errors.generic"));
       }
     } finally {
       setLoading(false);

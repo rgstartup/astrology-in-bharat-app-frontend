@@ -5,7 +5,7 @@ import { toast } from "@repo/design/shadcn";
 import { type IExpert } from "@repo/lib";
 import { useExpertPresence } from "@/hooks/useExpertPresence";
 import { toExpertStatus } from "@/realtime/types/presence";
-import { API_ROUTES, apiV2 } from "@/actions";
+import { API_ROUTES, clientAPI } from "@/actions";
 
 /**
  * Fetches the prep-time expert profile and resolves live availability
@@ -44,7 +44,7 @@ export function usePrepExpert(expertId: string) {
 
       setLoading(true);
       try {
-        const res = await apiV2.get<IExpert>(
+        const res = await clientAPI.get<IExpert>(
           API_ROUTES.EXPERTS.ACCOUNT.replace(":id", String(expertId)),
         );
 

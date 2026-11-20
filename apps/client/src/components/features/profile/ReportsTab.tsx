@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLanguageStore } from "@/store/languageStore";
 import { useAuthStore } from "@/store/authStore";
 import { profileTranslations } from "../../../lib/translations/profile";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { FaCheckCircle, FaExclamationTriangle, FaShieldAlt, FaFire, FaChevronDown, FaDownload, FaTrash } from "@repo/design/react-icons";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
@@ -250,8 +250,8 @@ const ReportsTab: React.FC = () => {
     useEffect(() => {
         const fetchReports = async () => {
             try {
-                const [res, err] = await api.get<any>("/astrology/my-kundli-reports");
-                if (res?.data) setReports(res.data);
+                const result = await clientAPI.get<any>("/astrology/my-kundli-reports");
+                if (result.ok && result.data) setReports(result.data.data ?? result.data);
             } catch (error) {
                 console.error("Failed to fetch reports", error);
             } finally {
@@ -264,7 +264,10 @@ const ReportsTab: React.FC = () => {
     const handleDeleteReport = async (id: string) => {
         if (!confirm("Are you sure you want to delete this report?")) return;
         try {
-            await api.delete(`/astrology/kundli-reports/${id}`);
+            const result = await clientAPI.delete(`/astrology/kundli-reports/${id}`);
+            if (!result.ok) {
+              throw new Error(result.error?.message || "Failed to delete report");
+            }
             setReports((prev) => prev.filter((r) => r.id !== id));
         } catch (error) {
             console.error("Failed to delete report", error);

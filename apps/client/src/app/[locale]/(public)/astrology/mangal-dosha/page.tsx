@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 
 import HeroSection from "./hero.component";
 import InputForm from "./input-form.component";
@@ -65,18 +65,18 @@ const MangalDoshaPage = () => {
         lon: details.lon,
       }).toString();
 
-      const [rawData, fetchErr] = await api.get<any>(
+      const result = await clientAPI.get<any>(
         `/astrology/mangal-dosha?${query}`,
       );
 
-      if (fetchErr || !rawData) {
+      if (!result.ok || !result.data) {
         setError(
-          fetchErr?.message || "Failed to generate report. Please try again.",
+          result.error?.message || "Failed to generate report. Please try again.",
         );
         return;
       }
 
-      let data = rawData?.data ?? rawData;
+      let data = result.data?.data ?? result.data;
       const finalData = data?.mangal_dosha || data;
 
       if (

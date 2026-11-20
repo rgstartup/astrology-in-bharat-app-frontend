@@ -1,4 +1,4 @@
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 
 export interface ExpertProfile {
@@ -72,22 +72,22 @@ export const getExperts = async (
       ? `${API_ROUTES.EXPERTS.LIST}?${queryString}`
       : API_ROUTES.EXPERTS.LIST;
 
-    const [result, fetchError] = await api.get<any>(url, {
+    const result = await clientAPI.get<any>(url, {
       cache: "no-store",
     } as any);
 
-    if (fetchError) {
-      throw new Error(`API Error: ${getErrorMessage(fetchError)}`);
+    if (!result.ok) {
+      throw new Error(`API Error: ${getErrorMessage(result.error)}`);
     }
 
-    const finalData = Array.isArray(result)
-      ? result
-      : result.data || result.experts || [];
+    const finalData = Array.isArray(result.data)
+      ? result.data
+      : result.data?.data || result.data?.experts || [];
     if (finalData.length > 0) {
     }
     const finalPagination = {
-      total: result.meta.total,
-      hasMore: Boolean(result.meta.hasNextPage),
+      total: result.data?.meta?.total,
+      hasMore: Boolean(result.data?.meta?.hasNextPage),
     };
 
     return {
@@ -144,11 +144,11 @@ export const getExpertReviews = async (
 ): Promise<FetchReviewsResponse> => {
   try {
     const url = `/reviews/expert/${expertId}?page=${page}&limit=${limit}`;
-    const [data, error] = await api.get<any>(url, { cache: "no-store" } as any);
+    const result = await clientAPI.get<any>(url, { cache: "no-store" } as any);
 
-    if (error) throw new Error("Failed to fetch reviews");
+    if (!result.ok) throw new Error("Failed to fetch reviews");
 
-    return data;
+    return result.data;
   } catch {
     return { data: [], total: 0, page, limit };
   }

@@ -7,7 +7,7 @@ import ExpertListHeader from "./components/expert-list-header.component";
 import ExpertSlider from "./components/expert-slider.component";
 import { useExpertListStore } from "@/store/expertListStore";
 import { useDebounceValue } from "@/hooks/external-hooks";
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { usePresenceStore } from "@/store/presenceStore";
 import { toExpertStatus } from "@/realtime/types/presence";
 import { toast } from "@repo/design/shadcn";
@@ -63,7 +63,7 @@ const ExpertList: React.FC<ExpertListDataProps> = ({
       const params = buildFetchParams(1, debouncedSearch);
       const query = new URLSearchParams(params).toString();
 
-      const result = await apiV2
+      const result = await clientAPI
         .get<IExpert[]>(`${API_ROUTES.EXPERTS.LIST}?${query}`)
         .finally(() => setLoading(false));
 
@@ -124,7 +124,6 @@ const ExpertList: React.FC<ExpertListDataProps> = ({
     }
 
     if (previousQuerySignature.current === querySignature) return;
-    previousQuerySignature.current = querySignature;
 
     if (!isFiltered) {
       setExperts(defaultList);
@@ -185,10 +184,8 @@ const ExpertList: React.FC<ExpertListDataProps> = ({
       <div className="max-w-[1360px] mx-auto px-4 md:px-8 lg:px-12">
         {/* Redesigned Top Filter Menu */}
         <ExpertListHeader title={title} />
-
         {/* Carousel Content */}
         <ExpertSlider />
-
         {/* View all link */}
         <div className="view-all mt-6 md:mt-8 text-center">
           <Link

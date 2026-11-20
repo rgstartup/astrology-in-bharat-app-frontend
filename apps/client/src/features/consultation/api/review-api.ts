@@ -1,4 +1,4 @@
-import { apiV2 } from "@/actions";
+import { clientAPI } from "@/actions";
 
 /** Submit a review for a completed consultation session. */
 export async function submitReview(
@@ -14,5 +14,5 @@ export async function submitReview(
     comment,
   };
 
-  return apiV2.post("/reviews", payload);
+  return clientAPI.post("/reviews", payload);
 }

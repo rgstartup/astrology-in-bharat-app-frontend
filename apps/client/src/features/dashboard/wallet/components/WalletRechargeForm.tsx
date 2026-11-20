@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, WALLET_RECHARGE_PACKS } from "@/features/dashboard";
 import { useAuthStore } from "@/store/authStore";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { loadRazorpay } from "@/libs/razorpay";
 import { getErrorMessage, IClientRechargeInitiateResponse } from "@repo/lib";
 import { PlusCircle, ShieldCheck, Sparkles } from "@repo/design/lucide";
@@ -49,22 +49,23 @@ export function WalletRechargeForm({
         return;
       }
 
-      const [orderRes, orderError] =
-        await api.post<IClientRechargeInitiateResponse>(
-          API_ROUTES.WALLET.RECHARGE_INITIATE,
-          {
-            amount: rechargeAmount,
-          },
-        );
+      const orderResult = await clientAPI.post<IClientRechargeInitiateResponse>(
+        API_ROUTES.WALLET.RECHARGE_INITIATE,
+        {
+          amount: rechargeAmount,
+        },
+      );
 
-      if (orderError || !orderRes) {
+      if (!orderResult.ok || !orderResult.data) {
         toast.error(
-          getErrorMessage(orderError) || "Failed to create payment order.",
+          getErrorMessage(orderResult.error) || "Failed to create payment order.",
         );
 
         setIsProcessing(false);
         return;
       }
+
+      const orderRes = orderResult.data;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -75,7 +76,7 @@ export function WalletRechargeForm({
         order_id: orderRes.id,
         handler: async (response: any) => {
           try {
-            const [verifyRes, verifyError] = await api.post<{
+            const verifyResult = await clientAPI.post<{
               balance: number;
             }>(
               API_ROUTES.WALLET.RECHARGE_VERIFY,
@@ -89,14 +90,14 @@ export function WalletRechargeForm({
               },
             );
 
-            if (verifyError || !verifyRes) {
+            if (!verifyResult.ok || !verifyResult.data) {
               toast.error(
-                getErrorMessage(verifyError) || "Payment verification failed!",
+                getErrorMessage(verifyResult.error) || "Payment verification failed!",
               );
               return;
             }
 
-            updateBalance(verifyRes.balance);
+            updateBalance(verifyResult.data.balance);
             toast.success(`Successfully recharged ₹${rechargeAmount}!`);
 
             onSuccess();

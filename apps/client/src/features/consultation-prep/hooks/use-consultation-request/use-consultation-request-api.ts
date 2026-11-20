@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { toast } from "@repo/design/shadcn";
 import { ConsultationErrorCode } from "@repo/lib";
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import type {
   InitiateConsultationData,
   InitiateConsultationErrorBody,
@@ -23,7 +23,7 @@ interface ConsultationRequestApiOptions {
 }
 
 /**
- * Initiates a consultation through apiV2 and handles domain errors.
+ * Initiates a consultation through clientAPI and handles domain errors.
  * Returns consultation metadata on success; returns null on failure/abort so
  * the application layer can decide whether to proceed to the socket request.
  *
@@ -52,7 +52,7 @@ export function useConsultationRequestApi({
       const controller = getAbortController();
       setActionLoading(true);
       try {
-        const apiRes = await apiV2.post<
+        const apiRes = await clientAPI.post<
           InitiateConsultationData,
           InitiateConsultationErrorBody
         >(

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
-import { api as http, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import {
   DevotionalRitualItem,
   PaginatedDevotionalRitualResponse,
@@ -135,20 +135,20 @@ const PujaListSection = () => {
   useEffect(() => {
     const fetchRituals = async () => {
       setLoading(true);
-      const [res, error] = (await http.get<PaginatedDevotionalRitualResponse>(
+      const result = await clientAPI.get<PaginatedDevotionalRitualResponse>(
         `${API_ROUTES.DEVOTION.RITUALS}?page=1&limit=20&is_active=true&sort_by=sort_order&order=ASC`,
-      )) as any;
+      );
 
-      if (error || !res?.data || res.data.length === 0) {
-        if (error) {
+      if (!result.ok || !result.data?.data || result.data.data.length === 0) {
+        if (!result.ok) {
           console.warn(
             "⚠️ Failed to fetch devotional rituals, using fallback data.",
-            error,
+            result.error,
           );
         }
         setRituals(DUMMY_RITUALS);
       } else {
-        setRituals(res.data);
+        setRituals(result.data.data);
       }
       setLoading(false);
     };

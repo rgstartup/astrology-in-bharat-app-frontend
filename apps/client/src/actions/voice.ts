@@ -1,6 +1,6 @@
 "use server";
 
-import { apiV2Server, AUTH_COOKIE_NAMES, API_ROUTES, type ApiErrorBody } from "@/actions/server-api";
+import { serverAPI, AUTH_COOKIE_NAMES, API_ROUTES, type ApiErrorBody } from "@/actions/server-api";
 
 export interface VoiceEligibilityData {
   isEligibleForFree: boolean;
@@ -38,7 +38,7 @@ function toErrorResult(err: {
 export async function checkVoiceEligibilityAction(
   expertId: number | string,
 ): Promise<VoiceActionResult<VoiceEligibilityData>> {
-  const res = await apiV2Server.get<VoiceEligibilityData>(
+  const res = await serverAPI.get<VoiceEligibilityData>(
     `${API_ROUTES.VOICE.ELIGIBILITY}?expertId=${Number(expertId)}`,
   );
   if (res.ok) return { ok: true, data: res.data };
@@ -55,7 +55,7 @@ export async function checkVoiceEligibilityAction(
 export async function getVoiceTokenAction(
   consultationId: number,
 ): Promise<VoiceActionResult<VoiceTokenData>> {
-  const res = await apiV2Server.get<VoiceTokenData>(
+  const res = await serverAPI.get<VoiceTokenData>(
     `${API_ROUTES.VOICE.TOKEN}/${consultationId}`,
   );
   if (res.ok) return { ok: true, data: res.data };

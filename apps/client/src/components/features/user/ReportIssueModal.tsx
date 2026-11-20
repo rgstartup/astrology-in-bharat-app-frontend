@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "@repo/design/shadcn";
-import { api as http } from "@/actions";
+import { clientAPI } from "@/actions";
 import { getErrorMessage } from "@repo/lib";
 
 interface ReportIssueModalProps {
@@ -161,17 +161,17 @@ export default function ReportIssueModal({
             payload.pujaId = String(itemDetails.id);
         }
 
-        const [res, error] = await http.post<any>("/support/disputes", payload);
+        const result = await clientAPI.post<any>("/support/disputes", payload);
 
-        if (error) {
-            console.error("Error reporting issue:", error);
-            toast.error(getErrorMessage(error) || "Failed to report issue. Please try again.");
+        if (!result.ok) {
+            console.error("Error reporting issue:", result.error);
+            toast.error(getErrorMessage(result.error) || "Failed to report issue. Please try again.");
             setLoading(false);
             setSubmittingWithChat(false);
             return;
         }
 
-        const resBody = res?.data || res;
+        const resBody = result.data?.data ?? result.data;
         let newDispute = resBody?.data || resBody?.dispute || resBody;
 
         if (typeof newDispute !== "object" || newDispute === null) {
@@ -196,7 +196,7 @@ export default function ReportIssueModal({
                 `Date: ${date}\n\n` +
                 `Description: ${issue.trim()}`;
 
-            await http.post(`/support/disputes/${newDispute.id}/messages`, {
+            await clientAPI.post(`/support/disputes/${newDispute.id}/messages`, {
                 message: summaryMessage
             });
         }

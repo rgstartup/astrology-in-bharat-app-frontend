@@ -1,6 +1,6 @@
 "use server";
 
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import {
   ProductGroup,
   ProductType,
@@ -47,13 +47,12 @@ export async function fetchExpertProducts(params: GetExpertProductsDto = {}) {
     const queryString = searchParams.toString();
     const endpoint = `${API_ROUTES.EXPERT.PRODUCTS.ROOT}${queryString ? `?${queryString}` : ""}`;
 
-    const [res, error] =
-      await api.get<PaginatedExpertProductResponse>(endpoint);
-    if (error || !res) {
-      console.warn("fetchExpertProducts error:", error);
+    const result = await clientAPI.get<PaginatedExpertProductResponse>(endpoint);
+    if (!result.ok || !result.data) {
+      console.warn("fetchExpertProducts error:", result.error);
       return [];
     }
-    return res.data;
+    return result.data.data;
   } catch (err) {
     console.error("fetchExpertProducts exception:", err);
     return [];

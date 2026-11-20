@@ -3,7 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import React, { useState, FormEvent, Suspense } from "react";
 import { toast } from "@repo/design/shadcn";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { RiMailSendFill, RiArrowLeftLine } from "@repo/design/react-icons";
 import { BooleanMessage, getErrorMessage } from "@repo/lib";
 import { useTranslations } from "next-intl";
@@ -24,16 +24,16 @@ const ForgotPasswordContent: React.FC = () => {
     }
 
     setIsLoading(true);
-    const [data, fetchError] = await api
+    const result = await clientAPI
       .post<BooleanMessage>(`/auth/forgot/password`, email)
       .finally(() => setIsLoading(false));
 
-    if (fetchError) {
+    if (!result.ok) {
       toast.error(
-        getErrorMessage(fetchError) || t("forgotPassword.errors.failed"),
+        getErrorMessage(result.error) || t("forgotPassword.errors.failed"),
       );
     } else {
-      toast.success(data?.message || t("forgotPassword.success"));
+      toast.success(result.data?.message || t("forgotPassword.success"));
       setIsSent(true);
     }
   };

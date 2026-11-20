@@ -4,7 +4,7 @@ import { useState } from "react";
 import PlatformReviewHeader from "./header";
 import PlatformReviewRating from "./rating";
 import QuickTag from "./quick-tag";
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { toast } from "@repo/design/shadcn";
 import { getErrorMessage } from "@repo/lib";
 
@@ -41,16 +41,16 @@ const ReviewForm: React.FC<IReviewFormProps> = (props) => {
   const handleSubmit = async () => {
     if (state.rating === 0) return;
     try {
-      const [_, err] = await api.post("/reviews", {
+      const result = await clientAPI.post("/reviews", {
         rating: state.rating,
         comment: state.review || undefined,
         tags: selectedTags.length > 0 ? selectedTags : undefined,
         review_type: "platform",
       });
 
-      if (err) {
+      if (!result.ok) {
         toast.error(
-          getErrorMessage(err) ||
+          getErrorMessage(result.error) ||
             "Review submit karne mein problem hui. Dobara try karein.",
         );
         return;

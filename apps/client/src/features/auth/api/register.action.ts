@@ -1,6 +1,6 @@
 "use server";
 
-import { apiV2, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import type { RegisterFormData, AuthActionResponse } from "@/lib/types";
 
 // ─────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@ export async function registerAction(
     payload.last_name = lastName;
   }
 
-  const result = await apiV2.post<{ message?: string }>(
+  const result = await clientAPI.post<{ message?: string }>(
     API_ROUTES.AUTH.REGISTER.INITIATE,
     payload,
   );

@@ -1,4 +1,4 @@
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { PaginatedProductsResponse, ProductWithLikes } from "@repo/lib";
 
 export interface ProductQueryParams {
@@ -30,14 +30,14 @@ export const getProducts = async (
 
     const queryStr = searchParams.toString();
     const endpoint = queryStr ? `/products?${queryStr}` : "/products";
-    const [data, error] = await api.get<any>(endpoint);
+    const result = await clientAPI.get<any>(endpoint);
 
-    if (error || !data) {
-      console.warn("⚠️ Failed to fetch products:", error);
+    if (!result.ok || !result.data) {
+      console.warn("⚠️ Failed to fetch products:", result.error);
       return [];
     }
 
-    return Array.isArray(data) ? data : data.data || [];
+    return Array.isArray(result.data) ? result.data : result.data.data || [];
   } catch (error) {
     console.error("Backend not reachable:", error);
     return [];

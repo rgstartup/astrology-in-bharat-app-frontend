@@ -10,7 +10,7 @@ import {
   MessageCircle,
 } from "@repo/design/lucide";
 import OnlinePujaSeoContent from "./online-puja-seo.component";
-import { api, API_ROUTES } from "@/actions";
+import { clientAPI, API_ROUTES } from "@/actions";
 import { ExpertPuja } from "@/lib/types/puja";
 import { PujaCard } from "@/components/features/puja/PujaCard";
 import { useWishlistStore } from "@/store/wishlistStore";
@@ -55,15 +55,15 @@ const OnlinePujaPage = () => {
   useEffect(() => {
     const fetchPujasItems = async () => {
       setLoading(true);
-      const [res, error] = await api.get<ExpertPuja[]>(
+      const result = await clientAPI.get<ExpertPuja[]>(
         API_ROUTES.EXPERT.GET_ALL_PUJAS,
       );
 
-      if (error) {
-        console.error("Failed to fetch pujas:", error);
+      if (!result.ok) {
+        console.error("Failed to fetch pujas:", result.error);
         setPujas([]);
       } else {
-        setPujas(res || []);
+        setPujas(result.data || []);
       }
       setLoading(false);
     };

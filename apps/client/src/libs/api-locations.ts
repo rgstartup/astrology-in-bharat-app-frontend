@@ -1,4 +1,4 @@
-import { api as http } from "@/actions";
+import { clientAPI } from "@/actions";
 
 export interface State {
   id: string;
@@ -13,20 +13,20 @@ export interface District {
 }
 
 export const fetchStates = async (): Promise<State[]> => {
-  const [data, error] = await http.get<State[]>("/locations/states");
-  if (error) {
-    console.warn("⚠️ Failed to fetch states:", error);
+  const result = await clientAPI.get<State[]>("/locations/states");
+  if (!result.ok) {
+    console.warn("⚠️ Failed to fetch states:", result.error);
     return [];
   }
-  return data || [];
+  return result.data || [];
 };
 
 export const fetchDistricts = async (stateId: string): Promise<District[]> => {
   if (!stateId) return [];
-  const [data, error] = await http.get<District[]>(`/locations/districts?state_id=${stateId}`);
-  if (error) {
-    console.warn("⚠️ Failed to fetch districts:", error);
+  const result = await clientAPI.get<District[]>(`/locations/districts?state_id=${stateId}`);
+  if (!result.ok) {
+    console.warn("⚠️ Failed to fetch districts:", result.error);
     return [];
   }
-  return data || [];
+  return result.data || [];
 };

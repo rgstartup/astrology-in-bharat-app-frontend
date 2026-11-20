@@ -1,6 +1,6 @@
 "use server";
 
-import { api, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
+import { clientAPI, API_ROUTES, AUTH_COOKIE_NAMES } from "@/actions";
 import { getAccessToken } from "@/actions/cookie";
 import { getErrorMessage, Media } from "@repo/lib";
 import { OnboardingFormData, OnboardingActionResponse } from "@/lib/types";
@@ -62,17 +62,17 @@ export async function saveOnboardingAction(
     ];
   }
 
-  const [, error] = await api.patch(API_ROUTES.AUTH.ME, payload, {
+  const result = await clientAPI.patch(API_ROUTES.AUTH.ME, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
       Cookie: `${AUTH_COOKIE_NAMES.ACCESS_TOKEN}=${token}`,
     },
   });
 
-  if (error) {
-    console.log(error);
+  if (!result.ok) {
+    console.log(result.error);
     return {
-      error: getErrorMessage(error),
+      error: getErrorMessage(result.error),
     };
   }
 
@@ -98,7 +98,7 @@ export async function uploadOnboardingPictureAction(
     formData.append("public_id", public_id);
   }
 
-  const [resData, error] = await api.patch<{
+  const result = await clientAPI.patch<{
     avatar?: string;
     avatar_media: Media | null;
   }>(API_ROUTES.AUTH.PICTURE, formData, {
@@ -108,17 +108,17 @@ export async function uploadOnboardingPictureAction(
     },
   });
 
-  console.log(error);
+  console.log(result.error);
 
-  if (error || !resData?.avatar) {
+  if (!result.ok || !result.data?.avatar) {
     return {
-      error: getErrorMessage(error || "Failed to upload picture"),
+      error: getErrorMessage(result.error || "Failed to upload picture"),
     };
   }
 
   return {
     success: true,
-    avatar: resData.avatar,
-    avatar_media: resData.avatar_media,
+    avatar: result.data.avatar,
+    avatar_media: result.data.avatar_media,
   };
 }

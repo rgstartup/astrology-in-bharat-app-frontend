@@ -6,7 +6,7 @@ import { toast } from "@repo/design/shadcn";
 import { useTranslations } from "next-intl";
 import { RiLockPasswordFill, RiEyeLine, RiEyeOffLine } from "@repo/design/react-icons";
 
-import { api } from "@/actions";
+import { clientAPI } from "@/actions";
 import { Link, useRouter } from "@/i18n/navigation";
 import { BooleanMessage, getErrorMessage } from "@repo/lib";
 
@@ -51,20 +51,20 @@ const ResetPasswordContent: React.FC = () => {
 
     setIsLoading(true);
 
-    const [data, fetchError] = await api
+    const result = await clientAPI
       .post<BooleanMessage>(`/auth/reset/password?token=${token}`, {
         password,
       })
       .finally(() => setIsLoading(false));
 
-    if (fetchError) {
+    if (!result.ok) {
       toast.error(
-        getErrorMessage(fetchError) || t("resetPassword.errors.failed"),
+        getErrorMessage(result.error) || t("resetPassword.errors.failed"),
       );
       return;
     }
 
-    toast.success(data?.message || t("resetPassword.successMessage"));
+    toast.success(result.data?.message || t("resetPassword.successMessage"));
     setIsSuccess(true);
     setTimeout(() => {
       router.push("/login");
